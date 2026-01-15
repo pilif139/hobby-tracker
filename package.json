@@ -1,0 +1,21 @@
+{
+  "name": "hobby-tracker",
+  "version": "1.0.0",
+  "author": "Filip Kasperski",
+  "workspaces": [
+    "backend"
+  ],
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.mjs,.cjs,.ts,.mts,.cts,.jsx,.tsx"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.0.0",
+    "prettier": "3.8.0",
+    "typescript-eslint": "^8.53.0"
+  }
+}
