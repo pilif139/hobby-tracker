@@ -31,15 +31,15 @@ jobs:
               with:
                   bun-version: latest
 
-            - name: cd into backend
-              run: cd backend
-
             - name: Install dependencies
+              working-directory: ./backend
               run: bun install
 
             - name: Compile code
+              working-directory: ./backend
               run: bun run build
 
             - name: Run tests
+              working-directory: ./backend
               run: bun test
             
