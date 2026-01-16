@@ -42,4 +42,25 @@ jobs:
             - name: Run tests
               working-directory: ./backend
               run: bun test
-            
+    frontend:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v2
+
+          - name: Set up bun
+            uses: oven-sh/setup-bun@v2
+            with:
+                bun-version: latest
+
+          - name: Install dependencies
+            working-directory: ./frontend
+            run: bun install
+
+          - name: Compile code
+            working-directory: ./frontend
+            run: bun run build
+
+          - name: Run tests
+            working-directory: ./frontend
+            run: bun run test
