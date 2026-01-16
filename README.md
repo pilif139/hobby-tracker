@@ -3,15 +3,18 @@
 Projekt z programowania aplikacji webowych i mobilnych
 
 ### Dla całego projektu
- - bun jako runtime javascriptu
- - typescript
- - prettier
- - eslint
+
+- bun jako runtime javascriptu
+- typescript
+- prettier
+- eslint
 
 ### Frontend:
+
 - react
 
 ### Backend:
+
 - framework: hono
 - baza danych: postgres na postawiony na dockerze i prisma orm
 
