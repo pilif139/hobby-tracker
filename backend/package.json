@@ -2,7 +2,7 @@
   "name": "backend",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "build": "bun build src/index.ts --outdir ../dist/backend/index.js"
+    "build": "bun build src/index.ts --outdir ./dist/index.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",

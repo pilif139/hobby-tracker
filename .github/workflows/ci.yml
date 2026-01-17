@@ -57,6 +57,10 @@ jobs:
         working-directory: ./frontend
         run: bun install
 
+      - name: Run linter
+        working-directory: ./frontend
+        run: bun lint
+
       - name: Compile code
         working-directory: ./frontend
         run: bun run build
