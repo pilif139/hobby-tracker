@@ -1,19 +1,21 @@
 {
   "name": "backend",
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
+    "dev": "wrangler dev",
+    "dev:local": "bun run --hot src/index.ts",
+    "deploy": "wrangler deploy --minify",
     "build": "bun build src/index.ts --outdir ./dist/index.js"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/adapter-d1": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "dotenv": "^17.2.3",
     "hono": "^4.11.4",
-    "pg": "^8.17.1"
+    "wrangler": "^4.59.2"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260118.0",
     "@types/bun": "latest",
-    "@types/pg": "^8.16.0",
     "prisma": "^7.2.0"
   }
 }

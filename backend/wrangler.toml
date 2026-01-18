@@ -1,0 +1,10 @@
+name = "hobby-tracker-backend"
+main = "src/index.ts"
+compatibility_date = "2026-01-18"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hobby-tracker-db"
+database_id = "3142426a-3bd3-418b-9c01-a990a0bbba32"
+migrations_dir = "./prisma/d1/migrations"

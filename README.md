@@ -12,6 +12,10 @@ Projekt z programowania aplikacji webowych i mobilnych
 ### Frontend:
 
 - react
+- testy: vitest, react-testing-library
+- tanstack router
+- tanstack query
+- tailwindcss
 
 ### Backend:
 
