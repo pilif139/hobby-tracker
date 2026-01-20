@@ -9,7 +9,12 @@
     "strict": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx"
+    "jsxImportSource": "hono/jsx",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "type": "module",
   "include": ["src/**/*", "worker-configuration.d.ts"]
