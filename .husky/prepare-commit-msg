@@ -1,0 +1,20 @@
+BRANCH_NAME=$(git branch --show-current)
+COMMIT_MSG_FILE=$1
+
+# only prepend branch name on branches that need it
+if [ "$BRANCH_NAME" != "main" ] && [ "$BRANCH_NAME" != "master" ]; then
+  # Check if branch name is not already in the message
+  if ! grep -q "^\[$BRANCH_NAME\]" "$COMMIT_MSG_FILE"; then
+    # Get the first non-empty, non-comment line
+    FIRST_LINE=$(grep -v "^#" "$COMMIT_MSG_FILE" | grep -v "^$" | head -1)
+    
+    if [ -z "$FIRST_LINE" ]; then
+      # If file is empty or only has comments, add branch name to first line
+      sed -i.bak "1i\\
+[$BRANCH_NAME] " "$COMMIT_MSG_FILE"
+    else
+      # If there's content, prepend to the first non-comment line using | as delimiter
+      sed -i.bak "0,/^[^#]/ s|^|[$BRANCH_NAME] |" "$COMMIT_MSG_FILE"
+    fi
+  fi
+fi

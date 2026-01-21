@@ -1,21 +1,17 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es2022",
-    "module": "es2022",
-    "lib": ["ES2022"],
-    "types": ["@cloudflare/workers-types"],
-    "moduleResolution": "bundler",
-    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "skipLibCheck": true,
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
+    "types": ["bun-types", "@cloudflare/workers-types"],
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./*"]
     }
   },
-  "type": "module",
-  "include": ["src/**/*", "worker-configuration.d.ts"]
+  "include": [
+    "src/**/*",
+    "tests/**/*",
+    "eslint.config.js",
+    "worker-configuration.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", ".wrangler", "prisma/generated"]
 }

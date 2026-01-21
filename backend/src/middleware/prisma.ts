@@ -1,7 +1,7 @@
 import { PrismaD1 } from '@prisma/adapter-d1';
 import { createMiddleware } from 'hono/factory';
-import { PrismaClient } from '../../prisma/generated/prisma/client';
-import { AppContext } from '../types';
+import { PrismaClient } from '@/prisma/generated/client';
+import type { AppContext } from '@/src/types';
 
 export const prismaMiddleware = createMiddleware<AppContext>(
   async (c, next) => {

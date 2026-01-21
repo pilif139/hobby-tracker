@@ -1,11 +1,10 @@
-import { PrismaClient } from 'prisma/generated/prisma/client';
-import {
-  userResponseSelect,
-  userWithHobbiesSelect,
+import type {
   UserResponse,
   UserWithHobbies,
   UserCreateInput,
 } from './user.dto';
+import { userResponseSelect, userWithHobbiesSelect } from './user.dto';
+import type { PrismaClient } from '@/prisma/generated/client';
 
 export class UserRepository {
   constructor(private prisma: PrismaClient) {}

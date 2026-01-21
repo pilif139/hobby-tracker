@@ -1,6 +1,2 @@
 # deps
 node_modules/
-
-/generated/prisma
-
-/prisma/generated/prisma

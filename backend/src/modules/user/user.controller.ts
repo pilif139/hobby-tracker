@@ -1,7 +1,7 @@
-import { AppContext } from '@/types';
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { CreateUserSchema, DeleteUserSchema } from './user.dto';
+import type { AppContext } from '@/src/types';
 
 const app = new Hono<AppContext>()
   .get('/', async (c) => {

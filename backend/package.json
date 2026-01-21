@@ -1,10 +1,13 @@
 {
   "name": "backend",
+  "type": "module",
   "scripts": {
     "dev": "wrangler dev",
     "dev:local": "bun run --hot src/index.ts",
     "deploy": "wrangler deploy --minify",
-    "build": "bun build src/index.ts --outdir ./dist/index.js"
+    "build": "bun build src/index.ts --outdir ./dist/index.js",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --fix"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.6",
@@ -14,6 +17,13 @@
     "hono": "^4.11.4",
     "wrangler": "^4.59.2",
     "zod": "^4.3.5"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": "prettier --write"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260118.0",

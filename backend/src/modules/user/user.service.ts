@@ -1,10 +1,10 @@
-import { UserRepository } from '@/modules/user/user.repository';
-import {
+import type {
   CreateUserDto,
   UpdateUserDto,
   UserResponse,
   UserWithHobbies,
-} from '@/modules/user/user.dto';
+} from '@/src/modules/user/user.dto';
+import type { UserRepository } from '@/src/modules/user/user.repository';
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}

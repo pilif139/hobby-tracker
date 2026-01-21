@@ -1,6 +1,6 @@
-import { AppContext } from '@/types';
 import { cache } from 'hono/cache';
 import { createMiddleware } from 'hono/factory';
+import type { AppContext } from '@/src/types';
 
 export const cacheMiddleware = createMiddleware<AppContext>(async (c, next) => {
   const handler = cache({
