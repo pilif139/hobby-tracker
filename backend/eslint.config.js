@@ -13,7 +13,7 @@ export default [
   },
   ...baseConfig,
   {
-    files: ['src/**/*.ts', 'tests/**/*.{ts,tsx}'],
+    files: ['src/**/*.ts', 'tests/**/*.{ts,tsx}', '*.config.js', '*.config.ts'],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',

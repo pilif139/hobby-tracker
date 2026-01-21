@@ -16,6 +16,7 @@ Projekt z programowania aplikacji webowych i mobilnych
 ### Backend:
 
 - framework: hono
+- testy: moduł bun:test
 - baza danych: postgres na postawiony na dockerze i prisma orm
 
 ### Mobilki:
