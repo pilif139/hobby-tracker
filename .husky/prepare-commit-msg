@@ -1,16 +1,31 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
 
-BRANCH_NAME=$(git branch --show-current)
+COMMIT_MSG_FILE="${1}"
 
-COMMIT_MSG_FILE=$1
+if [ -z "$BRANCHES_TO_SKIP" ]; then
+  BRANCHES_TO_SKIP="main"
+fi
 
-COMMIT_SOURCE=$2
+BRANCH_NAME="$(git symbolic-ref --short HEAD)"
+BRANCH_NAME="${BRANCH_NAME##*/}"
 
-if [ -z "$COMMIT_SOURCE" ] && [ "$BRANCH_NAME" != "main" ]; then
-  CURRENT_MSG=$(cat "$COMMIT_MSG_FILE")
-  
-  if ! echo "$CURRENT_MSG" | grep -q "\[$BRANCH_NAME\]"; then
-    echo "[$BRANCH_NAME] $CURRENT_MSG" > "$COMMIT_MSG_FILE"
-  fi
+is_branch_excluded() {
+  result=0
+
+  for branch in ${BRANCHES_TO_SKIP}; do
+    if [ "$branch" = "$BRANCH_NAME" ]; then
+      result=1
+    fi
+  done
+  echo $result
+}
+
+is_branch_in_commit_msg() {
+  head -1 "$COMMIT_MSG_FILE" | grep -c --regexp=^"${1}".*$
+}
+
+if [ -n "$BRANCH_NAME" ] && ! [ "$(is_branch_excluded "$BRANCH_NAME")" -eq 1 ] && \
+! [ "$(is_branch_in_commit_msg "$BRANCH_NAME")" -eq 1 ]; then
+  sed -i'.bak' -e "1s~^~${BRANCH_NAME} ~" "$COMMIT_MSG_FILE"
 fi
