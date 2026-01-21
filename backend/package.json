@@ -1,8 +1,11 @@
 {
   "name": "backend",
+  "type": "module",
   "scripts": {
     "dev": "bun run --hot src/index.ts",
-    "build": "bun build src/index.ts --outdir ../dist/backend/index.js"
+    "build": "bun build src/index.ts --outdir ../dist/backend/index.js",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint --fix"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
@@ -11,7 +14,15 @@
     "hono": "^4.11.4",
     "pg": "^8.17.1"
   },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yaml,yml}": "prettier --write"
+  },
   "devDependencies": {
+    "@hono/eslint-config": "^2.0.5",
     "@types/bun": "latest",
     "@types/pg": "^8.16.0",
     "prisma": "^7.2.0"

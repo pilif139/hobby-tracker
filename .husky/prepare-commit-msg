@@ -1,0 +1,13 @@
+BRANCH_NAME=$(git branch --show-current)
+
+COMMIT_MSG_FILE=$1
+
+COMMIT_SOURCE=$2
+
+if [ -z "$COMMIT_SOURCE" ] && [ "$BRANCH_NAME" != "main" ]; then
+  CURRENT_MSG=$(cat "$COMMIT_MSG_FILE")
+  
+  if ! echo "$CURRENT_MSG" | grep -q "\[$BRANCH_NAME\]"; then
+    echo "[$BRANCH_NAME] $CURRENT_MSG" > "$COMMIT_MSG_FILE"
+  fi
+fi
