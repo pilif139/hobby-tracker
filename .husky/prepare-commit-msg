@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 BRANCH_NAME=$(git branch --show-current)
 COMMIT_MSG_FILE=$1
 COMMIT_SOURCE=$2
@@ -8,8 +5,17 @@ COMMIT_SOURCE=$2
 # Skip if amending, merging, or on main/master branch
 if [ -z "$COMMIT_SOURCE" ] && [ "$BRANCH_NAME" != "main" ] && [ "$BRANCH_NAME" != "master" ]; then
   # Check if branch name is not already in the message
-  if ! grep -q "\[$BRANCH_NAME\]" "$COMMIT_MSG_FILE"; then
-    # Prepend branch name to the first non-comment line
-    sed -i.bak "1s/^/[$BRANCH_NAME] /" "$COMMIT_MSG_FILE"
+  if ! grep -q "^\[$BRANCH_NAME\]" "$COMMIT_MSG_FILE"; then
+    # Get the first non-empty, non-comment line
+    FIRST_LINE=$(grep -v "^#" "$COMMIT_MSG_FILE" | grep -v "^$" | head -1)
+    
+    if [ -z "$FIRST_LINE" ]; then
+      # If file is empty or only has comments, add branch name to first line
+      sed -i.bak "1i\\
+[$BRANCH_NAME] " "$COMMIT_MSG_FILE"
+    else
+      # If there's content, prepend to the first non-comment line
+      sed -i.bak "0,/^[^#]/ s/^/[$BRANCH_NAME] /" "$COMMIT_MSG_FILE"
+    fi
   fi
 fi
