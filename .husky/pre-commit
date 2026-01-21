@@ -1,5 +1,18 @@
 bunx lint-staged
-cd frontend
-bun check-types
-cd ../backend
-bun check-types
+
+FRONTEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^frontend/.*(\.ts|\.tsx|\.js|\.jsx|\.json|package-lock\.json|bun\.lockb)$" || true)
+BACKEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^backend/.*(\.ts|\.js|\.json|package-lock\.json|bun\.lockb)$" || true)
+
+if [ -n "$FRONTEND_CHANGED" ]; then
+  echo "Type checking frontend:"
+  cd frontend
+  bun check-types
+  cd ..
+fi
+
+if [ -n "$BACKEND_CHANGED" ]; then
+  echo "Type checking backend:"
+  cd backend
+  bun check-types
+  cd ..
+fi
