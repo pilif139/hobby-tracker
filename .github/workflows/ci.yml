@@ -18,6 +18,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Generate prisma client
+        run: bunx prisma generate
+
       - name: Check types
         run: bun run check-types
 
