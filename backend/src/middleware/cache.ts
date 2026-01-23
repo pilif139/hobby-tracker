@@ -9,5 +9,5 @@ export const cacheMiddleware = createMiddleware<AppContext>(async (c, next) => {
     cacheableStatusCodes: [200, 304, 404],
   });
 
-  await handler(c, next);
+  return handler(c, next);
 });

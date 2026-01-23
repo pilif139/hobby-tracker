@@ -7,6 +7,5 @@ export const csrfMiddleware = createMiddleware<AppContext>(async (c, next) => {
   const handler = csrf({
     origin: allowedOrigins.map((origin) => origin.trim()),
   });
-
-  await handler(c, next);
+  return handler(c, next);
 });

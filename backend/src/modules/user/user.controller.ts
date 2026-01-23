@@ -3,7 +3,7 @@ import { Hono } from 'hono';
 import { CreateUserSchema, DeleteUserSchema } from './user.dto';
 import type { AppContext } from '@/src/types';
 
-const app = new Hono<AppContext>()
+const userController = new Hono<AppContext>()
   .get('/', async (c) => {
     const userService = c.get('services').user;
     const users = await userService.getAll();
@@ -22,6 +22,6 @@ const app = new Hono<AppContext>()
     return c.json({ user });
   });
 
-export default app;
+export default userController;
 // for rpc on client
-export type UserApi = typeof app;
+export type UserApi = typeof userController;

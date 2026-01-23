@@ -1,14 +1,13 @@
-import type { PrismaClient } from '@/prisma/generated/client';
 import type { UserService } from '@/src/modules/user/user.service';
 
 export interface Bindings {
   DB: D1Database;
+  authKV: KVNamespace;
   ALLOWED_ORIGINS: string;
   ENVIRONMENT: 'development' | 'production';
 }
 
 export interface Variables {
-  prisma: PrismaClient;
   services: {
     user: UserService;
   };

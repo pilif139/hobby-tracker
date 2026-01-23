@@ -18,5 +18,5 @@ export const corsMiddleware = createMiddleware<AppContext>(async (c, next) => {
     maxAge: 24 * 60 * 60,
   });
 
-  await handler(c, next);
+  return handler(c, next);
 });
