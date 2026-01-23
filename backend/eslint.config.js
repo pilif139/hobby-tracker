@@ -1,7 +1,9 @@
 import baseConfig from '@hono/eslint-config';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
-export default [
+export default defineConfig([
+  ...baseConfig,
   {
     ignores: [
       '*.config.js',
@@ -11,18 +13,27 @@ export default [
       'prisma/**',
     ],
   },
-  ...baseConfig,
   {
-    files: ['src/**/*.ts', 'tests/**/*.{ts,tsx}', '*.config.js', '*.config.ts'],
+    files: [
+      'src/**/*.ts',
+      'tests/**/*.{ts,tsx}',
+      '*.config.js',
+      '*.config.ts',
+      '*.d.ts',
+    ],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+    },
   },
   {
     files: ['*.config.js', '*.config.ts'],
     ...tseslint.configs.disableTypeChecked,
   },
-];
+]);

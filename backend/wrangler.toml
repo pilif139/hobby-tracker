@@ -1,0 +1,28 @@
+name = "hobby-tracker-backend"
+main = "src/index.ts"
+compatibility_date = "2026-01-16"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hobby-tracker-db"
+database_id = "3142426a-3bd3-418b-9c01-a990a0bbba32"
+migrations_dir = "./prisma/d1/migrations"
+
+[[kv_namespaces]]
+binding = "authKV"
+id = "7a439afc4184493c9c00d2cd9037778a"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+invocation_logs = true
+head_sampling_rate = 1
+persist = true
+
+[vars]
+ALLOWED_ORIGINS = "http://localhost:5173"
+ENVIRONMENT = "development"
