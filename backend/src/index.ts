@@ -1,4 +1,4 @@
-import { swaggerUI } from '@hono/swagger-ui';
+import { Scalar } from '@scalar/hono-api-reference';
 import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
@@ -47,9 +47,10 @@ app.get(
 
 // OpenAPI and Swagger UI setup
 app.get(
-  '/swagger',
-  swaggerUI({
+  '/scalar',
+  Scalar({
     url: '/doc',
+    theme: 'deepSpace',
   }),
 );
 
@@ -60,6 +61,7 @@ createOpenApiDocument(app, {
   },
 });
 
+// TODO: maybe refactor this into its own file; still need to research how to do this cleanly with hono
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
     return err.getResponse();

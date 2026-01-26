@@ -33,7 +33,12 @@ export default defineConfig(
   },
   eslintConfigPrettier,
   {
-    files: ['src/**/*.ts', 'tests/**/*.{ts,tsx}', '*.config.js', '*.config.ts'],
+    files: [
+      'src/**/*.{ts,tsx}',
+      'tests/**/*.{ts,tsx}',
+      '*.config.js',
+      '*.config.ts',
+    ],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',
