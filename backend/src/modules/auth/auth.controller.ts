@@ -1,12 +1,10 @@
 import { Hono } from 'hono';
-import type { Context } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
-import type { CookieOptions } from 'hono/utils/cookie';
 import { openApi } from 'hono-zod-openapi';
 import z from 'zod';
 import { UserSafeSchema } from '../user/user.dto';
-import authConfig from './auth.config';
+import authConfig, { getAuthCookieOptions } from './auth.config';
 import { LoginSchema, RegisterSchema } from './auth.dto';
 import type { AppContext } from '@/src/types';
 
@@ -14,7 +12,7 @@ const app = new Hono<AppContext>()
   .post(
     '/login',
     openApi({
-      tags: ['Authentication', 'Login'],
+      tags: ['Authentication'],
       request: {
         json: LoginSchema,
       },
@@ -37,14 +35,14 @@ const app = new Hono<AppContext>()
         c,
         'accessToken',
         accessToken,
-        getCookieOptions(c, authConfig.accessTokenExpirationTime),
+        getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
       );
 
       setCookie(
         c,
         'refreshToken',
         refreshToken,
-        getCookieOptions(c, authConfig.refreshTokenExpirationTime),
+        getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
       return c.json(user);
     },
@@ -52,7 +50,7 @@ const app = new Hono<AppContext>()
   .post(
     '/register',
     openApi({
-      tags: ['Authentication', 'Register'],
+      tags: ['Authentication'],
       request: {
         json: RegisterSchema,
       },
@@ -65,21 +63,26 @@ const app = new Hono<AppContext>()
       const request = c.req.valid('json');
       const authService = c.get('services').auth;
 
-      const { accessToken, refreshToken, user } =
-        await authService.register(request);
+      let accessToken, refreshToken, user;
+      try {
+        ({ accessToken, refreshToken, user } =
+          await authService.register(request));
+      } catch (error) {
+        throw new HTTPException(500, { message: (error as Error).message });
+      }
 
       setCookie(
         c,
         'accessToken',
         accessToken,
-        getCookieOptions(c, authConfig.accessTokenExpirationTime),
+        getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
       );
 
       setCookie(
         c,
         'refreshToken',
         refreshToken,
-        getCookieOptions(c, authConfig.refreshTokenExpirationTime),
+        getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
       return c.json(user);
     },
@@ -87,21 +90,21 @@ const app = new Hono<AppContext>()
   .post(
     '/logout',
     openApi({
-      tags: ['Authentication', 'Logout'],
+      tags: ['Authentication'],
       responses: {
         200: z.object({ message: z.string() }),
       },
     }),
     (c) => {
-      deleteCookie(c, 'accessToken', getCookieOptions(c, 0));
-      deleteCookie(c, 'refreshToken', getCookieOptions(c, 0));
+      deleteCookie(c, 'accessToken', getAuthCookieOptions(c, 0));
+      deleteCookie(c, 'refreshToken', getAuthCookieOptions(c, 0));
       return c.json({ message: 'Successfully logged out' });
     },
   )
   .post(
     '/logout-other-devices',
     openApi({
-      tags: ['Authentication', 'Logout'],
+      tags: ['Authentication'],
       responses: {
         200: z.object({ message: z.string() }),
         401: z.object({ message: z.string(), cause: z.string().optional() }),
@@ -134,28 +137,17 @@ const app = new Hono<AppContext>()
         c,
         'accessToken',
         accessToken,
-        getCookieOptions(c, authConfig.accessTokenExpirationTime),
+        getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
       );
 
       setCookie(
         c,
         'refreshToken',
         refreshToken,
-        getCookieOptions(c, authConfig.refreshTokenExpirationTime),
+        getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
       return c.json({ message: 'Logged out from other devices' });
     },
   );
-
-function getCookieOptions(c: Context<AppContext>, maxAge: number) {
-  return {
-    httpOnly: true,
-    secure: c.env.ENVIRONMENT === 'production',
-    sameSite: 'Lax',
-    path: '/',
-    domain: c.env.ALLOWED_ORIGINS.split(',')[0], // TODO: improve for multiple domains
-    maxAge,
-  } as Partial<CookieOptions>;
-}
 
 export { app as authController };

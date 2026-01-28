@@ -8,7 +8,10 @@ import { createOpenApiDocument, openApi } from 'hono-zod-openapi';
 import z from 'zod';
 import { getPrismaClient } from './lib/prisma';
 // import { cacheMiddleware } from './middleware/cache';
+import { authMiddleware } from './middleware/auth';
 import { dependencyMiddleware } from './middleware/dependencies';
+import { authController } from './modules/auth/auth.controller';
+import userController from './modules/user/user.controller';
 import { corsMiddleware } from '@/src/middleware/cors';
 import { csrfMiddleware } from '@/src/middleware/csrf';
 import type { AppContext } from '@/src/types';
@@ -22,6 +25,10 @@ app.use('*', csrfMiddleware);
 // only get request are cached
 // app.get('*', cacheMiddleware);
 app.use('*', dependencyMiddleware);
+app.use('*', authMiddleware);
+
+app.route('/auth', authController);
+app.route('/user', userController);
 
 app.get(
   '/health',

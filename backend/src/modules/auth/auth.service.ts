@@ -14,11 +14,25 @@ export class AuthService {
   ) {}
 
   async register(user: CreateUserDto) {
+    const exists = await this.userService.getByEmail(user.email);
+    if (exists) {
+      throw new Error('User with this email already exists');
+    }
+
     const createdUser = await this.userService.create(user);
 
+    let accessToken, refreshToken;
+    try {
+      accessToken = await this.generateAccessToken(createdUser.id);
+      refreshToken = await this.generateRefreshToken(createdUser.id);
+    } catch (error) {
+      await this.userService.delete(createdUser.id);
+      throw new Error('Failed to generate tokens: ' + (error as Error).message);
+    }
+
     return {
-      accessToken: await this.generateAccessToken(createdUser.id),
-      refreshToken: await this.generateRefreshToken(createdUser.id),
+      accessToken,
+      refreshToken,
       user: {
         id: createdUser.id,
         email: createdUser.email,
@@ -37,20 +51,13 @@ export class AuthService {
       return false;
     }
 
-    let refreshToken = await this.authKV.get(`userId:${user.id}`);
-    if (!refreshToken) {
-      refreshToken = await this.generateRefreshToken(user.id);
-    } else {
-      const parsed = JSON.parse(refreshToken) as KVRefreshToken;
-      refreshToken = await this.createJWT(
-        {
-          userId: user.id,
-          token: parsed.refreshToken,
-        },
-        authConfig.refreshTokenExpirationTime,
-        this.REFRESH_TOKEN_SECRET,
-      );
-    }
+    const tokenInKV = await this.authKV.get(`userId:${user.id}`);
+    const refreshToken = await this.generateRefreshToken(
+      user.id,
+      tokenInKV
+        ? (JSON.parse(tokenInKV) as KVRefreshToken).refreshToken
+        : undefined,
+    );
 
     return {
       accessToken: await this.generateAccessToken(user.id),
@@ -76,8 +83,9 @@ export class AuthService {
     };
   }
 
-  async generateRefreshToken(userId: string) {
-    const randomToken = Bun.randomUUIDv7();
+  async generateRefreshToken(userId: string, token?: string) {
+    const randomToken =
+      token ?? crypto.getRandomValues(new Uint8Array(32)).join('');
     await this.authKV.put(
       `userId:${userId}`,
       JSON.stringify({ refreshToken: randomToken }),
