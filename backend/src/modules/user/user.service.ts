@@ -1,3 +1,4 @@
+import { createHash } from '@/src/lib/hash';
 import type {
   CreateUserDto,
   UpdateUserDto,
@@ -26,10 +27,12 @@ export class UserService {
   }
 
   async create(data: CreateUserDto): Promise<UserResponse> {
+    const hashedPassword = await createHash(data.password);
+
     return this.userRepository.create({
       name: data.name,
       email: data.email,
-      password: data.password,
+      password: hashedPassword,
     });
   }
 
@@ -41,8 +44,6 @@ export class UserService {
 
     return this.userRepository.update(id, {
       name: data.name,
-      email: data.email,
-      password: data.password,
     });
   }
 

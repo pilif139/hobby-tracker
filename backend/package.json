@@ -10,9 +10,10 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
-    "@hono/swagger-ui": "^0.5.3",
     "@prisma/adapter-d1": "^7.2.0",
     "@prisma/client": "^7.2.0",
+    "@scalar/hono-api-reference": "^0.9.37",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "hono": "^4.11.4",
     "hono-zod-openapi": "^1.0.1",

@@ -1,4 +1,4 @@
-import { swaggerUI } from '@hono/swagger-ui';
+import { Scalar } from '@scalar/hono-api-reference';
 import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
@@ -8,7 +8,10 @@ import { createOpenApiDocument, openApi } from 'hono-zod-openapi';
 import z from 'zod';
 import { getPrismaClient } from './lib/prisma';
 // import { cacheMiddleware } from './middleware/cache';
+import { authMiddleware } from './middleware/auth';
 import { dependencyMiddleware } from './middleware/dependencies';
+import { authController } from './modules/auth/auth.controller';
+import userController from './modules/user/user.controller';
 import { corsMiddleware } from '@/src/middleware/cors';
 import { csrfMiddleware } from '@/src/middleware/csrf';
 import type { AppContext } from '@/src/types';
@@ -22,6 +25,10 @@ app.use('*', csrfMiddleware);
 // only get request are cached
 // app.get('*', cacheMiddleware);
 app.use('*', dependencyMiddleware);
+app.use('*', authMiddleware);
+
+app.route('/auth', authController);
+app.route('/user', userController);
 
 app.get(
   '/health',
@@ -47,9 +54,10 @@ app.get(
 
 // OpenAPI and Swagger UI setup
 app.get(
-  '/swagger',
-  swaggerUI({
+  '/scalar',
+  Scalar({
     url: '/doc',
+    theme: 'deepSpace',
   }),
 );
 
@@ -60,6 +68,7 @@ createOpenApiDocument(app, {
   },
 });
 
+// TODO: maybe refactor this into its own file; still need to research how to do this cleanly with hono
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
     return err.getResponse();

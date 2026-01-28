@@ -1,7 +1,15 @@
 import { z } from 'zod';
 import type { Prisma } from '@/prisma/generated/client';
+import { UsernameSchema } from '@/src/modules/auth/auth.dto';
 
 export const userResponseSelect = {
+  id: true,
+  email: true,
+  name: true,
+  password: true,
+} as const satisfies Prisma.UserSelect;
+
+export const userSafeSelect = {
   id: true,
   email: true,
   name: true,
@@ -24,17 +32,21 @@ export type UserResponse = Prisma.UserGetPayload<{
   select: typeof userResponseSelect;
 }>;
 
-export type UserWithHobbies = Prisma.UserGetPayload<{
-  select: typeof userWithHobbiesSelect;
+export type UserSafe = Prisma.UserGetPayload<{
+  select: typeof userSafeSelect;
 }>;
 
-export const UserResponseSchema = z.object({
+export const UserResponseSchema = z.object<UserResponse>();
+
+export const UserSafeSchema = z.object({
   id: z.uuid(),
   email: z.email(),
   name: z.string(),
-}) satisfies z.ZodType<UserResponse>;
+});
 
-export type UserResponseDto = z.infer<typeof UserResponseSchema>;
+export type UserWithHobbies = Prisma.UserGetPayload<{
+  select: typeof userWithHobbiesSelect;
+}>;
 
 export const CreateUserSchema = z.object({
   email: z.email(),
@@ -44,10 +56,15 @@ export const CreateUserSchema = z.object({
 
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 
+// TODO: add secure email and password update handling
 export const UpdateUserSchema = z.object({
-  email: z.email().optional(),
-  name: z.string().min(2).max(100).optional(),
-  password: z.string().min(8).max(128).optional(),
+  // email: z
+  //   .email({
+  //     error: 'Invalid email address',
+  //   })
+  //   .optional(),
+  name: UsernameSchema.optional(),
+  // password: UserPasswordSchema.optional(),
 });
 
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
