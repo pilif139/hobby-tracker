@@ -23,12 +23,40 @@ const userController = new Hono<AppContext>()
       );
     },
   )
+  .get(
+    '/:id',
+    openApi({
+      tags: ['User', 'Get By Id'],
+      request: {
+        param: z.object({
+          id: z.uuid(),
+        }),
+      },
+      responses: {
+        200: UserSafeSchema,
+        404: z.object({ error: z.string() }),
+      },
+    }),
+    async (c) => {
+      const userService = c.get('services').user;
+      const id = c.req.param('id');
+      const user = await userService.getById(id);
+      if (!user) {
+        return c.notFound();
+      }
+      return c.json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      });
+    },
+  )
   .delete(
     '/:id',
     openApi({
       tags: ['User', 'Delete'],
       request: {
-        json: DeleteUserSchema,
+        query: DeleteUserSchema,
       },
       responses: {
         200: z.object({ deleted: z.boolean() }),
@@ -49,17 +77,28 @@ const userController = new Hono<AppContext>()
         json: UpdateUserSchema,
       },
       responses: {
-        204: z.object({}),
+        204: UserSafeSchema,
+        404: z.object({ error: z.string() }),
       },
     }),
-    (c) => {
+    async (c) => {
       const body = c.req.valid('json');
       const id = c.req.param('id');
       const userService = c.get('services').user;
-      return userService.update(id, body).then(() => {
-        c.status(204);
+      const updatedUser = await userService.update(id, body);
+
+      if (!updatedUser) {
+        return c.notFound();
+      }
+
+      c.status(204);
+      return c.json({
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
       });
     },
   );
 
 export default userController;
+export type UserApi = typeof userController;

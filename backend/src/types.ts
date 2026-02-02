@@ -1,3 +1,4 @@
+import type { Logger } from 'lib';
 import type { AuthService } from './modules/auth/auth.service';
 import type { UserService } from '@/src/modules/user/user.service';
 
@@ -16,6 +17,7 @@ export interface Variables {
     user: UserService;
     auth: AuthService;
   };
+  logger: Logger;
 }
 
 export interface AppContext {
