@@ -4,7 +4,7 @@ import { HTTPException } from 'hono/http-exception';
 import authConfig, { getAuthCookieOptions } from '../modules/auth/auth.config';
 import type { AppContext } from '../types';
 
-const NEED_AUTH_PATHS = ['/user'];
+const NEED_AUTH_PATHS = ['/user', '/auth/logout'];
 
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
   if (!NEED_AUTH_PATHS.includes(c.req.path)) {
@@ -18,7 +18,9 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
   const refreshToken = getCookie(c, 'refreshToken');
 
   if (!accessToken) {
-    throw new HTTPException(401, { message: 'Unauthorized' });
+    throw new HTTPException(401, {
+      message: 'Unauthorized',
+    });
   }
 
   const payload = await authService.validateAccessToken(accessToken);
