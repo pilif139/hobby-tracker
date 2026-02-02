@@ -1,15 +1,13 @@
-# lib
+# Lib
 
-To install dependencies:
+This is the `lib` directory, which contains shared code for the project. It includes modules, utils, and other reusable components that can be utilized across different parts of the application.
 
-```bash
-bun install
+## How to use
+
+To use code from this workspace, simply add the following line to package.json dependencies:
+
+```json
+"lib": "workspace:*"
 ```
 
-To run:
-
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.2.21. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+For more info go to [Bun package manager workspace docs](https://bun.sh/docs/pm/workspaces).
