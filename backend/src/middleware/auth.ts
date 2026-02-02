@@ -17,19 +17,19 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
   const accessToken = getCookie(c, 'accessToken');
   const refreshToken = getCookie(c, 'refreshToken');
 
-  if (!accessToken) {
-    throw new HTTPException(401, {
-      message: 'Unauthorized',
-    });
-  }
+  if (accessToken) {
+    const payload = await authService.validateAccessToken(accessToken);
+    if (!payload) {
+      c.get('logger').error('Invalid access token');
+      throw new HTTPException(401, { message: 'Unauthorized' });
+    }
 
-  const payload = await authService.validateAccessToken(accessToken);
-
-  if (payload) {
+    c.get('logger').info(`Authenticated user ID: ${payload}`);
     c.set('userId', payload);
   } else if (refreshToken) {
     const refreshPayload = await authService.validateRefreshToken(refreshToken);
     if (!refreshPayload) {
+      c.get('logger').error('Invalid refresh token');
       throw new HTTPException(401, { message: 'Unauthorized' });
     }
 
@@ -42,6 +42,9 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
     );
 
     c.set('userId', refreshPayload.userId);
+    c.get('logger').info(
+      `Authenticated user ID (refresh): ${refreshPayload.userId}`,
+    );
     setCookie(
       c,
       'accessToken',
@@ -56,6 +59,7 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
       getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
     );
   } else {
+    c.get('logger').error('Invalid access token and no refresh token provided');
     throw new HTTPException(401, { message: 'Unauthorized' });
   }
 

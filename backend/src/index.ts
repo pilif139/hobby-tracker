@@ -3,6 +3,7 @@ import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
 
+import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
 import { createOpenApiDocument, openApi } from 'hono-zod-openapi';
 import z from 'zod';
@@ -20,6 +21,7 @@ import type { AppContext } from '@/src/types';
 const app = new Hono<AppContext>()
   .use(
     '*',
+    logger(),
     loggerMiddleware,
     secureHeaders(),
     corsMiddleware,

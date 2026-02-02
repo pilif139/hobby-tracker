@@ -4,20 +4,19 @@ export class ConsoleTransport implements Transport {
   log(entry: LogEntry) {
     const { level, message, context, timestamp } = entry;
 
-    console.log(`${timestamp} [${level}] ${message}`);
     const prefix = `[${timestamp}] [${level.toUpperCase()}]`;
     switch (level) {
       case 'debug':
-        console.debug(prefix, message, context);
+        console.debug(`\x1b[1;35m${prefix}\x1b[0m`, message, context ?? '');
         break;
       case 'info':
-        console.info(prefix, message, context);
+        console.info(`\x1b[1;34m${prefix}\x1b[0m`, message, context ?? '');
         break;
       case 'warn':
-        console.warn(prefix, message, context);
+        console.warn(`\x1b[1;33m${prefix}\x1b[0m`, message, context ?? '');
         break;
       case 'error':
-        console.error(prefix, message, context);
+        console.error(`\x1b[1;31m${prefix}\x1b[0m`, message, context ?? '');
         break;
     }
   }
