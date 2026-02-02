@@ -4,7 +4,8 @@
   "author": "Filip Kasperski",
   "workspaces": [
     "backend",
-    "frontend"
+    "frontend",
+    "lib"
   ],
   "scripts": {
     "lint": "cd frontend && eslint . && cd ../backend && eslint .",
