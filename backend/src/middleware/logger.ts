@@ -1,6 +1,7 @@
 import { createMiddleware } from 'hono/factory';
-import { ConsoleTransport, Logger } from 'lib';
+import { ConsoleTransport, FileTransport, Logger } from 'lib';
 import type { Transport } from 'lib';
+import { join } from 'path';
 import type { AppContext } from '../types';
 
 export const loggerMiddleware = createMiddleware<AppContext>(
@@ -8,6 +9,9 @@ export const loggerMiddleware = createMiddleware<AppContext>(
     const transports: Transport[] = [];
     if (c.env.ENVIRONMENT === 'development') {
       transports.push(new ConsoleTransport());
+
+      const logsDir = join(__dirname, '..', '..', 'logs');
+      transports.push(new FileTransport(logsDir));
     }
 
     const customLogger = new Logger({
