@@ -17,8 +17,15 @@ const app = new Hono<AppContext>()
         json: LoginSchema,
       },
       responses: {
-        200: UserSafeSchema,
+        200: {
+          schema: UserSafeSchema,
+          description: 'Successfully logged in',
+          headers: z.object({
+            'Set-Cookie': z.string(),
+          }),
+        },
         401: z.object({ message: z.string() }),
+        403: z.object({ message: z.string() }),
       },
     }),
     async (c) => {
@@ -55,7 +62,14 @@ const app = new Hono<AppContext>()
         json: RegisterSchema,
       },
       responses: {
-        200: UserSafeSchema,
+        200: {
+          schema: UserSafeSchema,
+          description: 'Successfully registered user',
+          headers: z.object({
+            'Set-Cookie': z.string(),
+          }),
+        },
+        403: z.object({ message: z.string() }),
         500: z.object({ message: z.string() }),
       },
     }),
@@ -98,6 +112,7 @@ const app = new Hono<AppContext>()
     (c) => {
       deleteCookie(c, 'accessToken', getAuthCookieOptions(c, 0));
       deleteCookie(c, 'refreshToken', getAuthCookieOptions(c, 0));
+      c.set('userId', '');
       return c.json({ message: 'Successfully logged out' });
     },
   )
