@@ -1,52 +1,60 @@
-import type {
-  UserResponse,
-  UserWithHobbies,
-  UserCreateInput,
-} from './user.dto';
-import { userResponseSelect, userWithHobbiesSelect } from './user.dto';
+import { userResponseSelect } from './user.dto';
 import type { PrismaClient } from '@/prisma/generated/client';
+import type {
+  UserCreateInput,
+  UserUpdateInput,
+} from '@/prisma/generated/models/User';
 
 export class UserRepository {
   constructor(private prisma: PrismaClient) {}
 
-  async findById(id: string): Promise<UserResponse | null> {
+  async findById(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
       select: userResponseSelect,
     });
   }
 
-  async findByIdWithHobbies(id: string): Promise<UserWithHobbies | null> {
+  async findProfileById(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
-      select: userWithHobbiesSelect,
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        _count: {
+          select: {
+            hobbies: true,
+            hobbySessions: true,
+            followedBy: true,
+            follows: true,
+          },
+        },
+      },
     });
   }
 
-  async findByEmail(email: string): Promise<UserResponse | null> {
+  async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
       select: userResponseSelect,
     });
   }
 
-  async findAll(): Promise<UserResponse[]> {
+  async findAll() {
     return this.prisma.user.findMany({
       select: userResponseSelect,
     });
   }
 
-  async create(data: UserCreateInput): Promise<UserResponse> {
+  async create(data: UserCreateInput) {
     return this.prisma.user.create({
       data,
       select: userResponseSelect,
     });
   }
 
-  async update(
-    id: string,
-    data: { name?: string; email?: string; password?: string },
-  ): Promise<UserResponse> {
+  async update(id: string, data: UserUpdateInput) {
     return this.prisma.user.update({
       where: { id },
       data,
@@ -54,14 +62,14 @@ export class UserRepository {
     });
   }
 
-  async delete(id: string): Promise<UserResponse> {
+  async delete(id: string) {
     return this.prisma.user.delete({
       where: { id },
       select: userResponseSelect,
     });
   }
 
-  async exists(id: string): Promise<boolean> {
+  async exists(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: { id: true },
@@ -69,7 +77,7 @@ export class UserRepository {
     return user !== null;
   }
 
-  async emailExists(email: string): Promise<boolean> {
+  async emailExists(email: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
       select: { id: true },

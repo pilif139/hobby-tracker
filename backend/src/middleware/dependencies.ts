@@ -2,6 +2,7 @@ import { createMiddleware } from 'hono/factory';
 import { AuthService } from '../modules/auth/auth.service';
 import { createUserService } from '../modules/user/user.factory';
 import { getPrismaClient } from '@/src/lib/prisma';
+import { createHobbyService } from '@/src/modules/hobby/hobby.factory';
 import type { AppContext } from '@/src/types';
 
 export const dependencyMiddleware = createMiddleware<AppContext>(
@@ -20,6 +21,9 @@ export const dependencyMiddleware = createMiddleware<AppContext>(
           c.env.ACCESS_TOKEN_SECRET,
           c.env.REFRESH_TOKEN_SECRET,
         );
+      },
+      get hobby() {
+        return createHobbyService(prisma);
       },
     });
 

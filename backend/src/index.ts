@@ -2,8 +2,6 @@ import { Scalar } from '@scalar/hono-api-reference';
 import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
-
-import { logger } from 'hono/logger';
 import { secureHeaders } from 'hono/secure-headers';
 import { createOpenApiDocument, openApi } from 'hono-zod-openapi';
 import z from 'zod';
@@ -21,7 +19,6 @@ import type { AppContext } from '@/src/types';
 const app = new Hono<AppContext>()
   .use(
     '*',
-    logger(),
     loggerMiddleware,
     secureHeaders(),
     corsMiddleware,
@@ -76,9 +73,22 @@ createOpenApiDocument(app, {
     title: 'Hobby Tracker API',
     version: '1.0.0',
   },
+  components: {
+    securitySchemes: {
+      accessToken: {
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'accessToken',
+      },
+      refreshToken: {
+        type: 'apiKey',
+        in: 'cookie',
+        name: 'refreshToken',
+      },
+    },
+  },
+  security: [{ accessToken: [], refreshToken: [] }],
 });
-
-// TODO: maybe refactor this into its own file; still need to research how to do this cleanly with hono
 
 showRoutes(app, {
   verbose: true,

@@ -19,19 +19,36 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  hobbies Hobby[]
+  hobbies       Hobby[]
+  hobbySessions HobbySession[]
+
+  follows    Follow[] @relation("Following")
+  followedBy Follow[] @relation("Follower")
+}
+
+model Follow {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  followerId String
+  follower   User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+
+  followingId String
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@index([followerId, followingId])
 }
 
 model Hobby {
   id          String  @id @default(uuid())
   name        String
   description String?
-  userId      String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user          User           @relation(fields: [userId], references: [id])
+  users         User[]
   hobbySessions HobbySession[]
 }
 
@@ -45,5 +62,8 @@ model HobbySession {
   updatedAt         DateTime @updatedAt
 
   hobbyId String
-  hobby   Hobby  @relation(fields: [hobbyId], references: [id])
+  hobby   Hobby  @relation(fields: [hobbyId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
