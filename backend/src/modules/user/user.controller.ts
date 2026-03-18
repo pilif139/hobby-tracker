@@ -7,6 +7,11 @@ import {
   UserProfileSchema,
   UserSafeSchema,
 } from './user.dto';
+import {
+  NoContentResponseSchema,
+  NotFoundResponseSchema,
+  ForbiddenResponseSchema,
+} from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
 const userController = new Hono<AppContext>()
@@ -16,12 +21,12 @@ const userController = new Hono<AppContext>()
       tags: ['User', 'Get By Id'],
       request: {
         param: z.object({
-          id: z.uuid(),
+          id: z.string(), // even though its a UUID we treat it as string so that zod doesnt throw an error when validating the path parameter, and we can return a 404 if the user is not found instead of a 400 bad request error
         }),
       },
       responses: {
         200: UserProfileSchema,
-        404: z.object({ error: z.string() }),
+        404: NotFoundResponseSchema,
       },
     }),
     async (c) => {
@@ -29,9 +34,9 @@ const userController = new Hono<AppContext>()
       const id = c.req.param('id');
       const user = await userService.getProfileById(id);
       if (!user) {
-        return c.notFound();
+        return c.var.res(404, { message: 'User not found' });
       }
-      return c.json({
+      return c.var.res({
         id: user.id,
         name: user.name,
         createdAt: user.createdAt,
@@ -50,26 +55,25 @@ const userController = new Hono<AppContext>()
         query: DeleteUserSchema,
       },
       responses: {
-        204: z.object(),
+        204: NoContentResponseSchema,
+        403: ForbiddenResponseSchema,
+        404: NotFoundResponseSchema,
       },
     }),
     async (c) => {
       const id = c.req.param('id');
       const currentUserId = c.get('userId');
       if (currentUserId !== id) {
-        c.status(403);
-        return c.json({ error: 'Unauthorized user' });
+        return c.var.res(403, { message: 'Unauthorized user' });
       }
 
       const userService = c.get('services').user;
 
       const deleted = await userService.delete(id);
       if (!deleted) {
-        c.status(404);
-        return c.json({ error: 'User not found' });
+        return c.var.res(404, { message: 'User not found' });
       }
-      c.status(204);
-      return c.json(null);
+      return c.var.res(204, null);
     },
   )
   .patch(
@@ -80,8 +84,9 @@ const userController = new Hono<AppContext>()
         json: UpdateUserSchema,
       },
       responses: {
-        204: UserSafeSchema,
-        404: z.object({ error: z.string() }),
+        200: UserSafeSchema,
+        403: ForbiddenResponseSchema,
+        404: NotFoundResponseSchema,
       },
     }),
     async (c) => {
@@ -90,19 +95,17 @@ const userController = new Hono<AppContext>()
 
       const currentUserId = c.get('userId');
       if (currentUserId !== id) {
-        c.status(403);
-        return c.json({ error: 'Unauthorized user' });
+        return c.var.res(403, { message: 'Unauthorized user' });
       }
 
       const userService = c.get('services').user;
       const updatedUser = await userService.update(id, body);
 
       if (!updatedUser) {
-        return c.notFound();
+        return c.var.res(404, { message: 'User not found' });
       }
 
-      c.status(204);
-      return c.json({
+      return c.var.res({
         id: updatedUser.id,
         name: updatedUser.name,
         email: updatedUser.email,

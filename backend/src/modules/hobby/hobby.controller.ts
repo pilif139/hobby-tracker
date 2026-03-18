@@ -28,11 +28,11 @@ const hobbyController = new Hono<AppContext>()
       const hobbyService = c.get('services').hobby;
       const { search, offset, limit } = c.req.valid('query');
       if (!search || search.trim() === '') {
-        return c.json([]);
+        return c.var.res([]);
       }
       const hobbies = await hobbyService.search(search, offset, limit);
 
-      return c.json(hobbies);
+      return c.var.res(hobbies);
     },
   )
   .get(
@@ -64,8 +64,7 @@ const hobbyController = new Hono<AppContext>()
       const hobbyService = c.get('services').hobby;
       const hobby = await hobbyService.create(body);
 
-      c.status(201);
-      return c.json(hobby);
+      return c.var.res(201, hobby);
     },
   )
   .post(
