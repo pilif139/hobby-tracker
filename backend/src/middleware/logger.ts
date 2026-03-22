@@ -1,4 +1,5 @@
 import { createMiddleware } from 'hono/factory';
+import { logger } from 'hono/logger';
 import { ConsoleTransport, Logger } from 'lib';
 import type { Transport } from 'lib';
 import type { AppContext } from '../types';
@@ -19,6 +20,10 @@ export const loggerMiddleware = createMiddleware<AppContext>(
     });
     c.set('logger', customLogger);
 
-    await next();
+    const handler = logger((message: string) => {
+      customLogger.info(message);
+    });
+
+    return handler(c, next);
   },
 );

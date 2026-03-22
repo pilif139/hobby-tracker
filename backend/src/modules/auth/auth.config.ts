@@ -10,7 +10,10 @@ const authConfig = {
 
 export default authConfig;
 
-export function getAuthCookieOptions(c: Context<AppContext>, maxAge: number) {
+export function getAuthCookieOptions<e extends AppContext>(
+  c: Context<e>,
+  maxAge: number,
+) {
   return {
     httpOnly: true,
     secure: c.env.ENVIRONMENT === 'production',

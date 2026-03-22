@@ -69,6 +69,7 @@ export class Logger {
   private emit(entry: LogEntry): void {
     const promise = this.emitAsync(entry);
 
+    // if there is a waitUntil function, wait for it to resolve before continuing
     if (this.waitUntil) {
       this.waitUntil(promise);
     } else {

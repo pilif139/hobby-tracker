@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE IF NOT EXISTS "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Hobby" (
+CREATE TABLE IF NOT EXISTS "Hobby" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -16,7 +16,7 @@ CREATE TABLE "Hobby" (
 );
 
 -- CreateTable
-CREATE TABLE "HobbySession" (
+CREATE TABLE IF NOT EXISTS "HobbySession" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "startTime" DATETIME NOT NULL,
     "endTime" DATETIME NOT NULL,
@@ -27,5 +27,5 @@ CREATE TABLE "HobbySession" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
 

@@ -1,6 +1,7 @@
 import type { Logger } from 'lib';
 import type { AuthService } from './modules/auth/auth.service';
-import type { UserService } from '@/src/modules/user/user.service';
+import type { HobbyService } from './modules/hobby/hobby.service';
+import type { UserService } from './modules/user/user.service';
 
 export interface Bindings {
   DB: D1Database;
@@ -16,6 +17,7 @@ export interface Variables {
   services: {
     user: UserService;
     auth: AuthService;
+    hobby: HobbyService;
   };
   logger: Logger;
 }

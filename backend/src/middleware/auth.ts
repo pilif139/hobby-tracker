@@ -4,10 +4,46 @@ import { HTTPException } from 'hono/http-exception';
 import authConfig, { getAuthCookieOptions } from '../modules/auth/auth.config';
 import type { AppContext } from '../types';
 
-const NEED_AUTH_PATHS = ['/user', '/auth/logout'];
+// TODO: refactor to use regex in the app.use("/[regex]") and not here
+const NEED_AUTH_PATHS = ['/user', '/auth/logout', '/auth/logout-other-devices'];
+
+// we dont want to allow user to login or register if they are already logged in
+const GUEST_ONLY_PATHS = ['/auth/login', '/auth/register'];
 
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
-  if (!NEED_AUTH_PATHS.includes(c.req.path)) {
+  const isGuestOnlyPath = GUEST_ONLY_PATHS.find((path) =>
+    path.includes(c.req.path),
+  );
+  const isProtectedPath = NEED_AUTH_PATHS.find((path) =>
+    path.includes(c.req.path),
+  );
+
+  // For guest-only paths, check if user is already logged in
+  if (isGuestOnlyPath) {
+    const accessToken = getCookie(c, 'accessToken');
+    const refreshToken = getCookie(c, 'refreshToken');
+
+    if (accessToken || refreshToken) {
+      const authService = c.get('services').auth;
+      const isValidAccess = accessToken
+        ? await authService.validateAccessToken(accessToken)
+        : null;
+      const isValidRefresh = refreshToken
+        ? await authService.validateRefreshToken(refreshToken)
+        : null;
+
+      if (isValidAccess || isValidRefresh) {
+        throw new HTTPException(403, {
+          message: 'Already authenticated. Please logout first.',
+        });
+      }
+    }
+
+    await next();
+    return;
+  }
+
+  if (!isProtectedPath) {
     await next();
     return;
   }

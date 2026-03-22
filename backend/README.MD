@@ -1,5 +1,16 @@
 # Hobby tracker backend
 
+Głównym załoeniem aplikacji backendowej jest nauczenie się czegoś nowego, dlatego postanowiłem wykorzystać usługi Cloudflare tj. KV, D1 database, Workers itp..
+
+
+## Technologie
+- Hono framework
+- Zod do walidacji danych
+- Prisma jako ORM
+- Cloudflare D1, KV, Workers, Images
+- Własny system autentykacji i autoryzacji oparty na tokenie JWT oraz refresh tokenie przechowywanym w bardzo szybkiej bazie danych klucz-wartość Cloudflare KV
+- hono-zod-openapi - służy do generowania dokumentacji OpenAPI na podstawie kodu aplikacji. Było wiele alternatyw dla tej biblioteki, którę są bardziej popularne, nawet oficjalne wsparcie dla OpenAPI w hono, ale ostatecznie padło na tę bibliotekę ze względu na jej prostotę i elastyczność, która w porównaniu do innych pozwala na szybki development.
+
 ## Architektura projektu
 
 - src - folder z głównym kodem aplikacji

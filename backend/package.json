@@ -9,14 +9,14 @@
     "lint": "eslint --fix"
   },
   "dependencies": {
-    "lib": "workspace:*",
     "@prisma/adapter-d1": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@scalar/hono-api-reference": "^0.9.37",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "hono": "^4.11.4",
-    "hono-zod-openapi": "^1.0.1",
+    "hono-zod-openapi": "^1.1.1",
+    "lib": "workspace:*",
     "wrangler": "^4.59.2",
     "zod": "^4.3.5"
   },
