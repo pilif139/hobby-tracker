@@ -4,12 +4,26 @@ import { listLocalDatabases } from '@prisma/adapter-d1';
 import 'dotenv/config';
 import { defineConfig } from 'prisma/config';
 
+function getLocalDatabaseUrl(): string {
+  try {
+    const databases = listLocalDatabases();
+    const db = databases.pop();
+    if (db) {
+      return `file:${db}`;
+    }
+  } catch {
+    // In CI or environments without .wrangler directory, fall back to a dummy URL.
+    // prisma generate only needs the schema, not a real database connection.
+  }
+  return 'file:./prisma/placeholder.db';
+}
+
 export default defineConfig({
   schema: 'prisma/schema.prisma',
   migrations: {
     path: 'prisma/migrations',
   },
   datasource: {
-    url: `file:${listLocalDatabases().pop()}`,
+    url: getLocalDatabaseUrl(),
   },
 });
