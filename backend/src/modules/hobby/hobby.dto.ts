@@ -38,3 +38,10 @@ export const DeleteHobbySchema = z.object({
 export type DeleteHobbyDto = z.infer<typeof DeleteHobbySchema>;
 
 export type CreateHobbyInput = Prisma.HobbyCreateWithoutHobbySessionsInput;
+
+export const UserHobbyResponseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  sessionCount: z.number(),
+});

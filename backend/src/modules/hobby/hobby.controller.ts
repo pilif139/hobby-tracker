@@ -5,7 +5,12 @@ import {
   createHobbySchema,
   HobbyResponseSchema,
   updateHobbySchema,
+  UserHobbyResponseSchema,
 } from './hobby.dto';
+import {
+  BaseMessageResponse,
+  NotFoundResponseSchema,
+} from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
 const hobbyController = new Hono<AppContext>()
@@ -36,17 +41,45 @@ const hobbyController = new Hono<AppContext>()
     },
   )
   .get(
+    '/user/:userId',
+    openApi({
+      tags: ['Hobby', 'Get By User'],
+      request: {
+        param: z.string(),
+      },
+      responses: {
+        200: z.array(UserHobbyResponseSchema),
+      },
+    }),
+    async (c) => {
+      const hobbyService = c.get('services').hobby;
+      const userId = c.req.valid('param');
+      const hobbies = await hobbyService.getByUserId(userId);
+
+      return c.var.res(hobbies);
+    },
+  )
+  .get(
     '/:id',
     openApi({
       tags: ['Hobby', 'Get By Id'],
       request: {
-        param: z.uuid(),
+        param: z.string(),
       },
       responses: {
         200: HobbyResponseSchema,
+        404: NotFoundResponseSchema,
       },
     }),
-    async (c) => {},
+    async (c) => {
+      const hobbyService = c.get('services').hobby;
+      const id = c.req.valid('param');
+      const hobby = await hobbyService.getById(id);
+      if (!hobby) {
+        return c.var.res(404, { message: 'Hobby not found' });
+      }
+      return c.var.res(hobby);
+    },
   )
   .post(
     '/',
@@ -68,7 +101,69 @@ const hobbyController = new Hono<AppContext>()
     },
   )
   .post(
-    '/uploadImage/:hobbyId',
+    '/add-to-profile/:hobbyId',
+    openApi({
+      tags: ['Hobby', 'Add'],
+      request: {
+        param: z.string(),
+      },
+      responses: {
+        200: z.object({
+          message: z.string(),
+        }),
+        404: NotFoundResponseSchema,
+        409: BaseMessageResponse,
+      },
+    }),
+    async (c) => {
+      const hobbyService = c.get('services').hobby;
+      const hobbyId = c.req.valid('param');
+      const userId = c.get('userId');
+
+      const result = await hobbyService.addToProfile(userId, hobbyId);
+      if ('error' in result) {
+        if (result.error === 'Hobby not found') {
+          return c.var.res(404, { message: 'Hobby not found' });
+        }
+        return c.var.res(409, { message: 'Hobby already in profile' });
+      }
+
+      return c.var.res({ message: 'Hobby added to profile' });
+    },
+  )
+  .delete(
+    '/remove-from-profile/:hobbyId',
+    openApi({
+      tags: ['Hobby', 'Remove'],
+      request: {
+        param: z.string(),
+      },
+      responses: {
+        200: z.object({
+          message: z.string(),
+        }),
+        404: BaseMessageResponse,
+        400: BaseMessageResponse,
+      },
+    }),
+    async (c) => {
+      const hobbyService = c.get('services').hobby;
+      const hobbyId = c.req.valid('param');
+      const userId = c.get('userId');
+
+      const result = await hobbyService.removeFromProfile(userId, hobbyId);
+      if ('error' in result) {
+        if (result.error === 'Hobby not found') {
+          return c.var.res(404, { message: 'Hobby not found' });
+        }
+        return c.var.res(400, { message: 'Hobby not in profile' });
+      }
+
+      return c.var.res({ message: 'Hobby removed from profile' });
+    },
+  )
+  .post(
+    '/upload-image/:hobbyId',
     openApi({
       tags: ['Hobby', 'Upload New Image'],
       request: {
@@ -90,7 +185,7 @@ const hobbyController = new Hono<AppContext>()
     openApi({
       tags: ['Hobby', 'Update Existing'],
       request: {
-        param: z.uuid(),
+        param: z.string(),
         json: updateHobbySchema,
       },
       responses: {

@@ -36,6 +36,26 @@ export class HobbyRepository {
     });
   }
 
+  async findByUserId(userId: string) {
+    return this.prisma.hobby.findMany({
+      where: {
+        users: { some: { id: userId } },
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        _count: {
+          select: {
+            hobbySessions: {
+              where: { userId },
+            },
+          },
+        },
+      },
+    });
+  }
+
   async create(data: HobbyCreateInput): Promise<HobbyResponse> {
     return this.prisma.hobby.create({
       data,
@@ -68,5 +88,36 @@ export class HobbyRepository {
       },
     });
     return !!hobby;
+  }
+
+  async isUserLinkedToHobby(userId: string, hobbyId: string): Promise<boolean> {
+    const hobby = await this.prisma.hobby.findFirst({
+      where: {
+        id: hobbyId,
+        users: { some: { id: userId } },
+      },
+      select: { id: true },
+    });
+    return !!hobby;
+  }
+
+  async addUserToHobby(userId: string, hobbyId: string) {
+    return this.prisma.hobby.update({
+      where: { id: hobbyId },
+      data: {
+        users: { connect: { id: userId } },
+      },
+      select: hobbyResponseSelect,
+    });
+  }
+
+  async removeUserFromHobby(userId: string, hobbyId: string) {
+    return this.prisma.hobby.update({
+      where: { id: hobbyId },
+      data: {
+        users: { disconnect: { id: userId } },
+      },
+      select: hobbyResponseSelect,
+    });
   }
 }

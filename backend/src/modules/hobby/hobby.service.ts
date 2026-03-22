@@ -15,6 +15,14 @@ export class HobbyService {
     return this.hobbyRepository.findById(id);
   }
 
+  async getByUserId(userId: string) {
+    const hobbies = await this.hobbyRepository.findByUserId(userId);
+    return hobbies.map(({ _count, ...hobby }) => ({
+      ...hobby,
+      sessionCount: _count.hobbySessions,
+    }));
+  }
+
   async getAll() {
     return this.hobbyRepository.findAll();
   }
@@ -34,5 +42,41 @@ export class HobbyService {
 
   async delete(id: string) {
     return this.hobbyRepository.delete(id);
+  }
+
+  async addToProfile(userId: string, hobbyId: string) {
+    const exists = await this.hobbyRepository.exists(hobbyId);
+    if (!exists) {
+      return { error: 'Hobby not found' } as const;
+    }
+
+    const alreadyLinked = await this.hobbyRepository.isUserLinkedToHobby(
+      userId,
+      hobbyId,
+    );
+    if (alreadyLinked) {
+      return { error: 'Hobby already in profile' } as const;
+    }
+
+    await this.hobbyRepository.addUserToHobby(userId, hobbyId);
+    return { success: true } as const;
+  }
+
+  async removeFromProfile(userId: string, hobbyId: string) {
+    const exists = await this.hobbyRepository.exists(hobbyId);
+    if (!exists) {
+      return { error: 'Hobby not found' } as const;
+    }
+
+    const isLinked = await this.hobbyRepository.isUserLinkedToHobby(
+      userId,
+      hobbyId,
+    );
+    if (!isLinked) {
+      return { error: 'Hobby not in profile' } as const;
+    }
+
+    await this.hobbyRepository.removeUserFromHobby(userId, hobbyId);
+    return { success: true } as const;
   }
 }

@@ -8,6 +8,7 @@ export const BaseErrorResponse = BaseMessageResponse.extend({
   cause: z.string().optional(),
 });
 
+// TODO: maybe we don't need this, we can just use BaseMessageResponse and BaseErrorResponse because response validator doesnt handle default values
 export const createMessageResponse = (defaultMessage: string) =>
   BaseMessageResponse.extend({ message: z.string().default(defaultMessage) });
 
