@@ -2,7 +2,6 @@ import { Hono } from 'hono';
 import { openApi } from 'hono-zod-openapi';
 import z from 'zod';
 import {
-  DeleteUserSchema,
   UpdateUserSchema,
   UserProfileSchema,
   UserSafeSchema,
@@ -20,7 +19,9 @@ const userController = new Hono<AppContext>()
     openApi({
       tags: ['User', 'Get By Id'],
       request: {
-        param: z.string(), // even though its a UUID we treat it as string so that zod doesnt throw an error when validating the path parameter, and we can return a 404 if the user is not found instead of a 400 bad request error
+        param: z.object({
+          id: z.string(),
+        }),
       },
       responses: {
         200: UserProfileSchema,
@@ -29,7 +30,7 @@ const userController = new Hono<AppContext>()
     }),
     async (c) => {
       const userService = c.get('services').user;
-      const id = c.req.valid('param');
+      const id = c.req.valid('param').id;
       const user = await userService.getProfileById(id);
       if (!user) {
         return c.var.res(404, { message: 'User not found' });
@@ -50,7 +51,9 @@ const userController = new Hono<AppContext>()
     openApi({
       tags: ['User', 'Delete'],
       request: {
-        param: DeleteUserSchema,
+        param: z.object({
+          id: z.string(),
+        }),
       },
       responses: {
         204: NoContentResponseSchema,
@@ -80,7 +83,9 @@ const userController = new Hono<AppContext>()
       tags: ['User', 'Update'],
       request: {
         json: UpdateUserSchema,
-        param: z.string(),
+        param: z.object({
+          id: z.string(),
+        }),
       },
       responses: {
         200: UserSafeSchema,
@@ -90,7 +95,7 @@ const userController = new Hono<AppContext>()
     }),
     async (c) => {
       const body = c.req.valid('json');
-      const id = c.req.valid('param');
+      const id = c.req.valid('param').id;
 
       const currentUserId = c.get('userId');
       if (currentUserId !== id) {

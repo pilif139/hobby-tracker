@@ -4,7 +4,6 @@ import z from 'zod';
 import {
   createHobbySchema,
   HobbyResponseSchema,
-  updateHobbySchema,
   UserHobbyResponseSchema,
 } from './hobby.dto';
 import {
@@ -45,7 +44,9 @@ const hobbyController = new Hono<AppContext>()
     openApi({
       tags: ['Hobby', 'Get By User'],
       request: {
-        param: z.string(),
+        param: z.object({
+          userId: z.string(),
+        }),
       },
       responses: {
         200: z.array(UserHobbyResponseSchema),
@@ -53,7 +54,7 @@ const hobbyController = new Hono<AppContext>()
     }),
     async (c) => {
       const hobbyService = c.get('services').hobby;
-      const userId = c.req.valid('param');
+      const userId = c.req.valid('param').userId;
       const hobbies = await hobbyService.getByUserId(userId);
 
       return c.var.res(hobbies);
@@ -64,7 +65,9 @@ const hobbyController = new Hono<AppContext>()
     openApi({
       tags: ['Hobby', 'Get By Id'],
       request: {
-        param: z.string(),
+        param: z.object({
+          id: z.string(),
+        }),
       },
       responses: {
         200: HobbyResponseSchema,
@@ -73,7 +76,7 @@ const hobbyController = new Hono<AppContext>()
     }),
     async (c) => {
       const hobbyService = c.get('services').hobby;
-      const id = c.req.valid('param');
+      const id = c.req.valid('param').id;
       const hobby = await hobbyService.getById(id);
       if (!hobby) {
         return c.var.res(404, { message: 'Hobby not found' });
@@ -105,7 +108,9 @@ const hobbyController = new Hono<AppContext>()
     openApi({
       tags: ['Hobby', 'Add'],
       request: {
-        param: z.string(),
+        param: z.object({
+          hobbyId: z.string(),
+        }),
       },
       responses: {
         200: z.object({
@@ -117,7 +122,7 @@ const hobbyController = new Hono<AppContext>()
     }),
     async (c) => {
       const hobbyService = c.get('services').hobby;
-      const hobbyId = c.req.valid('param');
+      const hobbyId = c.req.valid('param').hobbyId;
       const userId = c.get('userId');
 
       const result = await hobbyService.addToProfile(userId, hobbyId);
@@ -136,7 +141,9 @@ const hobbyController = new Hono<AppContext>()
     openApi({
       tags: ['Hobby', 'Remove'],
       request: {
-        param: z.string(),
+        param: z.object({
+          hobbyId: z.string(),
+        }),
       },
       responses: {
         200: z.object({
@@ -148,7 +155,7 @@ const hobbyController = new Hono<AppContext>()
     }),
     async (c) => {
       const hobbyService = c.get('services').hobby;
-      const hobbyId = c.req.valid('param');
+      const hobbyId = c.req.valid('param').hobbyId;
       const userId = c.get('userId');
 
       const result = await hobbyService.removeFromProfile(userId, hobbyId);
@@ -167,7 +174,9 @@ const hobbyController = new Hono<AppContext>()
     openApi({
       tags: ['Hobby', 'Upload New Image'],
       request: {
-        param: z.uuid(),
+        param: z.object({
+          hobbyId: z.string(),
+        }),
         form: z.object({
           image: z.instanceof(File),
         }),
@@ -176,20 +185,6 @@ const hobbyController = new Hono<AppContext>()
         200: z.object({
           message: z.string(),
         }),
-      },
-    }),
-    async (c) => {},
-  )
-  .patch(
-    '/:id',
-    openApi({
-      tags: ['Hobby', 'Update Existing'],
-      request: {
-        param: z.string(),
-        json: updateHobbySchema,
-      },
-      responses: {
-        200: HobbyResponseSchema,
       },
     }),
     async (c) => {},
