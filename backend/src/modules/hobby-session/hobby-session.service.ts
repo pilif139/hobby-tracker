@@ -14,8 +14,16 @@ export class HobbySessionService {
     return this.hobbySessionRepository.findByHobbyId(hobbyId);
   }
 
-  async findByUserId(userId: string) {
-    return this.hobbySessionRepository.findByUserId(userId);
+  async findByUserIdPaginated(
+    userId: string,
+    limit: number = 10,
+    offset: number = 0,
+  ) {
+    return this.hobbySessionRepository.findByUserIdPaginated(
+      userId,
+      limit,
+      offset,
+    );
   }
 
   async create(data: Prisma.HobbySessionCreateInput) {

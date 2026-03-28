@@ -24,7 +24,7 @@ export class HobbySessionRepository {
     });
   }
 
-  async findByUserId(userId: string) {
+  async findByUserIdPaginated(userId: string, limit: number, offset: number) {
     return this.prisma.hobbySession.findMany({
       where: { userId },
       select: {
@@ -36,6 +36,8 @@ export class HobbySessionRepository {
         createdAt: true,
         updatedAt: true,
       },
+      take: limit,
+      skip: offset,
     });
   }
 
