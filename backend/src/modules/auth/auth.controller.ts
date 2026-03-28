@@ -1,6 +1,6 @@
-import { Hono } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
+import { Hono } from 'hono/quick';
 import { openApi } from 'hono-zod-openapi';
 import z from 'zod';
 import { UserSafeSchema } from '../user/user.dto';

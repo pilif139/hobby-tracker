@@ -1,7 +1,7 @@
 import { Scalar } from '@scalar/hono-api-reference';
-import { Hono } from 'hono';
 import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
+import { Hono } from 'hono/quick';
 import { secureHeaders } from 'hono/secure-headers';
 import { createOpenApiDocument, openApi } from 'hono-zod-openapi';
 import z from 'zod';
@@ -17,7 +17,7 @@ import { corsMiddleware } from '@/src/middleware/cors';
 import { csrfMiddleware } from '@/src/middleware/csrf';
 import type { AppContext } from '@/src/types';
 
-const app = new Hono<AppContext>()
+export const app = new Hono<AppContext>()
   .use(
     '*',
     loggerMiddleware,

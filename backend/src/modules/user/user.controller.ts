@@ -1,4 +1,4 @@
-import { Hono } from 'hono';
+import { Hono } from 'hono/quick';
 import { openApi } from 'hono-zod-openapi';
 import z from 'zod';
 import {
