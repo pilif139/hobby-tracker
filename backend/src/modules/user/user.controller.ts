@@ -1,5 +1,5 @@
 import { Hono } from 'hono/quick';
-import { openApi } from 'hono-zod-openapi';
+import { describeRoute, validator } from 'hono-openapi';
 import z from 'zod';
 import {
   UpdateUserSchema,
@@ -7,35 +7,31 @@ import {
   UserSafeSchema,
 } from './user.dto';
 import {
-  NoContentResponseSchema,
   NotFoundResponseSchema,
   ForbiddenResponseSchema,
+  jsonResponse,
 } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
 const userController = new Hono<AppContext>()
   .get(
     '/:id',
-    openApi({
+    describeRoute({
       tags: ['User', 'Get By Id'],
-      request: {
-        param: z.object({
-          id: z.string(),
-        }),
-      },
       responses: {
-        200: UserProfileSchema,
-        404: NotFoundResponseSchema,
+        200: jsonResponse(UserProfileSchema, 'User Profile'),
+        404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
       },
     }),
+    validator('param', z.object({ id: z.string() })),
     async (c) => {
       const userService = c.get('services').user;
       const id = c.req.valid('param').id;
       const user = await userService.getProfileById(id);
       if (!user) {
-        return c.var.res(404, { message: 'User not found' });
+        return c.json({ message: 'User not found' }, 404);
       }
-      return c.var.res({
+      return c.json({
         id: user.id,
         name: user.name,
         createdAt: user.createdAt,
@@ -48,68 +44,60 @@ const userController = new Hono<AppContext>()
   )
   .delete(
     '/:id',
-    openApi({
+    describeRoute({
       tags: ['User', 'Delete'],
-      request: {
-        param: z.object({
-          id: z.string(),
-        }),
-      },
       responses: {
-        204: NoContentResponseSchema,
-        403: ForbiddenResponseSchema,
-        404: NotFoundResponseSchema,
+        204: { description: 'No Content' },
+        403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
+        404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
       },
     }),
+    validator('param', z.object({ id: z.string() })),
     async (c) => {
       const id = c.req.valid('param').id;
       const currentUserId = c.get('userId');
       if (currentUserId !== id) {
-        return c.var.res(403, { message: 'Unauthorized user' });
+        return c.json({ message: 'Unauthorized user' }, 403);
       }
 
       const userService = c.get('services').user;
 
       const deleted = await userService.delete(id);
       if (!deleted) {
-        return c.var.res(404, { message: 'User not found' });
+        return c.json({ message: 'User not found' }, 404);
       }
-      return c.var.res(204, null);
+      return c.body(null, 204);
     },
   )
   .patch(
     '/:id',
-    openApi({
+    describeRoute({
       tags: ['User', 'Update'],
-      request: {
-        json: UpdateUserSchema,
-        param: z.object({
-          id: z.string(),
-        }),
-      },
       responses: {
-        200: UserSafeSchema,
-        403: ForbiddenResponseSchema,
-        404: NotFoundResponseSchema,
+        200: jsonResponse(UserSafeSchema, 'Updated User'),
+        403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
+        404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
       },
     }),
+    validator('json', UpdateUserSchema),
+    validator('param', z.object({ id: z.string() })),
     async (c) => {
       const body = c.req.valid('json');
       const id = c.req.valid('param').id;
 
       const currentUserId = c.get('userId');
       if (currentUserId !== id) {
-        return c.var.res(403, { message: 'Unauthorized user' });
+        return c.json({ message: 'Unauthorized user' }, 403);
       }
 
       const userService = c.get('services').user;
       const updatedUser = await userService.update(id, body);
 
       if (!updatedUser) {
-        return c.var.res(404, { message: 'User not found' });
+        return c.json({ message: 'User not found' }, 404);
       }
 
-      return c.var.res({
+      return c.json({
         id: updatedUser.id,
         name: updatedUser.name,
         email: updatedUser.email,

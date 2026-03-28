@@ -3,7 +3,7 @@ import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono/quick';
 import { secureHeaders } from 'hono/secure-headers';
-import { createOpenApiDocument, openApi } from 'hono-zod-openapi';
+import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi';
 import z from 'zod';
 import { getPrismaClient } from './lib/prisma';
 // import { cacheMiddleware } from './middleware/cache';
@@ -32,11 +32,25 @@ export const app = new Hono<AppContext>()
   .route('/hobby', hobbyController)
   .get(
     '/health',
-    openApi({
+    describeRoute({
       tags: ['Health Check'],
       responses: {
-        200: z.object({ status: z.literal('ok') }),
-        500: z.object({ message: z.string() }),
+        200: {
+          description: 'Health check OK',
+          content: {
+            'application/json': {
+              schema: resolver(z.object({ status: z.literal('ok') })),
+            },
+          },
+        },
+        500: {
+          description: 'Server Error',
+          content: {
+            'application/json': {
+              schema: resolver(z.object({ message: z.string() })),
+            },
+          },
+        },
       },
     }),
     async (c) => {
@@ -55,13 +69,6 @@ export const app = new Hono<AppContext>()
         });
     },
   )
-  .get(
-    '/scalar',
-    Scalar({
-      url: '/doc',
-      theme: 'deepSpace',
-    }),
-  )
   .onError((err, c) => {
     c.get('logger').error(`Unhandled Error: ${err.message}`);
     if (err instanceof HTTPException) {
@@ -70,27 +77,61 @@ export const app = new Hono<AppContext>()
     return c.json({ message: `Internal Server Error: ${err.message}` }, 500);
   });
 
-createOpenApiDocument(app, {
-  info: {
-    title: 'Hobby Tracker API',
-    version: '1.0.0',
+// openapi docs
+
+app.get(
+  '/doc',
+  async (c, next) => {
+    if (c.env.ENVIRONMENT === 'production') {
+      return c.json(
+        { message: 'Documentation is not available in production' },
+        403,
+      );
+    }
+    return next();
   },
-  components: {
-    securitySchemes: {
-      accessToken: {
-        type: 'apiKey',
-        in: 'cookie',
-        name: 'accessToken',
+  openAPIRouteHandler(app, {
+    documentation: {
+      components: {
+        securitySchemes: {
+          accessTokenCookie: {
+            type: 'apiKey',
+            in: 'cookie',
+            name: 'session',
+          },
+          refreshTokenCookie: {
+            type: 'apiKey',
+            in: 'cookie',
+            name: 'refresh',
+          },
+        },
       },
-      refreshToken: {
-        type: 'apiKey',
-        in: 'cookie',
-        name: 'refreshToken',
-      },
+      security: [
+        {
+          accessTokenCookie: [],
+          refreshTokenCookie: [],
+        },
+      ],
     },
+  }),
+);
+
+app.get(
+  '/scalar',
+  async (c, next) => {
+    if (c.env.ENVIRONMENT === 'production') {
+      return c.json(
+        { message: 'Documentation is not available in production' },
+        403,
+      );
+    }
+    return next();
   },
-  security: [{ accessToken: [], refreshToken: [] }],
-});
+  Scalar({
+    url: '/doc',
+    theme: 'deepSpace',
+  }),
+);
 
 showRoutes(app, {
   verbose: true,
