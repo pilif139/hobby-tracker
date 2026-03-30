@@ -45,9 +45,3 @@ export const UpdateUserSchema = z.object({
 });
 
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
-
-export const DeleteUserSchema = z.object({
-  id: z.uuid(),
-});
-
-export type DeleteUserDto = z.infer<typeof DeleteUserSchema>;

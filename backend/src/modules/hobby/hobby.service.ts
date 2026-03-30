@@ -23,10 +23,6 @@ export class HobbyService {
     }));
   }
 
-  async getAll() {
-    return this.hobbyRepository.findAll();
-  }
-
   async create(data: CreateHobbyDto) {
     return this.hobbyRepository.create(data);
   }

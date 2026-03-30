@@ -53,13 +53,13 @@ model Hobby {
 }
 
 model HobbySession {
-  id                String   @id @default(uuid())
-  startTime         DateTime
-  endTime           DateTime
-  durationInSeconds Int?
-  notes             String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id        String   @id @default(uuid())
+  startTime DateTime
+  endTime   DateTime
+  notes     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   hobbyId String
   hobby   Hobby  @relation(fields: [hobbyId], references: [id], onDelete: Cascade)

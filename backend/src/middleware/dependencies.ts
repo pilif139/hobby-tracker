@@ -3,6 +3,7 @@ import { AuthService } from '../modules/auth/auth.service';
 import { createUserService } from '../modules/user/user.factory';
 import { getPrismaClient } from '@/src/lib/prisma';
 import { createHobbyService } from '@/src/modules/hobby/hobby.factory';
+import { createHobbySessionService } from '@/src/modules/hobby-session/hobby-session.factory';
 import type { AppContext } from '@/src/types';
 
 export const dependencyMiddleware = createMiddleware<AppContext>(
@@ -24,6 +25,9 @@ export const dependencyMiddleware = createMiddleware<AppContext>(
       },
       get hobby() {
         return createHobbyService(prisma);
+      },
+      get hobbySession() {
+        return createHobbySessionService(prisma);
       },
     });
 

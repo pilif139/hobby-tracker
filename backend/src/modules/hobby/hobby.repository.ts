@@ -23,12 +23,6 @@ export class HobbyRepository {
     });
   }
 
-  async findAll(): Promise<HobbyResponse[]> {
-    return this.prisma.hobby.findMany({
-      select: hobbyResponseSelect,
-    });
-  }
-
   async findById(id: string): Promise<HobbyResponse | null> {
     return this.prisma.hobby.findUnique({
       where: { id },

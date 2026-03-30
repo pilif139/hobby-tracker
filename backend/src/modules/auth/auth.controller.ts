@@ -1,12 +1,13 @@
-import { Hono } from 'hono';
 import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
-import { openApi } from 'hono-zod-openapi';
+import { Hono } from 'hono/quick';
+import { describeRoute, validator } from 'hono-openapi';
 import z from 'zod';
 import { UserSafeSchema } from '../user/user.dto';
 import authConfig, { getAuthCookieOptions } from './auth.config';
 import { LoginSchema, RegisterSchema } from './auth.dto';
 import {
+  jsonResponse,
   BadRequestResponseSchema,
   BaseMessageResponse,
   InternalServerErrorResponseSchema,
@@ -17,22 +18,21 @@ import type { AppContext } from '@/src/types';
 const app = new Hono<AppContext>()
   .post(
     '/login',
-    openApi({
+    describeRoute({
       tags: ['Authentication'],
-      request: {
-        json: LoginSchema,
-      },
       responses: {
         200: {
-          schema: UserSafeSchema,
-          description: 'Successfully logged in',
-          headers: z.object({
-            'Set-Cookie': z.string(),
-          }),
+          ...jsonResponse(UserSafeSchema, 'Successfully logged in'),
+          headers: {
+            'Set-Cookie': {
+              schema: { type: 'string' },
+            },
+          },
         },
-        401: UnauthorizedResponseSchema,
+        401: jsonResponse(UnauthorizedResponseSchema, 'Unauthorized'),
       },
     }),
+    validator('json', LoginSchema),
     async (c) => {
       const authService = c.get('services').auth;
       const { email, password } = c.req.valid('json');
@@ -61,28 +61,31 @@ const app = new Hono<AppContext>()
         refreshToken,
         getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
-      return c.var.res(user);
+      c.set('userId', user.id);
+      return c.json(user);
     },
   )
   .post(
     '/register',
-    openApi({
+    describeRoute({
       tags: ['Authentication'],
-      request: {
-        json: RegisterSchema,
-      },
       responses: {
         200: {
-          schema: UserSafeSchema,
-          description: 'Successfully registered user',
-          headers: z.object({
-            'Set-Cookie': z.string(),
-          }),
+          ...jsonResponse(UserSafeSchema, 'Successfully registered user'),
+          headers: {
+            'Set-Cookie': {
+              schema: { type: 'string' },
+            },
+          },
         },
-        403: UnauthorizedResponseSchema,
-        500: InternalServerErrorResponseSchema,
+        403: jsonResponse(UnauthorizedResponseSchema, 'Forbidden'),
+        500: jsonResponse(
+          InternalServerErrorResponseSchema,
+          'Internal Server Error',
+        ),
       },
     }),
+    validator('json', RegisterSchema),
     async (c) => {
       const request = c.req.valid('json');
       const authService = c.get('services').auth;
@@ -106,31 +109,32 @@ const app = new Hono<AppContext>()
         refreshToken,
         getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
-      return c.var.res(user);
+      c.set('userId', user.id);
+      return c.json(user);
     },
   )
   .post(
     '/logout',
-    openApi({
+    describeRoute({
       tags: ['Authentication'],
       responses: {
-        200: BaseMessageResponse,
+        200: jsonResponse(BaseMessageResponse, 'Success'),
       },
     }),
     (c) => {
       deleteCookie(c, 'accessToken', getAuthCookieOptions(c, 0));
       deleteCookie(c, 'refreshToken', getAuthCookieOptions(c, 0));
       c.set('userId', '');
-      return c.var.res({ message: 'Successfully logged out' });
+      return c.json({ message: 'Successfully logged out' });
     },
   )
   .post(
     '/logout-other-devices',
-    openApi({
+    describeRoute({
       tags: ['Authentication'],
       responses: {
-        200: BaseMessageResponse,
-        400: BadRequestResponseSchema,
+        200: jsonResponse(BaseMessageResponse, 'Success'),
+        400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
       },
     }),
     async (c) => {
@@ -139,7 +143,7 @@ const app = new Hono<AppContext>()
 
       const refreshTokenCookie = getCookie(c, 'refreshToken');
       if (!refreshTokenCookie) {
-        return c.var.res(400, { message: 'No refresh token provided' });
+        return c.json({ message: 'No refresh token provided' }, 400);
       }
 
       const { accessToken, refreshToken } = await authService
@@ -167,7 +171,7 @@ const app = new Hono<AppContext>()
         refreshToken,
         getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
-      return c.var.res({ message: 'Logged out from other devices' });
+      return c.json({ message: 'Logged out from other devices' });
     },
   );
 

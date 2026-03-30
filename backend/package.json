@@ -6,19 +6,24 @@
     "deploy": "wrangler deploy --minify",
     "build": "wrangler deploy --dry-run --outdir dist",
     "check-types": "tsc --noEmit",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "test": "vitest",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@hono/standard-validator": "^0.2.2",
     "@prisma/adapter-d1": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "@scalar/hono-api-reference": "^0.9.37",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "hono": "^4.11.4",
-    "hono-zod-openapi": "^1.1.1",
+    "hono-openapi": "^1.3.0",
     "lib": "workspace:*",
     "wrangler": "^4.59.2",
-    "zod": "^4.3.5"
+    "zod": "^4.3.5",
+    "zod-openapi": "4"
   },
   "lint-staged": {
     "*.{js,ts}": [
@@ -28,8 +33,10 @@
     "*.{json,md,yaml,yml}": "prettier --write"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.13.5",
     "@hono/eslint-config": "^2.0.5",
     "@types/bun": "latest",
-    "prisma": "^7.2.0"
+    "prisma": "^7.2.0",
+    "vitest": "^4.1.0"
   }
 }

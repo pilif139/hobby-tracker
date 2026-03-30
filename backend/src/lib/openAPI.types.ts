@@ -1,4 +1,14 @@
+import { resolver } from 'hono-openapi';
 import z from 'zod';
+
+export const jsonResponse = (schema: any, description: string = '') => ({
+  description,
+  content: {
+    'application/json': {
+      schema: resolver(schema),
+    },
+  },
+});
 
 export const BaseMessageResponse = z.object({
   message: z.string(),
