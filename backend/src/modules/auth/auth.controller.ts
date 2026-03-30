@@ -61,6 +61,7 @@ const app = new Hono<AppContext>()
         refreshToken,
         getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
+      c.set('userId', user.id);
       return c.json(user);
     },
   )
@@ -108,6 +109,7 @@ const app = new Hono<AppContext>()
         refreshToken,
         getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
       );
+      c.set('userId', user.id);
       return c.json(user);
     },
   )

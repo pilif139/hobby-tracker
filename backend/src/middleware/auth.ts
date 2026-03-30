@@ -4,17 +4,20 @@ import { HTTPException } from 'hono/http-exception';
 import authConfig, { getAuthCookieOptions } from '../modules/auth/auth.config';
 import type { AppContext } from '../types';
 
-// TODO: refactor to use regex in the app.use("/[regex]") and not here
-const NEED_AUTH_PATHS = ['/user', '/auth/logout', '/auth/logout-other-devices'];
-
 // we dont want to allow user to login or register if they are already logged in
 const GUEST_ONLY_PATHS = ['/auth/login', '/auth/register'];
+const DEVELOPMENT_PATHS = ['/doc', '/scalar', '/health'];
 
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
+  if (
+    c.env.ENVIRONMENT === 'development' &&
+    DEVELOPMENT_PATHS.includes(c.req.path)
+  ) {
+    await next();
+    return;
+  }
+
   const isGuestOnlyPath = GUEST_ONLY_PATHS.find((path) =>
-    path.includes(c.req.path),
-  );
-  const isProtectedPath = NEED_AUTH_PATHS.find((path) =>
     path.includes(c.req.path),
   );
 
@@ -39,11 +42,6 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
       }
     }
 
-    await next();
-    return;
-  }
-
-  if (!isProtectedPath) {
     await next();
     return;
   }
