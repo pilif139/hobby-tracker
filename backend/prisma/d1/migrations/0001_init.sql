@@ -1,4 +1,4 @@
--- CreateTable
+-- Table
 CREATE TABLE IF NOT EXISTS "User" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "email" TEXT NOT NULL,
@@ -28,4 +28,3 @@ CREATE TABLE IF NOT EXISTS "HobbySession" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX IF NOT EXISTS "User_email_key" ON "User"("email");
-

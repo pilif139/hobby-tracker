@@ -1,7 +1,7 @@
 import { resolver } from 'hono-openapi';
 import z from 'zod';
 
-export const jsonResponse = (schema: any, description: string = '') => ({
+export const jsonResponse = (schema: z.ZodType, description: string = '') => ({
   description,
   content: {
     'application/json': {

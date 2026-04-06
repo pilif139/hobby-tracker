@@ -1,24 +1,19 @@
-import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { tanstackConfig } from '@tanstack/eslint-config';
-import { defineConfig } from 'eslint/config';
 import pluginReact from 'eslint-plugin-react';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
-export default defineConfig(
+export default [
   {
-    ignores: ['dist/**', 'node_modules/**'],
+    ignores: ['dist/**', 'node_modules/**', 'src/api/generated/**'],
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    plugins: { js },
-    extends: ['js/recommended'],
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
   },
   ...tanstackConfig,
-  tseslint.configs.recommended,
-  ...(pluginReact.configs.flat?.recommended
+  ...(pluginReact.configs.flat.recommended
     ? [pluginReact.configs.flat.recommended]
     : []),
   {
@@ -29,6 +24,7 @@ export default defineConfig(
     },
     rules: {
       'react/react-in-jsx-scope': 'off',
+      '@typescript-eslint/array-type': 'off',
     },
   },
   eslintConfigPrettier,
@@ -50,4 +46,4 @@ export default defineConfig(
     files: ['*.config.js', '*.config.ts'],
     ...tseslint.configs.disableTypeChecked,
   },
-);
+];

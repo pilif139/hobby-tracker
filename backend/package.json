@@ -27,10 +27,10 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --fix",
-      "prettier --write"
+      "eslint --fix --no-warn-ignored",
+      "prettier --write --ignore-unknown"
     ],
-    "*.{json,md,yaml,yml}": "prettier --write"
+    "*.{json,md,yaml,yml}": "prettier --write --ignore-unknown"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.13.5",

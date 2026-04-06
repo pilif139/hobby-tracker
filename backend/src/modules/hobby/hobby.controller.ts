@@ -148,18 +148,20 @@ const hobbyController = new Hono<AppContext>()
 
       return c.json({ message: 'Hobby removed from profile' });
     },
-  )
-  .post(
-    '/upload-image/:hobbyId',
-    describeRoute({
-      tags: ['Hobby', 'Upload New Image'],
-      responses: {
-        200: jsonResponse(z.object({ message: z.string() }), 'Uploaded'),
-      },
-    }),
-    validator('param', z.object({ hobbyId: z.string() })),
-    validator('form', z.object({ image: z.instanceof(File as any) })),
-    async (c) => {},
   );
+// .post(
+//   '/upload-image/:hobbyId',
+//   describeRoute({
+//     tags: ['Hobby', 'Upload New Image'],
+//     responses: {
+//       200: jsonResponse(z.object({ message: z.string() }), 'Uploaded'),
+//     },
+//   }),
+//   validator('param', z.object({ hobbyId: z.string() })),
+//   validator('form', z.object({ image: z.instanceof(File) })),
+//   (c) => {
+//     c.json({});
+//   },
+// );
 
 export default hobbyController;
