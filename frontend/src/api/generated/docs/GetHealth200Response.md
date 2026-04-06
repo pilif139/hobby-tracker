@@ -1,10 +1,11 @@
 # GetHealth200Response
 
+
 ## Properties
 
-| Name       | Type       | Description | Notes                  |
-| ---------- | ---------- | ----------- | ---------------------- |
-| **status** | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**status** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -12,7 +13,7 @@
 import { GetHealth200Response } from './api';
 
 const instance: GetHealth200Response = {
-  status,
+    status,
 };
 ```
 

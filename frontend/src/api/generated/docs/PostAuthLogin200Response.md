@@ -1,12 +1,13 @@
 # PostAuthLogin200Response
 
+
 ## Properties
 
-| Name      | Type       | Description | Notes                  |
-| --------- | ---------- | ----------- | ---------------------- |
-| **id**    | **string** |             | [default to undefined] |
-| **email** | **string** |             | [default to undefined] |
-| **name**  | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**id** | **string** |  | [default to undefined]
+**email** | **string** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -14,9 +15,9 @@
 import { PostAuthLogin200Response } from './api';
 
 const instance: PostAuthLogin200Response = {
-  id,
-  email,
-  name,
+    id,
+    email,
+    name,
 };
 ```
 

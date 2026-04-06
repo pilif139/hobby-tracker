@@ -1,10 +1,11 @@
 # PostAuthLogout200Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                  |
-| ----------- | ---------- | ----------- | ---------------------- |
-| **message** | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -12,7 +13,7 @@
 import { PostAuthLogout200Response } from './api';
 
 const instance: PostAuthLogout200Response = {
-  message,
+    message,
 };
 ```
 

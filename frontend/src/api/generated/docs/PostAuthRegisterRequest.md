@@ -1,12 +1,13 @@
 # PostAuthRegisterRequest
 
+
 ## Properties
 
-| Name         | Type       | Description | Notes                  |
-| ------------ | ---------- | ----------- | ---------------------- |
-| **email**    | **string** |             | [default to undefined] |
-| **name**     | **string** |             | [default to undefined] |
-| **password** | **string** |             | [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**email** | **string** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
+**password** | **string** |  | [default to undefined]
 
 ## Example
 
@@ -14,9 +15,9 @@
 import { PostAuthRegisterRequest } from './api';
 
 const instance: PostAuthRegisterRequest = {
-  email,
-  name,
-  password,
+    email,
+    name,
+    password,
 };
 ```
 

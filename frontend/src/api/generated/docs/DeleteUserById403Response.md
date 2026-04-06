@@ -1,11 +1,12 @@
 # DeleteUserById403Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                               |
-| ----------- | ---------- | ----------- | ----------------------------------- |
-| **message** | **string** |             | [optional] [default to 'Forbidden'] |
-| **cause**   | **string** |             | [optional] [default to undefined]   |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [optional] [default to 'Forbidden']
+**cause** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -13,8 +14,8 @@
 import { DeleteUserById403Response } from './api';
 
 const instance: DeleteUserById403Response = {
-  message,
-  cause,
+    message,
+    cause,
 };
 ```
 

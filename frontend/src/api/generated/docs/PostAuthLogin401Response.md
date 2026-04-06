@@ -1,11 +1,12 @@
 # PostAuthLogin401Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                                             |
-| ----------- | ---------- | ----------- | ------------------------------------------------- |
-| **message** | **string** |             | [optional] [default to 'Credentials are invalid'] |
-| **cause**   | **string** |             | [optional] [default to undefined]                 |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [optional] [default to 'Credentials are invalid']
+**cause** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -13,8 +14,8 @@
 import { PostAuthLogin401Response } from './api';
 
 const instance: PostAuthLogin401Response = {
-  message,
-  cause,
+    message,
+    cause,
 };
 ```
 

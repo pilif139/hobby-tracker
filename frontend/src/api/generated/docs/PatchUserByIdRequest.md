@@ -1,10 +1,11 @@
 # PatchUserByIdRequest
 
+
 ## Properties
 
-| Name     | Type       | Description | Notes                             |
-| -------- | ---------- | ----------- | --------------------------------- |
-| **name** | **string** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**name** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -12,7 +13,7 @@
 import { PatchUserByIdRequest } from './api';
 
 const instance: PatchUserByIdRequest = {
-  name,
+    name,
 };
 ```
 

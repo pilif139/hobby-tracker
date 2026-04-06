@@ -1,11 +1,12 @@
 # PostAuthLogoutOtherDevices400Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                                 |
-| ----------- | ---------- | ----------- | ------------------------------------- |
-| **message** | **string** |             | [optional] [default to 'Bad request'] |
-| **cause**   | **string** |             | [optional] [default to undefined]     |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [optional] [default to 'Bad request']
+**cause** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -13,8 +14,8 @@
 import { PostAuthLogoutOtherDevices400Response } from './api';
 
 const instance: PostAuthLogoutOtherDevices400Response = {
-  message,
-  cause,
+    message,
+    cause,
 };
 ```
 

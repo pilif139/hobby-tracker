@@ -1,10 +1,11 @@
 # GetUserById404Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                               |
-| ----------- | ---------- | ----------- | ----------------------------------- |
-| **message** | **string** |             | [optional] [default to 'Not Found'] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [optional] [default to 'Not Found']
 
 ## Example
 
@@ -12,7 +13,7 @@
 import { GetUserById404Response } from './api';
 
 const instance: GetUserById404Response = {
-  message,
+    message,
 };
 ```
 

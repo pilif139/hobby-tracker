@@ -1,33 +1,39 @@
 # GetByUserApi
 
-All URIs are relative to _http://localhost_
+All URIs are relative to *http://localhost*
 
-| Method                                            | HTTP request                 | Description |
-| ------------------------------------------------- | ---------------------------- | ----------- |
-| [**getHobbyUserByUserId**](#gethobbyuserbyuserid) | **GET** /hobby/user/{userId} |             |
+|Method | HTTP request | Description|
+|------------- | ------------- | -------------|
+|[**getHobbyUserByUserId**](#gethobbyuserbyuserid) | **GET** /hobby/user/{userId} | |
 
 # **getHobbyUserByUserId**
-
 > Array<GetHobbyUserByUserId200ResponseInner> getHobbyUserByUserId()
+
 
 ### Example
 
 ```typescript
-import { GetByUserApi, Configuration } from './api';
+import {
+    GetByUserApi,
+    Configuration
+} from './api';
 
 const configuration = new Configuration();
 const apiInstance = new GetByUserApi(configuration);
 
 let userId: string; // (default to undefined)
 
-const { status, data } = await apiInstance.getHobbyUserByUserId(userId);
+const { status, data } = await apiInstance.getHobbyUserByUserId(
+    userId
+);
 ```
 
 ### Parameters
 
-| Name       | Type         | Description | Notes                 |
-| ---------- | ------------ | ----------- | --------------------- |
-| **userId** | [**string**] |             | defaults to undefined |
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **userId** | [**string**] |  | defaults to undefined|
+
 
 ### Return type
 
@@ -39,13 +45,14 @@ const { status, data } = await apiInstance.getHobbyUserByUserId(userId);
 
 ### HTTP request headers
 
-- **Content-Type**: Not defined
-- **Accept**: application/json
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
 
 ### HTTP response details
-
-| Status code | Description  | Response headers |
-| ----------- | ------------ | ---------------- |
-| **200**     | User Hobbies | -                |
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | User Hobbies |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+

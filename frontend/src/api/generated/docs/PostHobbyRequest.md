@@ -1,11 +1,12 @@
 # PostHobbyRequest
 
+
 ## Properties
 
-| Name            | Type       | Description | Notes                             |
-| --------------- | ---------- | ----------- | --------------------------------- |
-| **name**        | **string** |             | [default to undefined]            |
-| **description** | **string** |             | [optional] [default to undefined] |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**name** | **string** |  | [default to undefined]
+**description** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -13,8 +14,8 @@
 import { PostHobbyRequest } from './api';
 
 const instance: PostHobbyRequest = {
-  name,
-  description,
+    name,
+    description,
 };
 ```
 

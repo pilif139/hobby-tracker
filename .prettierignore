@@ -2,5 +2,3 @@
 build
 coverage
 backend/prisma/generated
-frontend/public
-frontend/src/api/generated

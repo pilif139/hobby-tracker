@@ -1,11 +1,12 @@
 # PostAuthRegister500Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                                           |
-| ----------- | ---------- | ----------- | ----------------------------------------------- |
-| **message** | **string** |             | [optional] [default to 'Internal server error'] |
-| **cause**   | **string** |             | [optional] [default to undefined]               |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [optional] [default to 'Internal server error']
+**cause** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -13,8 +14,8 @@
 import { PostAuthRegister500Response } from './api';
 
 const instance: PostAuthRegister500Response = {
-  message,
-  cause,
+    message,
+    cause,
 };
 ```
 

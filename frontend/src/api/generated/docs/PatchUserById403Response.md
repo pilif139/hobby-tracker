@@ -1,11 +1,12 @@
 # PatchUserById403Response
 
+
 ## Properties
 
-| Name        | Type       | Description | Notes                               |
-| ----------- | ---------- | ----------- | ----------------------------------- |
-| **message** | **string** |             | [optional] [default to 'Forbidden'] |
-| **cause**   | **string** |             | [optional] [default to undefined]   |
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**message** | **string** |  | [optional] [default to 'Forbidden']
+**cause** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -13,8 +14,8 @@
 import { PatchUserById403Response } from './api';
 
 const instance: PatchUserById403Response = {
-  message,
-  cause,
+    message,
+    cause,
 };
 ```
 
