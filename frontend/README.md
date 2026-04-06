@@ -37,24 +37,18 @@ bun dev
 
 ## Komunikacja z backendem
 
-[Link do docsów](https://hono.dev/docs/guides/rpc)
+Komunikacja z backendem odbywa się za pomocą wygenerowanego klienta OpenAPI, który znajduje się w `src/api/generated`. W `src/api/index.ts` tworzymy instancję tego klienta i eksportujemy ją, aby można było jej używać w całej aplikacji. Aby wygenerować klienta, należy mieć zainstalowaną javę i uruchomić komendę:
 
-Backend napisany jest w Hono, który posiada feature RPC do komunikacji z clientami. Z backendu importujemy AppType i tworzymy klienta RPC:
-
-```typescript
-const client = hc<AppType>('http://localhost:8787/', {
-  init: {
-    credentials: 'include',
-  },
-});
+```bash
+bun run generate:api
 ```
 
-Przykładowe użycie klienta:
+Zimportowany klient API powinien mieć wszystkie potrzebne metody, które są w danym kontrolerze na backendzie.
 
-```typescript
-const res = await apiClient.user[':id'].$get({
-  param: {
-    id: 'a234-1234-1234-1234-1234',
-  },
-});
-```
+## TODO
+
+- /feed - główna strona z feedem aktywności, (nie można wejść bez zalogowania)
+- /login - strona logowania, (nie można wejść po zalogowaniu)
+- /register - strona rejestracji, (nie można wejść po zalogowaniu)
+- inne podstrony związane z userem - czyli jego profil, lista obserwujących i obserwowanych, dodawnaie hobby session (mozna to dać na głowny feed w sumie.)
+- wymyśleć jakie jeszcze mogą być strony, np. strona z listą hobby, strona z listą aktywności, strona z listą użytkowników itp.

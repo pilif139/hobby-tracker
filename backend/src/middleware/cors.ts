@@ -3,7 +3,9 @@ import { createMiddleware } from 'hono/factory';
 import type { AppContext } from '@/src/types';
 
 export const corsMiddleware = createMiddleware<AppContext>(async (c, next) => {
-  const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',');
+  const allowedOrigins = c.env.ALLOWED_ORIGINS.split(',').map((origin) =>
+    origin.trim(),
+  );
 
   const handler = cors({
     origin: (origin) => {

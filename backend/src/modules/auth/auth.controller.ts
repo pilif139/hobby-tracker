@@ -2,7 +2,6 @@ import { deleteCookie, getCookie, setCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono/quick';
 import { describeRoute, validator } from 'hono-openapi';
-import z from 'zod';
 import { UserSafeSchema } from '../user/user.dto';
 import authConfig, { getAuthCookieOptions } from './auth.config';
 import { LoginSchema, RegisterSchema } from './auth.dto';
