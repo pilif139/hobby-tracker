@@ -12,6 +12,7 @@ import { dependencyMiddleware } from './middleware/dependencies';
 import { loggerMiddleware } from './middleware/logger';
 import { authController } from './modules/auth/auth.controller';
 import hobbyController from './modules/hobby/hobby.controller';
+import hobbySessionController from './modules/hobby-session/hobby-session.controller';
 import userController from './modules/user/user.controller';
 import { corsMiddleware } from '@/src/middleware/cors';
 import { csrfMiddleware } from '@/src/middleware/csrf';
@@ -30,6 +31,7 @@ export const app = new Hono<AppContext>()
   .route('/auth', authController)
   .route('/user', userController)
   .route('/hobby', hobbyController)
+  .route('/hobby-session', hobbySessionController)
   .get(
     '/health',
     describeRoute({
