@@ -79,7 +79,7 @@ describe('HobbySessionService (unit)', () => {
       },
     ]);
 
-    repositoryMock.getAnalytics.mockResolvedValue({
+    const mockAnalytics = {
       totalCount: 3,
       totalDurationInSeconds: 5400,
       averageDurationInSeconds: 1800,
@@ -90,7 +90,9 @@ describe('HobbySessionService (unit)', () => {
       sessionsLast30Days: 3,
       totalDurationLast7DaysInSeconds: 3000,
       totalDurationLast30DaysInSeconds: 5400,
-    });
+    };
+
+    repositoryMock.getAnalytics.mockResolvedValue(mockAnalytics);
 
     repositoryMock.getDistinctSessionDays.mockResolvedValue([
       '2026-04-01',
@@ -117,18 +119,9 @@ describe('HobbySessionService (unit)', () => {
 
     expect(result.sessions).toHaveLength(1);
     expect(result.stats).toEqual({
-      totalCount: 3,
-      totalDurationInSeconds: 5400,
-      averageDurationInSeconds: 1800,
-      minDurationInSeconds: 1200,
-      maxDurationInSeconds: 2400,
-      activeDaysCount: 3,
+      ...mockAnalytics,
       currentStreakDays: 1,
       longestStreakDays: 2,
-      sessionsLast7Days: 2,
-      sessionsLast30Days: 3,
-      totalDurationLast7DaysInSeconds: 3000,
-      totalDurationLast30DaysInSeconds: 5400,
     });
   });
 });

@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient } from '@/prisma/generated/client';
-import { ONE_DAY } from '@/src/lib/time';
+import { ONE_DAY_IN_MS } from '@/src/lib/time';
 
 export interface AnalyticsFilters {
   userId: string;
@@ -149,8 +149,8 @@ export class HobbySessionRepository {
     }
 
     const nowMs = Date.now();
-    const sevenDaysAgoMs = nowMs - 7 * ONE_DAY * 1000;
-    const thirtyDaysAgoMs = nowMs - 30 * ONE_DAY * 1000;
+    const sevenDaysAgoMs = nowMs - 7 * ONE_DAY_IN_MS;
+    const thirtyDaysAgoMs = nowMs - 30 * ONE_DAY_IN_MS;
 
     let totalDurationInSeconds = 0;
     let minDurationInSeconds = Number.POSITIVE_INFINITY;
