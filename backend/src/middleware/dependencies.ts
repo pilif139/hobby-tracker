@@ -1,5 +1,6 @@
 import { createMiddleware } from 'hono/factory';
 import { AuthService } from '../modules/auth/auth.service';
+import { createFollowService } from '../modules/follow/follow.factory';
 import { createUserService } from '../modules/user/user.factory';
 import { getPrismaClient } from '@/src/lib/prisma';
 import { createHobbyService } from '@/src/modules/hobby/hobby.factory';
@@ -28,6 +29,9 @@ export const dependencyMiddleware = createMiddleware<AppContext>(
       },
       get hobbySession() {
         return createHobbySessionService(prisma);
+      },
+      get follow() {
+        return createFollowService(prisma);
       },
     });
 

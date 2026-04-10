@@ -1,5 +1,6 @@
 import type { Logger } from 'lib';
 import type { AuthService } from './modules/auth/auth.service';
+import type { FollowService } from './modules/follow/follow.service';
 import type { HobbyService } from './modules/hobby/hobby.service';
 import type { HobbySessionService } from './modules/hobby-session/hobby-session.service';
 import type { UserService } from './modules/user/user.service';
@@ -20,6 +21,7 @@ export interface Variables {
     auth: AuthService;
     hobby: HobbyService;
     hobbySession: HobbySessionService;
+    follow: FollowService;
   };
   logger: Logger;
 }
