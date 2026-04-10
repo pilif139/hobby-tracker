@@ -9,17 +9,15 @@ const GUEST_ONLY_PATHS = ['/auth/login', '/auth/register'];
 const DEVELOPMENT_PATHS = ['/doc', '/scalar', '/health'];
 
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
-  if (
+  const isDevPath =
     c.env.ENVIRONMENT === 'development' &&
-    DEVELOPMENT_PATHS.includes(c.req.path)
-  ) {
+    DEVELOPMENT_PATHS.includes(c.req.path);
+  if (isDevPath) {
     await next();
     return;
   }
 
-  const isGuestOnlyPath = GUEST_ONLY_PATHS.find((path) =>
-    path.includes(c.req.path),
-  );
+  const isGuestOnlyPath = GUEST_ONLY_PATHS.includes(c.req.path);
 
   // For guest-only paths, check if user is already logged in
   if (isGuestOnlyPath) {

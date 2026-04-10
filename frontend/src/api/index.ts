@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { AuthenticationApi, HobbyApi, UserApi } from './generated';
+import type { PostAuthLogin200Response } from './generated';
 
 export interface ApiClientError {
   message: string;
   cause?: string | null;
   status?: number;
 }
+
+type UnauthorizedHandler = ((requestUrl: string) => void) | null;
 
 const API_BASE_URL: string =
   import.meta.env.VITE_API_URL ?? 'http://localhost:8787';
@@ -15,11 +18,28 @@ const apiHttpClient = axios.create({
   withCredentials: true,
 });
 
+let unauthorizedHandler: UnauthorizedHandler = null;
+
+export const setUnauthorizedHandler = (handler: UnauthorizedHandler) => {
+  unauthorizedHandler = handler;
+};
+
+export const getCurrentUser = async (): Promise<PostAuthLogin200Response> => {
+  const response =
+    await apiHttpClient.get<PostAuthLogin200Response>('/auth/me');
+  return response.data;
+};
+
 apiHttpClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     if (axios.isAxiosError(error)) {
       const { data, status } = error.response ?? {};
+      const requestUrl = error.config?.url ?? '';
+
+      if (status === 401) {
+        unauthorizedHandler?.(requestUrl);
+      }
 
       if (typeof data === 'string') {
         return Promise.reject({
@@ -62,6 +82,3 @@ export const userApiClient = new UserApi(
   API_BASE_URL,
   apiHttpClient,
 );
-
-// Backward-compatible alias
-export const authApi = authApiClient;

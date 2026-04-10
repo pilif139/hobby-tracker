@@ -10,6 +10,7 @@ import {
   BadRequestResponseSchema,
   BaseMessageResponse,
   InternalServerErrorResponseSchema,
+  NotFoundResponseSchema,
   UnauthorizedResponseSchema,
 } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
@@ -112,6 +113,33 @@ app.post(
     );
     c.set('userId', user.id);
     return c.json(user);
+  },
+);
+
+app.get(
+  '/me',
+  describeRoute({
+    tags: ['Authentication'],
+    responses: {
+      200: jsonResponse(UserSafeSchema, 'Current authenticated user'),
+      401: jsonResponse(UnauthorizedResponseSchema, 'Unauthorized'),
+      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+    },
+  }),
+  async (c) => {
+    const userService = c.get('services').user;
+    const userId = c.get('userId');
+    const user = await userService.getById(userId);
+
+    if (!user) {
+      return c.json({ message: 'User not found' }, 404);
+    }
+
+    return c.json({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    });
   },
 );
 

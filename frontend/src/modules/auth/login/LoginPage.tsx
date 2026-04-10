@@ -1,10 +1,11 @@
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
+import { useCurrentUser } from '../current-user/CurrentUserContext';
 import LoginSchema from './LoginSchema';
 import type { PostAuthLoginRequest } from '@/api/generated/api';
-import { authApi } from '@/api';
+import { authApiClient } from '@/api';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
@@ -12,6 +13,9 @@ import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { MeshGradientBackground } from '@/components/ui/mesh-gradient';
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const { setCurrentUser } = useCurrentUser();
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -29,14 +33,14 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationKey: ['login'],
     mutationFn: async (input: PostAuthLoginRequest) => {
-      const res = await authApi.postAuthLogin({
+      const res = await authApiClient.postAuthLogin({
         postAuthLoginRequest: input,
       });
       return res.data;
     },
-    onSuccess: () => {
-      // TODO: set auth context here
-      window.location.href = '/';
+    onSuccess: async (user) => {
+      setCurrentUser(user);
+      await navigate({ to: '/' });
     },
   });
 
