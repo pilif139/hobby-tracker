@@ -2,15 +2,17 @@
   "name": "frontend",
   "private": true,
   "type": "module",
+  "packageManager": "bun@1.2.21",
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc",
-    "preview": "vite preview",
+    "preview": "bun run build && wrangler dev",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint --fix",
     "check-types": "tsc --noEmit",
-    "api:generate": "openapi-generator-cli generate -i http://localhost:8787/doc -g typescript-axios -o src/api/generated --additional-properties=supportsES6=true,typescriptThreePlus=true,stringEnums=true,useSingleRequestParameter=true --skip-validate-spec --verbose"
+    "api:generate": "openapi-generator-cli generate -i http://localhost:8787/doc -g typescript-axios -o src/api/generated --additional-properties=supportsES6=true,typescriptThreePlus=true,stringEnums=true,useSingleRequestParameter=true --skip-validate-spec --verbose",
+    "deploy": "bun run build && wrangler deploy"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -40,7 +42,8 @@
     "shadcn": "^4.1.2",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.0.6",
-    "tw-animate-css": "^1.4.0"
+    "tw-animate-css": "^1.4.0",
+    "wrangler": "^4.82.1"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.31.0",
