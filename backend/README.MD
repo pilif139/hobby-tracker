@@ -2,7 +2,6 @@
 
 Głównym załoeniem aplikacji backendowej jest nauczenie się czegoś nowego, dlatego postanowiłem wykorzystać usługi Cloudflare tj. KV, D1 database, Workers itp..
 
-
 ## Technologie
 
 - Hono framework
@@ -49,26 +48,26 @@ Gdzie `sekretny_klucz_1` i `sekretny_klucz_2` to losowe ciągi znaków używane 
 
 Sekrety można wygenerować za pomocą komendy `openssl rand -base64 32`
 
-2. Zainstaluj zależności:
+1. Zainstaluj zależności:
 
 ```bash
 bun install
 ```
 
-3. Uruchom migracje i wygeneruj klienta prismy
+1. Uruchom migracje i wygeneruj klienta prismy
 
 ```bash
 bunx wrangler d1 migrations apply hobby-tracker-db --local
 bunx prisma generate
 ```
 
-4. Uruchom aplikację lokalnie:
+1. Uruchom aplikację lokalnie:
 
 ```bash
 bun dev
 ```
 
-Aplikacja będzie dostępna pod adresem http://localhost:8787
+Aplikacja będzie dostępna pod adresem <http://localhost:8787>
 
 ## Testy
 
