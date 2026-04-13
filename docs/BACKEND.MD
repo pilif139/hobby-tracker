@@ -8,6 +8,7 @@ Głównym załoeniem aplikacji backendowej jest nauczenie się czegoś nowego, 
 - Hono framework
 - Zod do walidacji danych
 - Prisma jako ORM
+- vitest do testów
 - Cloudflare D1, KV, Workers, Images
 - Własny system autentykacji i autoryzacji oparty na tokenie JWT oraz refresh tokenie przechowywanym w bardzo szybkiej bazie danych klucz-wartość Cloudflare KV
 - hono-openapi do generowania dokumentacji API i automatycznego walidowania danych przychodzących do endpointów na podstawie schematów zdefiniowanych za pomocą Zod

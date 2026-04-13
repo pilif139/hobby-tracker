@@ -20,7 +20,7 @@ Projekt z programowania aplikacji webowych i mobilnych
 ## Backend
 
 - framework: hono
-- testy: moduł bun:test
+- testy: vitest
 - baza danych: cloudflare D1 z prismaORM
 - deployment: cloudflare workers
 - nauka integracji z serwisami cloudflare'a: D1, KV, Workers itp. co bedzie potrzebne do dalszego rozwoju projektu i zdobycia doświadczenia w pracy z tymi technologiami
