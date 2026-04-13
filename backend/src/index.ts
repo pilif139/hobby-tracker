@@ -18,66 +18,70 @@ import { corsMiddleware } from '@/src/middleware/cors';
 import { csrfMiddleware } from '@/src/middleware/csrf';
 import type { AppContext } from '@/src/types';
 
-export const app = new Hono<AppContext>()
-  .use(
-    '*',
-    loggerMiddleware,
-    secureHeaders(),
-    corsMiddleware,
-    csrfMiddleware,
-    dependencyMiddleware,
-    authMiddleware,
-  )
-  .route('/auth', authController)
-  .route('/user', userController)
-  .route('/hobby', hobbyController)
-  .route('/hobby-session', hobbySessionController)
-  .get(
-    '/health',
-    describeRoute({
-      tags: ['Health Check'],
-      responses: {
-        200: {
-          description: 'Health check OK',
-          content: {
-            'application/json': {
-              schema: resolver(z.object({ status: z.literal('ok') })),
-            },
-          },
-        },
-        500: {
-          description: 'Server Error',
-          content: {
-            'application/json': {
-              schema: resolver(z.object({ message: z.string() })),
-            },
+export const app = new Hono<AppContext>();
+
+app.use(
+  '*',
+  loggerMiddleware,
+  secureHeaders(),
+  corsMiddleware,
+  csrfMiddleware,
+  dependencyMiddleware,
+  authMiddleware,
+);
+
+app.route('/auth', authController);
+app.route('/user', userController);
+app.route('/hobby', hobbyController);
+app.route('/hobby-session', hobbySessionController);
+
+app.get(
+  '/health',
+  describeRoute({
+    tags: ['Health Check'],
+    responses: {
+      200: {
+        description: 'Health check OK',
+        content: {
+          'application/json': {
+            schema: resolver(z.object({ status: z.literal('ok') })),
           },
         },
       },
-    }),
-    async (c) => {
-      const prisma = getPrismaClient(c.env.DB);
-      return prisma.$queryRaw`SELECT 1`
-        .then(() => {
-          return c.json({ status: 'ok' });
-        })
-        .catch((error: unknown) => {
-          c.get('logger').error(
-            `Database connection error: ${error instanceof Error ? error.message : (error as string)}`,
-          );
-          throw new HTTPException(500, {
-            message: 'Database connection failed',
-          });
-        });
+      500: {
+        description: 'Server Error',
+        content: {
+          'application/json': {
+            schema: resolver(z.object({ message: z.string() })),
+          },
+        },
+      },
     },
-  )
-  .onError((err, c) => {
-    c.get('logger').error(`Unhandled Error: ${err.message}`);
-    if (err instanceof HTTPException) {
-      return err.getResponse();
-    }
-    return c.json({ message: `Internal Server Error: ${err.message}` }, 500);
-  });
+  }),
+  async (c) => {
+    const prisma = getPrismaClient(c.env.DB);
+    return prisma.$queryRaw`SELECT 1`
+      .then(() => {
+        return c.json({ status: 'ok' });
+      })
+      .catch((error: unknown) => {
+        c.get('logger').error(
+          `Database connection error: ${error instanceof Error ? error.message : (error as string)}`,
+        );
+        throw new HTTPException(500, {
+          message: 'Database connection failed',
+        });
+      });
+  },
+);
+
+app.onError((err, c) => {
+  c.get('logger').error(`Unhandled Error: ${err.message}`);
+  if (err instanceof HTTPException) {
+    return err.getResponse();
+  }
+  return c.json({ message: `Internal Server Error: ${err.message}` }, 500);
+});
 
 // openapi docs
 
