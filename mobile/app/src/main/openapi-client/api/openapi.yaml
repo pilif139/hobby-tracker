@@ -1,0 +1,1171 @@
+openapi: 3.1.0
+info:
+  description: Development documentation
+  title: Hono Documentation
+  version: 0.0.0
+servers:
+- url: /
+security:
+- accessTokenCookie: []
+  refreshTokenCookie: []
+paths:
+  /auth/login:
+    post:
+      operationId: postAuthLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postAuthLogin_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogin_200_response"
+          description: Successfully logged in
+          headers:
+            Set-Cookie:
+              explode: false
+              schema:
+                nullable: true
+                type: string
+              style: simple
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogin_401_response"
+          description: Unauthorized
+      tags:
+      - Authentication
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /auth/register:
+    post:
+      operationId: postAuthRegister
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postAuthRegister_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogin_200_response"
+          description: Successfully registered user
+          headers:
+            Set-Cookie:
+              explode: false
+              schema:
+                type: string
+              style: simple
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogin_401_response"
+          description: Forbidden
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthRegister_500_response"
+          description: Internal Server Error
+      tags:
+      - Authentication
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /auth/me:
+    get:
+      operationId: getAuthMe
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogin_200_response"
+          description: Current authenticated user
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_401_response"
+          description: Unauthorized
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - Authentication
+      x-accepts:
+      - application/json
+  /auth/logout:
+    post:
+      operationId: postAuthLogout
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Success
+      tags:
+      - Authentication
+      x-accepts:
+      - application/json
+  /auth/logout-other-devices:
+    post:
+      operationId: postAuthLogoutOtherDevices
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogoutOtherDevices_200_response"
+          description: Success
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogoutOtherDevices_400_response"
+          description: Bad Request
+      tags:
+      - Authentication
+      x-accepts:
+      - application/json
+  /user/{id}:
+    delete:
+      operationId: deleteUserById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deleteUserById_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - User
+      - Delete
+      x-accepts:
+      - application/json
+    get:
+      operationId: getUserById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          nullable: true
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getUserById_200_response"
+          description: User Profile
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - User
+      - Get By Id
+      x-accepts:
+      - application/json
+    patch:
+      operationId: patchUserById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/patchUserById_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogin_200_response"
+          description: Updated User
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/patchUserById_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - User
+      - Update
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /hobby:
+    get:
+      operationId: getHobby
+      parameters:
+      - explode: true
+        in: query
+        name: search
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          type: number
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: number
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  properties: {}
+                  type: object
+                type: array
+          description: Search Results
+      tags:
+      - Hobby
+      - Search
+      x-accepts:
+      - application/json
+    post:
+      operationId: postHobby
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postHobby_request"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+          description: Created Hobby
+      tags:
+      - Hobby
+      - Create New
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /hobby/user/{userId}:
+    get:
+      operationId: getHobbyUserByUserId
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          nullable: true
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: "#/components/schemas/getHobbyUserByUserId_200_response_inner"
+                type: array
+          description: User Hobbies
+      tags:
+      - Hobby
+      - Get By User
+      x-accepts:
+      - application/json
+  /hobby/{id}:
+    get:
+      operationId: getHobbyById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+          description: Hobby
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - Hobby
+      - Get By Id
+      x-accepts:
+      - application/json
+  /hobby/add-to-profile/{hobbyId}:
+    post:
+      operationId: postHobbyAddToProfileByHobbyId
+      parameters:
+      - explode: false
+        in: path
+        name: hobbyId
+        required: true
+        schema:
+          nullable: true
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Added
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Conflict
+      tags:
+      - Hobby
+      - Add
+      x-accepts:
+      - application/json
+  /hobby/remove-from-profile/{hobbyId}:
+    delete:
+      operationId: deleteHobbyRemoveFromProfileByHobbyId
+      parameters:
+      - explode: false
+        in: path
+        name: hobbyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Removed
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Not Found
+      tags:
+      - Hobby
+      - Remove
+      x-accepts:
+      - application/json
+  /hobby-session/user/{userId}:
+    get:
+      operationId: getHobbySessionUserByUserId
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: from
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: to
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getHobbySessionUserByUserId_200_response"
+          description: User Hobby Sessions with stats
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/patchUserById_403_response"
+          description: Forbidden
+      tags:
+      - Hobby Session
+      - Get By User
+      x-accepts:
+      - application/json
+  /hobby-session/hobby/{hobbyId}:
+    get:
+      operationId: getHobbySessionHobbyByHobbyId
+      parameters:
+      - explode: false
+        in: path
+        name: hobbyId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 100
+          minimum: 1
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          maximum: 9007199254740991
+          minimum: 0
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: from
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: to
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getHobbySessionUserByUserId_200_response"
+          description: Current user sessions for a hobby with stats
+      tags:
+      - Hobby Session
+      - Get By Hobby
+      x-accepts:
+      - application/json
+  /hobby-session/{id}:
+    delete:
+      operationId: deleteHobbySessionById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "204":
+          description: No Content
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/deleteUserById_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - Hobby Session
+      - Delete
+      x-accepts:
+      - application/json
+    get:
+      operationId: getHobbySessionById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getHobbySessionById_200_response"
+          description: Hobby Session
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/patchUserById_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - Hobby Session
+      - Get By Id
+      x-accepts:
+      - application/json
+    patch:
+      operationId: patchHobbySessionById
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/patchHobbySessionById_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getHobbySessionById_200_response"
+          description: Updated session
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/patchHobbySessionById_400_response"
+          description: Bad Request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/patchUserById_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAuthMe_404_response"
+          description: Not Found
+      tags:
+      - Hobby Session
+      - Update
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /hobby-session:
+    post:
+      operationId: postHobbySession
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postHobbySession_request"
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getHobbySessionById_200_response"
+          description: Created session
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/patchHobbySessionById_400_response"
+          description: Bad Request
+      tags:
+      - Hobby Session
+      - Create
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /health:
+    get:
+      operationId: getHealth
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getHealth_200_response"
+          description: Health check OK
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Server Error
+      tags:
+      - Health Check
+      x-accepts:
+      - application/json
+components:
+  schemas:
+    postAuthLogoutOtherDevices_400_response:
+      example:
+        cause: cause
+        message: Bad request
+      properties:
+        message:
+          default: Bad request
+          type: string
+        cause:
+          nullable: true
+          type: string
+    postHobby_request:
+      properties:
+        name:
+          maxLength: 100
+          minLength: 2
+          type: string
+        description:
+          maxLength: 1000
+          minLength: 2
+          type: string
+      required:
+      - name
+    getHobbySessionUserByUserId_200_response_stats:
+      example:
+        averageDurationInSeconds: 1.4658129805029452
+        maxDurationInSeconds: 5.637376656633329
+        totalDurationLast7DaysInSeconds: 4.145608029883936
+        totalDurationInSeconds: 6.027456183070403
+        minDurationInSeconds: 5.962133916683182
+        sessionsLast7Days: 3.616076749251911
+        sessionsLast30Days: 2.027123023002322
+        totalDurationLast30DaysInSeconds: 7.386281948385884
+        activeDaysCount: 2.3021358869347655
+        longestStreakDays: 9.301444243932576
+        totalCount: 0.8008281904610115
+        currentStreakDays: 7.061401241503109
+      properties:
+        totalCount:
+          type: number
+        totalDurationInSeconds:
+          type: number
+        averageDurationInSeconds:
+          type: number
+        minDurationInSeconds:
+          type: number
+        maxDurationInSeconds:
+          type: number
+        activeDaysCount:
+          type: number
+        currentStreakDays:
+          type: number
+        longestStreakDays:
+          type: number
+        sessionsLast7Days:
+          type: number
+        sessionsLast30Days:
+          type: number
+        totalDurationLast7DaysInSeconds:
+          type: number
+        totalDurationLast30DaysInSeconds:
+          type: number
+      required:
+      - activeDaysCount
+      - averageDurationInSeconds
+      - currentStreakDays
+      - longestStreakDays
+      - maxDurationInSeconds
+      - minDurationInSeconds
+      - sessionsLast30Days
+      - sessionsLast7Days
+      - totalCount
+      - totalDurationInSeconds
+      - totalDurationLast30DaysInSeconds
+      - totalDurationLast7DaysInSeconds
+    getHobbySessionUserByUserId_200_response:
+      example:
+        sessions:
+        - createdAt: createdAt
+          notes: notes
+          hobbyId: hobbyId
+          startTime: startTime
+          id: id
+          endTime: endTime
+          userId: userId
+          updatedAt: updatedAt
+        - createdAt: createdAt
+          notes: notes
+          hobbyId: hobbyId
+          startTime: startTime
+          id: id
+          endTime: endTime
+          userId: userId
+          updatedAt: updatedAt
+        stats:
+          averageDurationInSeconds: 1.4658129805029452
+          maxDurationInSeconds: 5.637376656633329
+          totalDurationLast7DaysInSeconds: 4.145608029883936
+          totalDurationInSeconds: 6.027456183070403
+          minDurationInSeconds: 5.962133916683182
+          sessionsLast7Days: 3.616076749251911
+          sessionsLast30Days: 2.027123023002322
+          totalDurationLast30DaysInSeconds: 7.386281948385884
+          activeDaysCount: 2.3021358869347655
+          longestStreakDays: 9.301444243932576
+          totalCount: 0.8008281904610115
+          currentStreakDays: 7.061401241503109
+      properties:
+        sessions:
+          items:
+            $ref: "#/components/schemas/getHobbySessionUserByUserId_200_response_sessions_inner"
+          type: array
+        stats:
+          $ref: "#/components/schemas/getHobbySessionUserByUserId_200_response_stats"
+      required:
+      - sessions
+      - stats
+    postAuthLogin_401_response:
+      example:
+        cause: cause
+        message: Credentials are invalid
+      properties:
+        message:
+          default: Credentials are invalid
+          type: string
+        cause:
+          nullable: true
+          type: string
+    getUserById_200_response:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        followedByCount: 0.8008281904610115
+        hobbySessionsCount: 5.962133916683182
+        name: name
+        followsCount: 6.027456183070403
+        hobbiesCount: 1.4658129805029452
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          format: uuid
+          pattern: "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          type: string
+        name:
+          nullable: true
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        followedByCount:
+          type: number
+        followsCount:
+          type: number
+        hobbiesCount:
+          type: number
+        hobbySessionsCount:
+          type: number
+      required:
+      - createdAt
+      - followedByCount
+      - followsCount
+      - hobbiesCount
+      - hobbySessionsCount
+      - id
+      - name
+    postAuthLogoutOtherDevices_200_response:
+      example:
+        message: message
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    patchHobbySessionById_400_response:
+      example:
+        cause: cause
+        message: Bad request
+      properties:
+        message:
+          default: Bad request
+          type: string
+        cause:
+          type: string
+    patchUserById_403_response:
+      example:
+        cause: cause
+        message: Forbidden
+      properties:
+        message:
+          default: Forbidden
+          type: string
+        cause:
+          type: string
+    patchHobbySessionById_request:
+      properties:
+        hobbyId:
+          nullable: true
+          type: string
+        startTime:
+          nullable: true
+          type: string
+        endTime:
+          nullable: true
+          type: string
+        notes:
+          nullable: true
+          type: string
+    getHealth_200_response:
+      example:
+        status: ok
+      properties:
+        status:
+          enum:
+          - ok
+          type: string
+      required:
+      - status
+    postAuthLogin_200_response:
+      example:
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        email: email
+      properties:
+        id:
+          format: uuid
+          pattern: "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          type: string
+        email:
+          format: email
+          pattern: "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\\
+            -]*\\.)+[A-Za-z]{2,}$"
+          type: string
+        name:
+          type: string
+      required:
+      - email
+      - id
+      - name
+    postAuthLogin_request:
+      properties:
+        email:
+          format: email
+          pattern: "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\\
+            -]*\\.)+[A-Za-z]{2,}$"
+          type: string
+        password:
+          maxLength: 128
+          minLength: 8
+          type: string
+      required:
+      - email
+      - password
+    getAuthMe_401_response:
+      example:
+        cause: cause
+        message: Credentials are invalid
+      properties:
+        message:
+          default: Credentials are invalid
+          type: string
+        cause:
+          type: string
+    getAuthMe_404_response:
+      example:
+        message: Not Found
+      properties:
+        message:
+          default: Not Found
+          type: string
+    patchUserById_request:
+      properties:
+        name:
+          maxLength: 100
+          minLength: 2
+          type: string
+    postAuthRegister_request:
+      properties:
+        email:
+          format: email
+          pattern: "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\\
+            -]*\\.)+[A-Za-z]{2,}$"
+          type: string
+        name:
+          maxLength: 100
+          minLength: 2
+          type: string
+        password:
+          maxLength: 128
+          minLength: 8
+          type: string
+      required:
+      - email
+      - name
+      - password
+    deleteUserById_403_response:
+      example:
+        cause: cause
+        message: Forbidden
+      properties:
+        message:
+          default: Forbidden
+          type: string
+        cause:
+          nullable: true
+          type: string
+    postHobbySession_request:
+      properties:
+        hobbyId:
+          nullable: true
+          type: string
+        startTime:
+          nullable: true
+          type: string
+        endTime:
+          nullable: true
+          type: string
+        notes:
+          nullable: true
+          type: string
+      required:
+      - endTime
+      - hobbyId
+      - startTime
+    getHobbySessionById_200_response:
+      example:
+        createdAt: createdAt
+        notes: notes
+        hobbyId: hobbyId
+        startTime: startTime
+        id: id
+        endTime: endTime
+        userId: userId
+        updatedAt: updatedAt
+      properties:
+        id:
+          type: string
+        hobbyId:
+          type: string
+        userId:
+          type: string
+        startTime:
+          type: string
+        endTime:
+          type: string
+        notes:
+          nullable: true
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+      - createdAt
+      - endTime
+      - hobbyId
+      - id
+      - notes
+      - startTime
+      - updatedAt
+      - userId
+    getHobbyUserByUserId_200_response_inner:
+      example:
+        sessionCount: 0.8008281904610115
+        name: name
+        description: description
+        id: id
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        sessionCount:
+          type: number
+      required:
+      - description
+      - id
+      - name
+      - sessionCount
+    postAuthLogout_200_response:
+      example:
+        message: message
+      properties:
+        message:
+          nullable: true
+          type: string
+      required:
+      - message
+    postAuthRegister_500_response:
+      example:
+        cause: cause
+        message: Internal server error
+      properties:
+        message:
+          default: Internal server error
+          type: string
+        cause:
+          nullable: true
+          type: string
+    getHobbySessionUserByUserId_200_response_sessions_inner:
+      example:
+        createdAt: createdAt
+        notes: notes
+        hobbyId: hobbyId
+        startTime: startTime
+        id: id
+        endTime: endTime
+        userId: userId
+        updatedAt: updatedAt
+      properties:
+        id:
+          nullable: true
+          type: string
+        hobbyId:
+          nullable: true
+          type: string
+        userId:
+          nullable: true
+          type: string
+        startTime:
+          nullable: true
+          type: string
+        endTime:
+          nullable: true
+          type: string
+        notes:
+          nullable: true
+          type: string
+        createdAt:
+          nullable: true
+          type: string
+        updatedAt:
+          nullable: true
+          type: string
+      required:
+      - createdAt
+      - endTime
+      - hobbyId
+      - id
+      - notes
+      - startTime
+      - updatedAt
+      - userId
+  securitySchemes:
+    accessTokenCookie:
+      in: cookie
+      name: session
+      type: apiKey
+    refreshTokenCookie:
+      in: cookie
+      name: refresh
+      type: apiKey
+

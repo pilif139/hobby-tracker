@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Hobby Tracker</string>
+    <string name="login_title">Sign in</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login_button">Log in</string>
+    <string name="error_missing_credentials">Enter email and password.</string>
+    <string name="error_login_failed">Login failed.</string>
+    <string name="error_network">Network error. Try again.</string>
+    <string name="login_success">Logged in. Empty page.</string>
+</resources>
