@@ -2,21 +2,18 @@ import { createMiddleware } from 'hono/factory';
 import { AuthService } from '../modules/auth/auth.service';
 import { createFollowService } from '../modules/follow/follow.factory';
 import { createUserService } from '../modules/user/user.factory';
-import { getPrismaClient } from '@/src/lib/prisma';
 import { createHobbyService } from '@/src/modules/hobby/hobby.factory';
 import { createHobbySessionService } from '@/src/modules/hobby-session/hobby-session.factory';
 import type { AppContext } from '@/src/types';
 
 export const dependencyMiddleware = createMiddleware<AppContext>(
   async (c, next) => {
-    const prisma = getPrismaClient(c.env.DB);
-
     c.set('services', {
       get user() {
-        return createUserService(prisma);
+        return createUserService(c.env.DB);
       },
       get auth() {
-        const userService = createUserService(prisma);
+        const userService = createUserService(c.env.DB);
         return new AuthService(
           userService,
           c.env.authKV,
@@ -25,13 +22,13 @@ export const dependencyMiddleware = createMiddleware<AppContext>(
         );
       },
       get hobby() {
-        return createHobbyService(prisma);
+        return createHobbyService(c.env.DB);
       },
       get hobbySession() {
-        return createHobbySessionService(prisma);
+        return createHobbySessionService(c.env.DB);
       },
       get follow() {
-        return createFollowService(prisma);
+        return createFollowService(c.env.DB);
       },
     });
 
