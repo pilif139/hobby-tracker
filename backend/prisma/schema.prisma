@@ -22,8 +22,15 @@ model User {
   hobbies       Hobby[]
   hobbySessions HobbySession[]
 
+  uploadedObjects StorageObject[] @relation("UploadedBy")
+
+  avatarId String?        @unique
+  avatar   StorageObject? @relation("Avatar", fields: [avatarId], references: [id], onDelete: SetNull)
+
   follows    Follow[] @relation("Following")
   followedBy Follow[] @relation("Follower")
+
+  @@index([name])
 }
 
 model Follow {
@@ -50,6 +57,8 @@ model Hobby {
 
   users         User[]
   hobbySessions HobbySession[]
+
+  @@index([name])
 }
 
 model HobbySession {
@@ -66,4 +75,39 @@ model HobbySession {
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  storageObjects HobbySessionStorageObject[]
+
+  @@index([userId, hobbyId, createdAt(sort: Desc)])
+}
+
+// 1:n relation by adding unique constraint to a theoretical many-to-many table field so that only one session can be linked to a storage object, but a session can have multiple storage objects 
+model HobbySessionStorageObject {
+  hobbySessionId String
+  hobbySession   HobbySession @relation(fields: [hobbySessionId], references: [id], onDelete: Cascade)
+
+  storageObjectId String        @id
+  storageObject   StorageObject @relation(fields: [storageObjectId], references: [id], onDelete: Cascade)
+
+  @@index([hobbySessionId])
+}
+
+model StorageObject {
+  id          String   @id @default(uuid())
+  objectKey   String   @unique
+  bucket      String
+  contentType String?
+  size        Int
+  etag        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  uploadedByUserId String?
+  uploadedByUser   User?   @relation("UploadedBy", fields: [uploadedByUserId], references: [id], onDelete: SetNull)
+
+  avatarForUser     User?                       @relation("Avatar")
+  hobbySessionsLink HobbySessionStorageObject[]
+
+  @@index([uploadedByUserId, bucket])
+  @@index([createdAt(sort: Desc)])
 }
