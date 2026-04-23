@@ -18,7 +18,7 @@ const userController = new Hono<AppContext>();
 userController.get(
   '/:id',
   describeRoute({
-    tags: ['User', 'Get By Id'],
+    tags: ['User'],
     responses: {
       200: jsonResponse(UserProfileSchema, 'User Profile'),
       404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
@@ -47,7 +47,7 @@ userController.get(
 userController.delete(
   '/:id',
   describeRoute({
-    tags: ['User', 'Delete'],
+    tags: ['User'],
     responses: {
       204: { description: 'No Content' },
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
@@ -75,7 +75,7 @@ userController.delete(
 userController.patch(
   '/:id',
   describeRoute({
-    tags: ['User', 'Update'],
+    tags: ['User'],
     responses: {
       200: jsonResponse(UserSafeSchema, 'Updated User'),
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),

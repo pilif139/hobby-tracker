@@ -26,7 +26,7 @@ const hobbySessionController = new Hono<AppContext>();
 hobbySessionController.get(
   '/user/:userId',
   describeRoute({
-    tags: ['Hobby Session', 'Get By User'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(
         hobbySessionListResponseSchema,
@@ -96,7 +96,7 @@ hobbySessionController.get(
 hobbySessionController.get(
   '/hobby/:hobbyId',
   describeRoute({
-    tags: ['Hobby Session', 'Get By Hobby'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(
         hobbySessionListResponseSchema,
@@ -159,7 +159,7 @@ hobbySessionController.get(
 hobbySessionController.get(
   '/:id',
   describeRoute({
-    tags: ['Hobby Session', 'Get By Id'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(hobbySessionResponseSchema, 'Hobby Session'),
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
@@ -188,7 +188,7 @@ hobbySessionController.get(
 hobbySessionController.post(
   '/',
   describeRoute({
-    tags: ['Hobby Session', 'Create'],
+    tags: ['Hobby Session'],
     responses: {
       201: jsonResponse(hobbySessionResponseSchema, 'Created session'),
       400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
@@ -222,7 +222,7 @@ hobbySessionController.post(
 hobbySessionController.patch(
   '/:id',
   describeRoute({
-    tags: ['Hobby Session', 'Update'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(hobbySessionResponseSchema, 'Updated session'),
       400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
@@ -272,7 +272,7 @@ hobbySessionController.patch(
 hobbySessionController.delete(
   '/:id',
   describeRoute({
-    tags: ['Hobby Session', 'Delete'],
+    tags: ['Hobby Session'],
     responses: {
       204: { description: 'No Content' },
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),

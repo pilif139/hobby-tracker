@@ -18,7 +18,7 @@ const hobbyController = new Hono<AppContext>();
 hobbyController.get(
   '/',
   describeRoute({
-    tags: ['Hobby', 'Search'],
+    tags: ['Hobby'],
     responses: {
       200: jsonResponse(z.array(HobbyResponseSchema), 'Search Results'),
     },
@@ -46,7 +46,7 @@ hobbyController.get(
 hobbyController.get(
   '/user/:userId',
   describeRoute({
-    tags: ['Hobby', 'Get By User'],
+    tags: ['Hobby'],
     responses: {
       200: jsonResponse(z.array(UserHobbyResponseSchema), 'User Hobbies'),
     },
@@ -64,7 +64,7 @@ hobbyController.get(
 hobbyController.get(
   '/:id',
   describeRoute({
-    tags: ['Hobby', 'Get By Id'],
+    tags: ['Hobby'],
     responses: {
       200: jsonResponse(HobbyResponseSchema, 'Hobby'),
       404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
@@ -85,7 +85,7 @@ hobbyController.get(
 hobbyController.post(
   '/',
   describeRoute({
-    tags: ['Hobby', 'Create New'],
+    tags: ['Hobby'],
     responses: {
       201: jsonResponse(HobbyResponseSchema, 'Created Hobby'),
     },
@@ -103,7 +103,7 @@ hobbyController.post(
 hobbyController.post(
   '/add-to-profile/:hobbyId',
   describeRoute({
-    tags: ['Hobby', 'Add'],
+    tags: ['Hobby'],
     responses: {
       200: jsonResponse(z.object({ message: z.string() }), 'Added'),
       404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
@@ -131,7 +131,7 @@ hobbyController.post(
 hobbyController.delete(
   '/remove-from-profile/:hobbyId',
   describeRoute({
-    tags: ['Hobby', 'Remove'],
+    tags: ['Hobby'],
     responses: {
       200: jsonResponse(z.object({ message: z.string() }), 'Removed'),
       404: jsonResponse(BaseMessageResponse, 'Not Found'),

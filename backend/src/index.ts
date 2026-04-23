@@ -78,7 +78,7 @@ app.get(
 );
 
 app.onError((err, c) => {
-  c.get('logger').error(`Unhandled Error: ${err.message}`);
+  c.get('logger').error(`Error: ${err.message}`);
   if (err instanceof HTTPException) {
     return err.getResponse();
   }
