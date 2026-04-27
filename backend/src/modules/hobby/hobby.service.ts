@@ -1,4 +1,9 @@
 import type { CreateHobbyDto, UpdateHobbyDto } from './hobby.dto';
+import {
+  HobbyAlreadyInProfileError,
+  HobbyNotFoundError,
+  HobbyNotInProfileError,
+} from './hobby.errors';
 import type { HobbyRepository } from './hobby.repository';
 
 export class HobbyService {
@@ -30,20 +35,25 @@ export class HobbyService {
   async update(id: string, data: UpdateHobbyDto) {
     const exists = await this.hobbyRepository.exists(id);
     if (!exists) {
-      return null;
+      throw new HobbyNotFoundError();
     }
 
     return this.hobbyRepository.update(id, data);
   }
 
   async delete(id: string) {
+    const exists = await this.hobbyRepository.exists(id);
+    if (!exists) {
+      throw new HobbyNotFoundError();
+    }
+
     return this.hobbyRepository.delete(id);
   }
 
   async addToProfile(userId: string, hobbyId: string) {
     const exists = await this.hobbyRepository.exists(hobbyId);
     if (!exists) {
-      return { error: 'Hobby not found' } as const;
+      throw new HobbyNotFoundError();
     }
 
     const alreadyLinked = await this.hobbyRepository.isUserLinkedToHobby(
@@ -51,7 +61,7 @@ export class HobbyService {
       hobbyId,
     );
     if (alreadyLinked) {
-      return { error: 'Hobby already in profile' } as const;
+      throw new HobbyAlreadyInProfileError();
     }
 
     await this.hobbyRepository.addUserToHobby(userId, hobbyId);
@@ -61,7 +71,7 @@ export class HobbyService {
   async removeFromProfile(userId: string, hobbyId: string) {
     const exists = await this.hobbyRepository.exists(hobbyId);
     if (!exists) {
-      return { error: 'Hobby not found' } as const;
+      throw new HobbyNotFoundError();
     }
 
     const isLinked = await this.hobbyRepository.isUserLinkedToHobby(
@@ -69,7 +79,7 @@ export class HobbyService {
       hobbyId,
     );
     if (!isLinked) {
-      return { error: 'Hobby not in profile' } as const;
+      throw new HobbyNotInProfileError();
     }
 
     await this.hobbyRepository.removeUserFromHobby(userId, hobbyId);

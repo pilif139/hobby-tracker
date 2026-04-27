@@ -148,6 +148,10 @@ export class AuthService {
     }
   }
 
+  async invalidateRefreshToken(userId: string) {
+    await this.authKV.delete(`userId:${userId}`);
+  }
+
   private async createJWT(
     payload: Record<string, unknown>,
     expiresIn: number,

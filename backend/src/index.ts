@@ -82,6 +82,9 @@ app.onError((err, c) => {
   if (err instanceof HTTPException) {
     return err.getResponse();
   }
+  if (err instanceof z.ZodError) {
+    return c.json(z.treeifyError(err));
+  }
   return c.json({ message: `Internal Server Error: ${err.message}` }, 500);
 });
 

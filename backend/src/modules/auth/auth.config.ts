@@ -9,6 +9,8 @@ const authConfig = {
 } as const;
 
 export default authConfig;
+export const COOKIE_ACCESS_TOKEN_NAME = 'accessToken' as const;
+export const COOKIE_REFRESH_TOKEN_NAME = 'refreshToken' as const;
 
 export function getAuthCookieOptions<e extends AppContext>(
   c: Context<e>,

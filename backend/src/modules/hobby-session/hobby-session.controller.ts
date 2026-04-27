@@ -1,3 +1,4 @@
+import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono/quick';
 import { describeRoute, validator } from 'hono-openapi';
 import z from 'zod';
@@ -43,7 +44,7 @@ hobbySessionController.get(
     const maxFilterDate = new Date();
 
     if (userId !== currentUserId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     const hobbySessionService = c.get('services').hobbySession;
@@ -58,17 +59,15 @@ hobbySessionController.get(
     });
 
     if (parsedFrom.error) {
-      return c.json(
-        { message: getDateErrorMessage('from', parsedFrom.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('from', parsedFrom.error),
+      });
     }
 
     if (parsedTo.error) {
-      return c.json(
-        { message: getDateErrorMessage('to', parsedTo.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('to', parsedTo.error),
+      });
     }
 
     if (
@@ -76,7 +75,9 @@ hobbySessionController.get(
       parsedTo.date &&
       parsedFrom.date.getTime() > parsedTo.date.getTime()
     ) {
-      return c.json({ message: 'from must be before or equal to to' }, 400);
+      throw new HTTPException(400, {
+        message: 'from must be before or equal to to',
+      });
     }
 
     const result = await hobbySessionService.findByUserIdPaginatedWithStats(
@@ -121,17 +122,15 @@ hobbySessionController.get(
     });
 
     if (parsedFrom.error) {
-      return c.json(
-        { message: getDateErrorMessage('from', parsedFrom.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('from', parsedFrom.error),
+      });
     }
 
     if (parsedTo.error) {
-      return c.json(
-        { message: getDateErrorMessage('to', parsedTo.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('to', parsedTo.error),
+      });
     }
 
     if (
@@ -139,7 +138,9 @@ hobbySessionController.get(
       parsedTo.date &&
       parsedFrom.date.getTime() > parsedTo.date.getTime()
     ) {
-      return c.json({ message: 'from must be before or equal to to' }, 400);
+      throw new HTTPException(400, {
+        message: 'from must be before or equal to to',
+      });
     }
 
     const hobbySessionService = c.get('services').hobbySession;
@@ -174,11 +175,11 @@ hobbySessionController.get(
 
     const session = await hobbySessionService.getById(id);
     if (!session) {
-      return c.json({ message: 'Hobby session not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby session not found' });
     }
 
     if (session.userId !== userId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     return c.json(session);
@@ -204,7 +205,9 @@ hobbySessionController.post(
     const end = new Date(endTime);
 
     if (end.getTime() <= start.getTime()) {
-      return c.json({ message: 'endTime must be after startTime' }, 400);
+      throw new HTTPException(400, {
+        message: 'endTime must be after startTime',
+      });
     }
 
     const hobbySession = await hobbySessionService.create({
@@ -240,11 +243,11 @@ hobbySessionController.patch(
 
     const existingSession = await hobbySessionService.findById(id);
     if (!existingSession) {
-      return c.json({ message: 'Hobby session not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby session not found' });
     }
 
     if (existingSession.userId !== userId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     const nextStart = body.startTime
@@ -255,7 +258,9 @@ hobbySessionController.patch(
       : existingSession.endTime;
 
     if (nextEnd.getTime() <= nextStart.getTime()) {
-      return c.json({ message: 'endTime must be after startTime' }, 400);
+      throw new HTTPException(400, {
+        message: 'endTime must be after startTime',
+      });
     }
 
     const updated = await hobbySessionService.update(id, {
@@ -287,11 +292,11 @@ hobbySessionController.delete(
 
     const existingSession = await hobbySessionService.findById(id);
     if (!existingSession) {
-      return c.json({ message: 'Hobby session not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby session not found' });
     }
 
     if (existingSession.userId !== userId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     await hobbySessionService.delete(id);

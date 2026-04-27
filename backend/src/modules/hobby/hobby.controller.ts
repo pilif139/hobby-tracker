@@ -1,3 +1,4 @@
+import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono/quick';
 import { describeRoute, validator } from 'hono-openapi';
 import z from 'zod';
@@ -6,6 +7,11 @@ import {
   HobbyResponseSchema,
   UserHobbyResponseSchema,
 } from './hobby.dto';
+import {
+  HobbyAlreadyInProfileError,
+  HobbyNotFoundError,
+  HobbyNotInProfileError,
+} from './hobby.errors';
 import {
   BaseMessageResponse,
   NotFoundResponseSchema,
@@ -76,7 +82,7 @@ hobbyController.get(
     const id = c.req.valid('param').id;
     const hobby = await hobbyService.getById(id);
     if (!hobby) {
-      return c.json({ message: 'Hobby not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby not found' });
     }
     return c.json(hobby);
   },
@@ -116,15 +122,20 @@ hobbyController.post(
     const hobbyId = c.req.valid('param').hobbyId;
     const userId = c.get('userId');
 
-    const result = await hobbyService.addToProfile(userId, hobbyId);
-    if ('error' in result) {
-      if (result.error === 'Hobby not found') {
-        return c.json({ message: 'Hobby not found' }, 404);
+    try {
+      await hobbyService.addToProfile(userId, hobbyId);
+      return c.json({ message: 'Hobby added to profile' });
+    } catch (error) {
+      if (error instanceof HobbyNotFoundError) {
+        throw new HTTPException(404, { message: error.message });
       }
-      return c.json({ message: 'Hobby already in profile' }, 409);
-    }
 
-    return c.json({ message: 'Hobby added to profile' });
+      if (error instanceof HobbyAlreadyInProfileError) {
+        throw new HTTPException(409, { message: error.message });
+      }
+
+      throw error;
+    }
   },
 );
 
@@ -144,15 +155,20 @@ hobbyController.delete(
     const hobbyId = c.req.valid('param').hobbyId;
     const userId = c.get('userId');
 
-    const result = await hobbyService.removeFromProfile(userId, hobbyId);
-    if ('error' in result) {
-      if (result.error === 'Hobby not found') {
-        return c.json({ message: 'Hobby not found' }, 404);
+    try {
+      await hobbyService.removeFromProfile(userId, hobbyId);
+      return c.json({ message: 'Hobby removed from profile' });
+    } catch (error) {
+      if (error instanceof HobbyNotFoundError) {
+        throw new HTTPException(404, { message: error.message });
       }
-      return c.json({ message: 'Hobby not in profile' }, 400);
-    }
 
-    return c.json({ message: 'Hobby removed from profile' });
+      if (error instanceof HobbyNotInProfileError) {
+        throw new HTTPException(400, { message: error.message });
+      }
+
+      throw error;
+    }
   },
 );
 // .post(
