@@ -4,9 +4,17 @@ import type {
   UserCreateInput,
   UserUpdateInput,
 } from '@/prisma/generated/models/User';
+import {
+  getImageContentType,
+  InvalidImageFileExtensionException,
+  isValidImageFilename,
+} from '@/src/lib/image';
 
 export class UserRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private bucket: R2Bucket,
+  ) {}
 
   async findById(id: string) {
     return this.prisma.user.findUnique({
@@ -83,5 +91,36 @@ export class UserRepository {
       select: { id: true },
     });
     return user !== null;
+  }
+
+  async updateAvatar(userId: string, fileName: string, avatarBuffer: Buffer) {
+    const isValidType = isValidImageFilename(fileName);
+    const extension = fileName.split('.').pop();
+
+    if (!isValidType || !extension) {
+      throw new InvalidImageFileExtensionException();
+    }
+
+    const avatarKey = `avatars/${userId}/${crypto.randomUUID()}.${extension}`;
+    const contentType = getImageContentType(fileName);
+
+    // todo: make the failed uploads cleanup
+    await Promise.all([
+      this.bucket.put(avatarKey, avatarBuffer, {
+        httpMetadata: {
+          contentType,
+        },
+      }),
+      this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          avatarFileKey: avatarKey,
+        },
+      }),
+    ]).catch((error: unknown) => {
+      throw new Error('Failed to upload avatar: ' + (error as Error).message);
+    });
+
+    return avatarKey;
   }
 }

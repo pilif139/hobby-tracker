@@ -3,7 +3,10 @@ import { createHash } from '@/src/lib/hash';
 import type { UserRepository } from '@/src/modules/user/user.repository';
 
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly BUCKET_URL: string,
+  ) {}
 
   async getById(id: string) {
     return this.userRepository.findById(id);
@@ -28,31 +31,25 @@ export class UserService {
   }
 
   async update(id: string, data: UpdateUserDto) {
-    const exists = await this.userRepository.exists(id);
-    if (!exists) {
-      return null;
-    }
-
     return this.userRepository.update(id, {
       name: data.name,
     });
   }
 
   async delete(id: string) {
-    const exists = await this.userRepository.exists(id);
-    if (!exists) {
-      return false;
-    }
-
-    await this.userRepository.delete(id);
-    return true;
+    return this.userRepository.delete(id);
   }
 
-  async exists(id: string) {
-    return this.userRepository.exists(id);
-  }
+  async uploadAvatar(userId: string, avatar: File) {
+    const arrayBuffer = await avatar.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
-  async emailExists(email: string) {
-    return this.userRepository.emailExists(email);
+    const avatarKey = await this.userRepository.updateAvatar(
+      userId,
+      avatar.name,
+      buffer,
+    );
+
+    return `${this.BUCKET_URL}/${avatarKey}`;
   }
 }

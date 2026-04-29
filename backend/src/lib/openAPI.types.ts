@@ -36,3 +36,6 @@ export const BadRequestResponseSchema = createErrorResponse('Bad request');
 export const ForbiddenResponseSchema = createErrorResponse('Forbidden');
 
 export const NoContentResponseSchema = z.null();
+
+export const ContentTooLargeResponseSchema =
+  createErrorResponse('Content too large');

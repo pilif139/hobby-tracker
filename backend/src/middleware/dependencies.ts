@@ -10,10 +10,14 @@ export const dependencyMiddleware = createMiddleware<AppContext>(
   async (c, next) => {
     c.set('services', {
       get user() {
-        return createUserService(c.env.DB);
+        return createUserService(c.env.DB, c.env.R2, c.env.R2_BUCKET_URL);
       },
       get auth() {
-        const userService = createUserService(c.env.DB);
+        const userService = createUserService(
+          c.env.DB,
+          c.env.R2,
+          c.env.R2_BUCKET_URL,
+        );
         return new AuthService(
           userService,
           c.env.authKV,
@@ -28,7 +32,7 @@ export const dependencyMiddleware = createMiddleware<AppContext>(
         return createHobbySessionService(c.env.DB);
       },
       get follow() {
-        return createFollowService(c.env.DB);
+        return createFollowService(c.env.DB, c.env.R2);
       },
     });
 
