@@ -12,6 +12,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@cf-wasm/photon": "^0.3.4",
     "@hono/standard-validator": "^0.2.2",
     "@prisma/adapter-d1": "^7.2.0",
     "@prisma/client": "^7.2.0",

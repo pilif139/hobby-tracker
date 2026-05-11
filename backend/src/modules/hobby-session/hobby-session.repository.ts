@@ -1,4 +1,9 @@
 import type { Prisma, PrismaClient } from '@/prisma/generated/client';
+import {
+  getImageContentType,
+  InvalidImageFileExtensionException,
+  isValidImageFilename,
+} from '@/src/lib/image';
 import { ONE_DAY_IN_MS } from '@/src/lib/time';
 
 export interface AnalyticsFilters {
@@ -21,8 +26,13 @@ export interface HobbySessionAggregateRow {
   totalDurationLast30DaysInSeconds: number;
 }
 
+const sessionFileSelect = { select: { storageObjectKey: true } } as const;
+
 export class HobbySessionRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(
+    private prisma: PrismaClient,
+    private bucket: R2Bucket,
+  ) {}
 
   private buildAnalyticsWhereInput({
     userId,
@@ -54,6 +64,13 @@ export class HobbySessionRepository {
     });
   }
 
+  async findByIdWithFiles(id: string) {
+    return this.prisma.hobbySession.findUnique({
+      where: { id },
+      include: { files: sessionFileSelect },
+    });
+  }
+
   async findByHobbyId(hobbyId: string) {
     return this.prisma.hobbySession.findMany({
       where: { hobbyId },
@@ -66,6 +83,7 @@ export class HobbySessionRepository {
         notes: true,
         createdAt: true,
         updatedAt: true,
+        files: sessionFileSelect,
       },
     });
   }
@@ -91,6 +109,7 @@ export class HobbySessionRepository {
         notes: true,
         createdAt: true,
         updatedAt: true,
+        files: sessionFileSelect,
       },
     });
   }
@@ -110,14 +129,67 @@ export class HobbySessionRepository {
       select: {
         id: true,
         hobbyId: true,
+        userId: true,
         startTime: true,
         endTime: true,
         notes: true,
         createdAt: true,
         updatedAt: true,
+        files: sessionFileSelect,
       },
       take: limit,
       skip: offset,
+    });
+  }
+
+  async uploadSessionFile(
+    sessionId: string,
+    userId: string,
+    buffer: Buffer,
+    filename: string,
+  ): Promise<string> {
+    const isValidType = isValidImageFilename(filename);
+    const extension = filename.split('.').pop();
+
+    if (!isValidType || !extension) {
+      throw new InvalidImageFileExtensionException();
+    }
+
+    const key = `hobby-sessions/${userId}/${sessionId}/${crypto.randomUUID()}.${extension}`;
+    const contentType = getImageContentType(filename);
+
+    await this.bucket.put(key, buffer, {
+      httpMetadata: { contentType },
+    });
+
+    await this.prisma.hobbySessionFile.create({
+      data: {
+        storageObjectKey: key,
+        hobbySessionId: sessionId,
+      },
+    });
+
+    return key;
+  }
+
+  async deleteSessionFiles(sessionId: string, keys: string[]): Promise<void> {
+    if (keys.length === 0) {
+      return;
+    }
+
+    const validFiles = await this.prisma.hobbySessionFile.findMany({
+      where: { storageObjectKey: { in: keys }, hobbySessionId: sessionId },
+      select: { storageObjectKey: true },
+    });
+
+    const validKeys = validFiles.map((f) => f.storageObjectKey);
+    if (validKeys.length === 0) {
+      return;
+    }
+
+    await Promise.all(validKeys.map((key) => this.bucket.delete(key)));
+    await this.prisma.hobbySessionFile.deleteMany({
+      where: { storageObjectKey: { in: validKeys } },
     });
   }
 

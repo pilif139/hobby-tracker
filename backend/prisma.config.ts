@@ -7,8 +7,9 @@ import { defineConfig } from 'prisma/config';
 function getLocalDatabaseUrl(): string {
   try {
     const databases = listLocalDatabases();
-    const db = databases.pop();
+    const db = databases.find((name) => !name.includes('metadata')); // wrangler d1 creates a metadata database we want to ignore
     if (db) {
+      console.log(`Using local D1 database: ${db}`);
       return `file:${db}`;
     }
   } catch {

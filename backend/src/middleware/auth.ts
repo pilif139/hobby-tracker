@@ -1,7 +1,10 @@
 import { getCookie, setCookie } from 'hono/cookie';
 import { createMiddleware } from 'hono/factory';
-import { HTTPException } from 'hono/http-exception';
-import authConfig, { getAuthCookieOptions } from '../modules/auth/auth.config';
+import authConfig, {
+  COOKIE_ACCESS_TOKEN_NAME,
+  COOKIE_REFRESH_TOKEN_NAME,
+  getAuthCookieOptions,
+} from '../modules/auth/auth.config';
 import type { AppContext } from '../types';
 
 // we dont want to allow user to login or register if they are already logged in
@@ -11,7 +14,7 @@ const DEVELOPMENT_PATHS = ['/doc', '/scalar', '/health'];
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
   const isDevPath =
     c.env.ENVIRONMENT === 'development' &&
-    DEVELOPMENT_PATHS.includes(c.req.path);
+    (DEVELOPMENT_PATHS.includes(c.req.path) || c.req.path.startsWith('/r2/'));
   if (isDevPath) {
     await next();
     return;
@@ -21,8 +24,8 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
 
   // For guest-only paths, check if user is already logged in
   if (isGuestOnlyPath) {
-    const accessToken = getCookie(c, 'accessToken');
-    const refreshToken = getCookie(c, 'refreshToken');
+    const accessToken = getCookie(c, COOKIE_ACCESS_TOKEN_NAME);
+    const refreshToken = getCookie(c, COOKIE_REFRESH_TOKEN_NAME);
 
     if (accessToken || refreshToken) {
       const authService = c.get('services').auth;
@@ -34,9 +37,12 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
         : null;
 
       if (isValidAccess || isValidRefresh) {
-        throw new HTTPException(403, {
-          message: 'Already authenticated. Please logout first.',
-        });
+        return c.json(
+          {
+            message: 'Already authenticated. Please logout first.',
+          },
+          403,
+        );
       }
     }
 
@@ -46,14 +52,14 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
 
   const authService = c.get('services').auth;
 
-  const accessToken = getCookie(c, 'accessToken');
-  const refreshToken = getCookie(c, 'refreshToken');
+  const accessToken = getCookie(c, COOKIE_ACCESS_TOKEN_NAME);
+  const refreshToken = getCookie(c, COOKIE_REFRESH_TOKEN_NAME);
 
   if (accessToken) {
     const payload = await authService.validateAccessToken(accessToken);
     if (!payload) {
       c.get('logger').error('Invalid access token');
-      throw new HTTPException(401, { message: 'Unauthorized' });
+      return c.json({ message: 'Unauthorized' }, 401);
     }
 
     c.get('logger').info(`Authenticated user ID: ${payload}`);
@@ -62,7 +68,7 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
     const refreshPayload = await authService.validateRefreshToken(refreshToken);
     if (!refreshPayload) {
       c.get('logger').error('Invalid refresh token');
-      throw new HTTPException(401, { message: 'Unauthorized' });
+      return c.json({ message: 'Unauthorized' }, 401);
     }
 
     const newAccessToken = await authService.generateAccessToken(
@@ -79,20 +85,20 @@ export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
     );
     setCookie(
       c,
-      'accessToken',
+      COOKIE_ACCESS_TOKEN_NAME,
       newAccessToken,
       getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
     );
 
     setCookie(
       c,
-      'refreshToken',
+      COOKIE_REFRESH_TOKEN_NAME,
       regeneratedRefreshToken,
       getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
     );
   } else {
-    c.get('logger').error('Invalid access token and no refresh token provided');
-    throw new HTTPException(401, { message: 'Unauthorized' });
+    c.get('logger').warn('Invalid access token and no refresh token provided');
+    return c.json({ message: 'Unauthorized' }, 401);
   }
 
   await next();

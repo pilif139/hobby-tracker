@@ -3,7 +3,11 @@ import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono/quick';
 import { describeRoute, validator } from 'hono-openapi';
 import { UserSafeSchema } from '../user/user.dto';
-import authConfig, { getAuthCookieOptions } from './auth.config';
+import authConfig, {
+  COOKIE_ACCESS_TOKEN_NAME,
+  COOKIE_REFRESH_TOKEN_NAME,
+  getAuthCookieOptions,
+} from './auth.config';
 import { LoginSchema, RegisterSchema } from './auth.dto';
 import {
   jsonResponse,
@@ -51,14 +55,14 @@ app.post(
 
     setCookie(
       c,
-      'accessToken',
+      COOKIE_ACCESS_TOKEN_NAME,
       accessToken,
       getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
     );
 
     setCookie(
       c,
-      'refreshToken',
+      COOKIE_REFRESH_TOKEN_NAME,
       refreshToken,
       getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
     );
@@ -100,14 +104,14 @@ app.post(
 
     setCookie(
       c,
-      'accessToken',
+      COOKIE_ACCESS_TOKEN_NAME,
       accessToken,
       getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
     );
 
     setCookie(
       c,
-      'refreshToken',
+      COOKIE_REFRESH_TOKEN_NAME,
       refreshToken,
       getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
     );
@@ -122,7 +126,6 @@ app.get(
     tags: ['Authentication'],
     responses: {
       200: jsonResponse(UserSafeSchema, 'Current authenticated user'),
-      401: jsonResponse(UnauthorizedResponseSchema, 'Unauthorized'),
       404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
     },
   }),
@@ -132,7 +135,7 @@ app.get(
     const user = await userService.getById(userId);
 
     if (!user) {
-      return c.json({ message: 'User not found' }, 404);
+      throw new HTTPException(404, { message: 'User not found' });
     }
 
     return c.json({
@@ -152,8 +155,8 @@ app.post(
     },
   }),
   (c) => {
-    deleteCookie(c, 'accessToken', getAuthCookieOptions(c, 0));
-    deleteCookie(c, 'refreshToken', getAuthCookieOptions(c, 0));
+    deleteCookie(c, COOKIE_ACCESS_TOKEN_NAME, getAuthCookieOptions(c, 0));
+    deleteCookie(c, COOKIE_REFRESH_TOKEN_NAME, getAuthCookieOptions(c, 0));
     c.set('userId', '');
     return c.json({ message: 'Successfully logged out' });
   },
@@ -172,7 +175,7 @@ app.post(
     const authService = c.get('services').auth;
     const userId = c.get('userId');
 
-    const refreshTokenCookie = getCookie(c, 'refreshToken');
+    const refreshTokenCookie = getCookie(c, COOKIE_REFRESH_TOKEN_NAME);
     if (!refreshTokenCookie) {
       return c.json({ message: 'No refresh token provided' }, 400);
     }
@@ -191,14 +194,14 @@ app.post(
 
     setCookie(
       c,
-      'accessToken',
+      COOKIE_ACCESS_TOKEN_NAME,
       accessToken,
       getAuthCookieOptions(c, authConfig.accessTokenExpirationTime),
     );
 
     setCookie(
       c,
-      'refreshToken',
+      COOKIE_REFRESH_TOKEN_NAME,
       refreshToken,
       getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
     );

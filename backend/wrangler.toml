@@ -14,6 +14,10 @@ migrations_dir = "./prisma/d1/migrations"
 binding = "authKV"
 id = "7a439afc4184493c9c00d2cd9037778a"
 
+[[r2_buckets]]
+binding = "R2"
+bucket_name = "hobby-tracker"
+
 [observability]
 enabled = false
 head_sampling_rate = 1
@@ -27,3 +31,7 @@ persist = true
 [vars]
 ALLOWED_ORIGINS = "http://localhost:5173"
 ENVIRONMENT = "development"
+R2_BUCKET_URL = "http://localhost:8787/r2"
+
+[env.production.vars]
+R2_BUCKET_URL = "https://pub-e14c51365034488c94ba892b148d2d43.r2.dev"

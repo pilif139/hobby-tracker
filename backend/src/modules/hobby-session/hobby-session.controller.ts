@@ -1,3 +1,6 @@
+import type { Context } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
+import { HTTPException } from 'hono/http-exception';
 import { Hono } from 'hono/quick';
 import { describeRoute, validator } from 'hono-openapi';
 import z from 'zod';
@@ -8,13 +11,16 @@ import {
   hobbySessionQueryDto,
   updateHobbySessionDto,
 } from './hobby-session.dto';
+import { TooManySessionImagesException } from './hobby-session.service';
 import {
   parseDateFilter,
   FILTER_MIN_DATE,
   getDateErrorMessage,
 } from '@/src/lib/date-filter';
+import { InvalidImageFileExtensionException } from '@/src/lib/image';
 import {
   BadRequestResponseSchema,
+  ContentTooLargeResponseSchema,
   ForbiddenResponseSchema,
   NotFoundResponseSchema,
   jsonResponse,
@@ -26,7 +32,7 @@ const hobbySessionController = new Hono<AppContext>();
 hobbySessionController.get(
   '/user/:userId',
   describeRoute({
-    tags: ['Hobby Session', 'Get By User'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(
         hobbySessionListResponseSchema,
@@ -43,7 +49,7 @@ hobbySessionController.get(
     const maxFilterDate = new Date();
 
     if (userId !== currentUserId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     const hobbySessionService = c.get('services').hobbySession;
@@ -58,17 +64,15 @@ hobbySessionController.get(
     });
 
     if (parsedFrom.error) {
-      return c.json(
-        { message: getDateErrorMessage('from', parsedFrom.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('from', parsedFrom.error),
+      });
     }
 
     if (parsedTo.error) {
-      return c.json(
-        { message: getDateErrorMessage('to', parsedTo.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('to', parsedTo.error),
+      });
     }
 
     if (
@@ -76,7 +80,9 @@ hobbySessionController.get(
       parsedTo.date &&
       parsedFrom.date.getTime() > parsedTo.date.getTime()
     ) {
-      return c.json({ message: 'from must be before or equal to to' }, 400);
+      throw new HTTPException(400, {
+        message: 'from must be before or equal to to',
+      });
     }
 
     const result = await hobbySessionService.findByUserIdPaginatedWithStats(
@@ -96,7 +102,7 @@ hobbySessionController.get(
 hobbySessionController.get(
   '/hobby/:hobbyId',
   describeRoute({
-    tags: ['Hobby Session', 'Get By Hobby'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(
         hobbySessionListResponseSchema,
@@ -121,17 +127,15 @@ hobbySessionController.get(
     });
 
     if (parsedFrom.error) {
-      return c.json(
-        { message: getDateErrorMessage('from', parsedFrom.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('from', parsedFrom.error),
+      });
     }
 
     if (parsedTo.error) {
-      return c.json(
-        { message: getDateErrorMessage('to', parsedTo.error) },
-        400,
-      );
+      throw new HTTPException(400, {
+        message: getDateErrorMessage('to', parsedTo.error),
+      });
     }
 
     if (
@@ -139,7 +143,9 @@ hobbySessionController.get(
       parsedTo.date &&
       parsedFrom.date.getTime() > parsedTo.date.getTime()
     ) {
-      return c.json({ message: 'from must be before or equal to to' }, 400);
+      throw new HTTPException(400, {
+        message: 'from must be before or equal to to',
+      });
     }
 
     const hobbySessionService = c.get('services').hobbySession;
@@ -159,7 +165,7 @@ hobbySessionController.get(
 hobbySessionController.get(
   '/:id',
   describeRoute({
-    tags: ['Hobby Session', 'Get By Id'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(hobbySessionResponseSchema, 'Hobby Session'),
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
@@ -174,11 +180,11 @@ hobbySessionController.get(
 
     const session = await hobbySessionService.getById(id);
     if (!session) {
-      return c.json({ message: 'Hobby session not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby session not found' });
     }
 
     if (session.userId !== userId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     return c.json(session);
@@ -188,15 +194,27 @@ hobbySessionController.get(
 hobbySessionController.post(
   '/',
   describeRoute({
-    tags: ['Hobby Session', 'Create'],
+    tags: ['Hobby Session'],
     responses: {
       201: jsonResponse(hobbySessionResponseSchema, 'Created session'),
       400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
+      413: jsonResponse(ContentTooLargeResponseSchema, 'Content Too Large'),
     },
   }),
-  validator('json', createHobbySessionDto),
+  bodyLimit({
+    maxSize: 20 * 1024 * 1024,
+    onError: (c) => {
+      (c as Context<AppContext>)
+        .get('logger')
+        .error('Body limit error: Payload too large');
+      throw new HTTPException(413, {
+        message: 'Request body is too large. Maximum size is 20MB.',
+      });
+    },
+  }),
+  validator('form', createHobbySessionDto),
   async (c) => {
-    const { hobbyId, startTime, endTime, notes } = c.req.valid('json');
+    const { hobbyId, startTime, endTime, notes, images } = c.req.valid('form');
     const userId = c.get('userId');
     const hobbySessionService = c.get('services').hobbySession;
 
@@ -204,47 +222,69 @@ hobbySessionController.post(
     const end = new Date(endTime);
 
     if (end.getTime() <= start.getTime()) {
-      return c.json({ message: 'endTime must be after startTime' }, 400);
+      throw new HTTPException(400, {
+        message: 'endTime must be after startTime',
+      });
     }
 
-    const hobbySession = await hobbySessionService.create({
-      startTime: start,
-      endTime: end,
-      notes,
-      hobbyId,
-      userId,
-    });
+    try {
+      const hobbySession = await hobbySessionService.create({
+        startTime: start,
+        endTime: end,
+        notes,
+        hobbyId,
+        userId,
+        images,
+      });
 
-    return c.json(hobbySession, 201);
+      return c.json(hobbySession, 201);
+    } catch (error) {
+      if (error instanceof InvalidImageFileExtensionException) {
+        throw new HTTPException(400, { message: error.message });
+      }
+      throw error;
+    }
   },
 );
 
 hobbySessionController.patch(
   '/:id',
   describeRoute({
-    tags: ['Hobby Session', 'Update'],
+    tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(hobbySessionResponseSchema, 'Updated session'),
       400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
       404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      413: jsonResponse(ContentTooLargeResponseSchema, 'Content Too Large'),
+    },
+  }),
+  bodyLimit({
+    maxSize: 20 * 1024 * 1024,
+    onError: (c) => {
+      (c as Context<AppContext>)
+        .get('logger')
+        .error('Body limit error: Payload too large');
+      throw new HTTPException(413, {
+        message: 'Request body is too large. Maximum size is 20MB.',
+      });
     },
   }),
   validator('param', z.object({ id: z.string() })),
-  validator('json', updateHobbySessionDto),
+  validator('form', updateHobbySessionDto),
   async (c) => {
     const id = c.req.valid('param').id;
-    const body = c.req.valid('json');
+    const body = c.req.valid('form');
     const userId = c.get('userId');
     const hobbySessionService = c.get('services').hobbySession;
 
     const existingSession = await hobbySessionService.findById(id);
     if (!existingSession) {
-      return c.json({ message: 'Hobby session not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby session not found' });
     }
 
     if (existingSession.userId !== userId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     const nextStart = body.startTime
@@ -255,24 +295,38 @@ hobbySessionController.patch(
       : existingSession.endTime;
 
     if (nextEnd.getTime() <= nextStart.getTime()) {
-      return c.json({ message: 'endTime must be after startTime' }, 400);
+      throw new HTTPException(400, {
+        message: 'endTime must be after startTime',
+      });
     }
 
-    const updated = await hobbySessionService.update(id, {
-      hobbyId: body.hobbyId,
-      startTime: body.startTime ? new Date(body.startTime) : undefined,
-      endTime: body.endTime ? new Date(body.endTime) : undefined,
-      notes: body.notes,
-    });
+    try {
+      const updated = await hobbySessionService.update(id, userId, {
+        hobbyId: body.hobbyId,
+        startTime: body.startTime ? new Date(body.startTime) : undefined,
+        endTime: body.endTime ? new Date(body.endTime) : undefined,
+        notes: body.notes,
+        newImages: body.images,
+        deletedImageKeys: body.deletedImageKeys,
+      });
 
-    return c.json(updated);
+      return c.json(updated);
+    } catch (error) {
+      if (
+        error instanceof TooManySessionImagesException ||
+        error instanceof InvalidImageFileExtensionException
+      ) {
+        throw new HTTPException(400, { message: error.message });
+      }
+      throw error;
+    }
   },
 );
 
 hobbySessionController.delete(
   '/:id',
   describeRoute({
-    tags: ['Hobby Session', 'Delete'],
+    tags: ['Hobby Session'],
     responses: {
       204: { description: 'No Content' },
       403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
@@ -287,11 +341,11 @@ hobbySessionController.delete(
 
     const existingSession = await hobbySessionService.findById(id);
     if (!existingSession) {
-      return c.json({ message: 'Hobby session not found' }, 404);
+      throw new HTTPException(404, { message: 'Hobby session not found' });
     }
 
     if (existingSession.userId !== userId) {
-      return c.json({ message: 'Unauthorized user' }, 403);
+      throw new HTTPException(403, { message: 'Unauthorized user' });
     }
 
     await hobbySessionService.delete(id);

@@ -8,8 +8,10 @@ import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi';
 import z from 'zod';
 import { getPrismaClient } from './lib/prisma';
 // import { cacheMiddleware } from './middleware/cache';
+import r2Proxy from './lib/r2-proxy';
 import { authMiddleware } from './middleware/auth';
 import { dependencyMiddleware } from './middleware/dependencies';
+import devOnly from './middleware/dev-only';
 import { loggerMiddleware } from './middleware/logger';
 import { authController } from './modules/auth/auth.controller';
 import hobbyController from './modules/hobby/hobby.controller';
@@ -32,6 +34,8 @@ app.use(
   authMiddleware,
 );
 
+app.use('/r2/*', devOnly);
+app.route('/r2', r2Proxy);
 app.route('/auth', authController);
 app.route('/user', userController);
 app.route('/hobby', hobbyController);
@@ -78,9 +82,12 @@ app.get(
 );
 
 app.onError((err, c) => {
-  c.get('logger').error(`Unhandled Error: ${err.message}`);
+  c.get('logger').error(`Error: ${err.message}`);
   if (err instanceof HTTPException) {
     return err.getResponse();
+  }
+  if (err instanceof z.ZodError) {
+    return c.json(z.treeifyError(err));
   }
   return c.json({ message: `Internal Server Error: ${err.message}` }, 500);
 });
@@ -89,15 +96,7 @@ app.onError((err, c) => {
 
 app.get(
   '/doc',
-  async (c, next) => {
-    if (c.env.ENVIRONMENT === 'production') {
-      return c.json(
-        { message: 'Documentation is not available in production' },
-        403,
-      );
-    }
-    return next();
-  },
+  devOnly,
   openAPIRouteHandler(app, {
     documentation: {
       components: {

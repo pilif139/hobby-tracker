@@ -90,6 +90,7 @@ describe('HobbySessionRepository (unit)', () => {
 
     const repository = new HobbySessionRepository(
       prismaMock as unknown as PrismaClient,
+      {} as R2Bucket,
     );
 
     const stats = await repository.getAnalytics({ userId: 'u1' });
@@ -107,6 +108,7 @@ describe('HobbySessionRepository (unit)', () => {
 
     const repository = new HobbySessionRepository(
       prismaMock as unknown as PrismaClient,
+      {} as R2Bucket,
     );
 
     const days = await repository.getDistinctSessionDays({ userId: 'u1' });
