@@ -39,6 +39,7 @@ describe('Hobby Session controller (integration)', () => {
 
     const service = new HobbySessionService(
       repositoryMock as unknown as HobbySessionRepository,
+      'https://bucket.example.com',
     );
 
     app = new Hono<AppContext>();

@@ -22,6 +22,7 @@ describe('HobbySessionService (unit)', () => {
 
     const service = new HobbySessionService(
       repositoryMock as unknown as HobbySessionRepository,
+      'https://bucket.example.com',
     );
 
     const result = await service.create({
@@ -49,11 +50,11 @@ describe('HobbySessionService (unit)', () => {
 
     const service = new HobbySessionService(
       repositoryMock as unknown as HobbySessionRepository,
+      'https://bucket.example.com',
     );
 
-    const result = await service.update('s1', {
+    const result = await service.update('s1', 'u2', {
       hobbyId: 'h2',
-      userId: 'u2',
       notes: 'updated',
     });
 
@@ -61,7 +62,6 @@ describe('HobbySessionService (unit)', () => {
     expect(repositoryMock.update).toHaveBeenCalledWith('s1', {
       notes: 'updated',
       hobby: { connect: { id: 'h2' } },
-      user: { connect: { id: 'u2' } },
     });
   });
 
@@ -102,6 +102,7 @@ describe('HobbySessionService (unit)', () => {
 
     const service = new HobbySessionService(
       repositoryMock as unknown as HobbySessionRepository,
+      'https://bucket.example.com',
     );
 
     const result = await service.findByUserIdPaginatedWithStats('u1', {

@@ -1,4 +1,10 @@
+import { PhotonImage } from '@cf-wasm/photon';
 import type { HobbySessionRepository } from './hobby-session.repository';
+import { resizeImage } from '@/src/lib/image';
+
+const SESSION_IMAGE_MAX_WIDTH = 1280;
+const SESSION_IMAGE_MAX_HEIGHT = 720;
+const SESSION_IMAGE_MAX_COUNT = 4;
 
 interface CreateHobbySessionInput {
   startTime: Date | string;
@@ -9,6 +15,7 @@ interface CreateHobbySessionInput {
   updatedAt?: Date | string;
   hobbyId: string;
   userId: string;
+  images?: File[];
 }
 
 interface UpdateHobbySessionInput {
@@ -19,7 +26,8 @@ interface UpdateHobbySessionInput {
   createdAt?: Date | string;
   updatedAt?: Date | string;
   hobbyId?: string;
-  userId?: string;
+  newImages?: File[];
+  deletedImageKeys?: string[];
 }
 
 interface SessionStats {
@@ -44,10 +52,68 @@ interface SessionListFilters {
   to?: Date;
 }
 
+export class TooManySessionImagesException extends Error {
+  constructor(max: number) {
+    super(`A session can have at most ${max} images.`);
+    this.name = new.target.name;
+    Object.setPrototypeOf(this, new.target.prototype);
+  }
+}
+
 export class HobbySessionService {
   constructor(
     private readonly hobbySessionRepository: HobbySessionRepository,
+    private readonly BUCKET_URL: string,
   ) {}
+
+  private mapFilesToUrls(files: { storageObjectKey: string }[]): string[] {
+    return files.map((f) => `${this.BUCKET_URL}/${f.storageObjectKey}`);
+  }
+
+  private async processImage(
+    file: File,
+  ): Promise<{ buffer: Buffer; filename: string }> {
+    const arrayBuffer = await file.arrayBuffer();
+    const originalBuffer = Buffer.from(arrayBuffer);
+
+    const image = PhotonImage.new_from_byteslice(originalBuffer);
+    const originalWidth = image.get_width();
+    const originalHeight = image.get_height();
+    image.free();
+
+    if (
+      originalWidth <= SESSION_IMAGE_MAX_WIDTH &&
+      originalHeight <= SESSION_IMAGE_MAX_HEIGHT
+    ) {
+      return { buffer: originalBuffer, filename: file.name };
+    }
+
+    const scale = Math.min(
+      SESSION_IMAGE_MAX_WIDTH / originalWidth,
+      SESSION_IMAGE_MAX_HEIGHT / originalHeight,
+    );
+    const targetWidth = Math.max(1, Math.floor(originalWidth * scale));
+    const targetHeight = Math.max(1, Math.floor(originalHeight * scale));
+
+    const buffer = resizeImage(originalBuffer, targetWidth, targetHeight);
+    return { buffer, filename: file.name };
+  }
+
+  private async uploadImages(
+    sessionId: string,
+    userId: string,
+    images: File[],
+  ): Promise<void> {
+    for (const image of images) {
+      const { buffer, filename } = await this.processImage(image);
+      await this.hobbySessionRepository.uploadSessionFile(
+        sessionId,
+        userId,
+        buffer,
+        filename,
+      );
+    }
+  }
 
   private getStreakStats(dayKeys: string[]) {
     if (dayKeys.length === 0) {
@@ -150,7 +216,12 @@ export class HobbySessionService {
   }
 
   async getById(id: string) {
-    return this.hobbySessionRepository.findById(id);
+    const session = await this.hobbySessionRepository.findByIdWithFiles(id);
+    if (!session) {
+      return null;
+    }
+    const { files, ...rest } = session;
+    return { ...rest, imageUrls: this.mapFilesToUrls(files) };
   }
 
   async findByHobbyId(hobbyId: string) {
@@ -176,7 +247,10 @@ export class HobbySessionService {
     );
 
     return {
-      sessions,
+      sessions: sessions.map(({ files, ...session }) => ({
+        ...session,
+        imageUrls: this.mapFilesToUrls(files),
+      })),
       stats,
     };
   }
@@ -200,29 +274,61 @@ export class HobbySessionService {
     );
 
     return {
-      sessions,
+      sessions: sessions.map(({ files, ...session }) => ({
+        ...session,
+        imageUrls: this.mapFilesToUrls(files),
+      })),
       stats,
     };
   }
 
   async create(data: CreateHobbySessionInput) {
-    const { hobbyId, userId, ...rest } = data;
+    const { hobbyId, userId, images, ...rest } = data;
 
-    return this.hobbySessionRepository.create({
+    const session = await this.hobbySessionRepository.create({
       ...rest,
       hobby: { connect: { id: hobbyId } },
       user: { connect: { id: userId } },
     });
+
+    if (images?.length) {
+      await this.uploadImages(session.id, userId, images);
+    }
+
+    return this.getById(session.id);
   }
 
-  async update(id: string, data: UpdateHobbySessionInput) {
-    const { hobbyId, userId, ...rest } = data;
+  async update(id: string, userId: string, data: UpdateHobbySessionInput) {
+    const { hobbyId, newImages, deletedImageKeys, ...rest } = data;
 
-    return this.hobbySessionRepository.update(id, {
+    if (newImages?.length || deletedImageKeys?.length) {
+      const current = await this.hobbySessionRepository.findByIdWithFiles(id);
+      const currentCount = current?.files.length ?? 0;
+      const afterDelete = currentCount - (deletedImageKeys?.length ?? 0);
+      const afterAdd = afterDelete + (newImages?.length ?? 0);
+
+      if (afterAdd > SESSION_IMAGE_MAX_COUNT) {
+        throw new TooManySessionImagesException(SESSION_IMAGE_MAX_COUNT);
+      }
+    }
+
+    if (deletedImageKeys?.length) {
+      await this.hobbySessionRepository.deleteSessionFiles(
+        id,
+        deletedImageKeys,
+      );
+    }
+
+    await this.hobbySessionRepository.update(id, {
       ...rest,
       ...(hobbyId ? { hobby: { connect: { id: hobbyId } } } : {}),
-      ...(userId ? { user: { connect: { id: userId } } } : {}),
     });
+
+    if (newImages?.length) {
+      await this.uploadImages(id, userId, newImages);
+    }
+
+    return this.getById(id);
   }
 
   async delete(id: string) {

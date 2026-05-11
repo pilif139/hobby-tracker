@@ -43,20 +43,25 @@ export class UserService {
   }
 
   async uploadAvatar(userId: string, avatar: File) {
-    const height = 256;
-    const width = 256;
+    const maxSize = 128;
 
     const arrayBuffer = await avatar.arrayBuffer();
     const originalBuffer = Buffer.from(arrayBuffer);
 
     const image = PhotonImage.new_from_byteslice(originalBuffer);
-
-    const buffer =
-      image.get_width() > width || image.get_height() > height
-        ? resizeImage(originalBuffer, width, height)
-        : originalBuffer;
-
+    const originalWidth = image.get_width();
+    const originalHeight = image.get_height();
     image.free();
+
+    let buffer: Buffer;
+    if (originalWidth <= maxSize && originalHeight <= maxSize) {
+      buffer = originalBuffer;
+    } else {
+      const scale = Math.min(maxSize / originalWidth, maxSize / originalHeight);
+      const targetWidth = Math.max(1, Math.floor(originalWidth * scale));
+      const targetHeight = Math.max(1, Math.floor(originalHeight * scale));
+      buffer = resizeImage(originalBuffer, targetWidth, targetHeight);
+    }
 
     const avatarKey = await this.userRepository.updateAvatar(
       userId,

@@ -110,7 +110,8 @@ const scopedServiceFactories: PartialServiceFactoryMap<Services> = {
     );
   },
   hobby: (c) => createHobbyService(c.env.DB),
-  hobbySession: (c) => createHobbySessionService(c.env.DB),
+  hobbySession: (c) =>
+    createHobbySessionService(c.env.DB, c.env.R2, c.env.R2_BUCKET_URL),
   follow: (c) => createFollowService(c.env.DB, c.env.R2),
 };
 

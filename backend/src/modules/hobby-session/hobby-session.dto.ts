@@ -1,10 +1,15 @@
 import z from 'zod';
 
+const imagesField = z.array(z.instanceof(File)).max(4);
+
+const deletedImageKeysField = z.array(z.string());
+
 export const createHobbySessionDto = z.object({
   hobbyId: z.string(),
   startTime: z.string(),
   endTime: z.string(),
   notes: z.string().optional(),
+  images: imagesField.optional(),
 });
 
 export const updateHobbySessionDto = z.object({
@@ -12,6 +17,8 @@ export const updateHobbySessionDto = z.object({
   startTime: z.string().optional(),
   endTime: z.string().optional(),
   notes: z.string().nullable().optional(),
+  images: imagesField.optional(),
+  deletedImageKeys: deletedImageKeysField.optional(),
 });
 
 export const hobbySessionQueryDto = z.object({
@@ -43,6 +50,7 @@ export const hobbySessionResponseSchema = z.object({
   startTime: z.string(),
   endTime: z.string(),
   notes: z.string().nullable(),
+  imageUrls: z.array(z.string()),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
