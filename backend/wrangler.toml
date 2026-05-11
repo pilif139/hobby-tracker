@@ -31,4 +31,7 @@ persist = true
 [vars]
 ALLOWED_ORIGINS = "http://localhost:5173"
 ENVIRONMENT = "development"
-R2_BUCKET_URL="https://pub-e14c51365034488c94ba892b148d2d43.r2.dev"
+R2_BUCKET_URL = "http://localhost:8787/r2"
+
+[env.production.vars]
+R2_BUCKET_URL = "https://pub-e14c51365034488c94ba892b148d2d43.r2.dev"

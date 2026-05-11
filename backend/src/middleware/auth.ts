@@ -14,7 +14,7 @@ const DEVELOPMENT_PATHS = ['/doc', '/scalar', '/health'];
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {
   const isDevPath =
     c.env.ENVIRONMENT === 'development' &&
-    DEVELOPMENT_PATHS.includes(c.req.path);
+    (DEVELOPMENT_PATHS.includes(c.req.path) || c.req.path.startsWith('/r2/'));
   if (isDevPath) {
     await next();
     return;
