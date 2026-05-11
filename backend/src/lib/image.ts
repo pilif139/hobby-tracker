@@ -1,3 +1,5 @@
+import { PhotonImage, resize, SamplingFilter } from '@cf-wasm/photon';
+
 const imageExtensions = ['.jpg', '.png', '.webp', '.jpeg', '.bmp'] as const;
 
 export type ImageFilename = `${string}${(typeof imageExtensions)[number]}`;
@@ -25,6 +27,23 @@ export function getImageContentType(filename: ImageFilename) {
     case '.bmp':
       return 'image/bmp';
   }
+}
+
+export function resizeImage(
+  imageBuffer: Buffer,
+  width: number,
+  height: number,
+): Buffer<ArrayBuffer> {
+  const image = PhotonImage.new_from_byteslice(imageBuffer);
+
+  const resizedImage = resize(image, width, height, SamplingFilter.Nearest);
+
+  const buffer = Buffer.from(resizedImage.get_bytes());
+
+  image.free();
+  resizedImage.free();
+
+  return buffer;
 }
 
 export class InvalidImageFileExtensionException extends Error {

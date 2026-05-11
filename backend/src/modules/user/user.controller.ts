@@ -129,17 +129,21 @@ userController.post(
       });
     },
   }),
+  validator(
+    'form',
+    z.object({
+      file: z.instanceof(File),
+    }),
+  ),
   async (c) => {
-    const body = await c.req.parseBody();
-    if (!(body instanceof File)) {
-      throw new HTTPException(400, { message: 'Avatar file is required' });
-    }
+    const { file } = c.req.valid('form');
 
     const currentUserId = c.get('userId');
     const userService = c.get('services').user;
 
     try {
-      await userService.uploadAvatar(currentUserId, body);
+      const url = await userService.uploadAvatar(currentUserId, file);
+      return c.json({ message: 'Avatar uploaded successfully:', url });
     } catch (error) {
       if (error instanceof InvalidImageFileExtensionException) {
         throw new HTTPException(400, { message: error.message });

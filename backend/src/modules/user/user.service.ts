@@ -1,5 +1,7 @@
+import { PhotonImage } from '@cf-wasm/photon';
 import type { CreateUserDto, UpdateUserDto } from './user.dto';
 import { createHash } from '@/src/lib/hash';
+import { resizeImage } from '@/src/lib/image';
 import type { UserRepository } from '@/src/modules/user/user.repository';
 
 export class UserService {
@@ -41,8 +43,20 @@ export class UserService {
   }
 
   async uploadAvatar(userId: string, avatar: File) {
+    const height = 256;
+    const width = 256;
+
     const arrayBuffer = await avatar.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    const originalBuffer = Buffer.from(arrayBuffer);
+
+    const image = PhotonImage.new_from_byteslice(originalBuffer);
+
+    const buffer =
+      image.get_width() > width || image.get_height() > height
+        ? resizeImage(originalBuffer, width, height)
+        : originalBuffer;
+
+    image.free();
 
     const avatarKey = await this.userRepository.updateAvatar(
       userId,

@@ -104,23 +104,23 @@ export class UserRepository {
     const avatarKey = `avatars/${userId}/${crypto.randomUUID()}.${extension}`;
     const contentType = getImageContentType(fileName);
 
-    // todo: make the failed uploads cleanup
-    await Promise.all([
-      this.bucket.put(avatarKey, avatarBuffer, {
+    try {
+      const result = await this.bucket.put(avatarKey, avatarBuffer, {
         httpMetadata: {
           contentType,
         },
-      }),
-      this.prisma.user.update({
+      });
+
+      await this.prisma.user.update({
         where: { id: userId },
         data: {
           avatarFileKey: avatarKey,
         },
-      }),
-    ]).catch((error: unknown) => {
+      });
+      return result.key;
+    } catch (error: unknown) {
+      // todo: make the failed uploads cleanup
       throw new Error('Failed to upload avatar: ' + (error as Error).message);
-    });
-
-    return avatarKey;
+    }
   }
 }
