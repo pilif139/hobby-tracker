@@ -27,7 +27,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import com.filip.hobbytracker.api.generated.model.GetAuthMe401Response;
 import com.filip.hobbytracker.api.generated.model.GetAuthMe404Response;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogin200Response;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogin401Response;
@@ -91,7 +90,6 @@ public class AuthenticationApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Current authenticated user </td><td>  -  </td></tr>
-        <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
@@ -155,7 +153,6 @@ public class AuthenticationApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Current authenticated user </td><td>  -  </td></tr>
-        <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
@@ -174,7 +171,6 @@ public class AuthenticationApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Current authenticated user </td><td>  -  </td></tr>
-        <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
@@ -195,7 +191,6 @@ public class AuthenticationApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Current authenticated user </td><td>  -  </td></tr>
-        <tr><td> 401 </td><td> Unauthorized </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */

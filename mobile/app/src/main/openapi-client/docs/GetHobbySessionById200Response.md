@@ -13,6 +13,7 @@
 |**startTime** | **String** |  |  |
 |**endTime** | **String** |  |  |
 |**notes** | **String** |  |  |
+|**imageUrls** | **List&lt;String&gt;** |  |  |
 |**createdAt** | **String** |  |  |
 |**updatedAt** | **String** |  |  |
 

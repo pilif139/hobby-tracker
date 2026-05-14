@@ -79,7 +79,6 @@ This endpoint does not need any parameter.
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Current authenticated user |  -  |
-| **401** | Unauthorized |  -  |
 | **404** | Not Found |  -  |
 
 <a id="postAuthLogin"></a>

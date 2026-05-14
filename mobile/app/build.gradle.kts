@@ -34,7 +34,12 @@ android {
 
     sourceSets {
         getByName("main") {
-            java.srcDir("src/main/openapi-client/src/main/java")
+            java.setSrcDirs(
+                listOf(
+                    "src/main/java",
+                    "src/main/openapi-client/src/main/java"
+                )
+            )
         }
     }
 

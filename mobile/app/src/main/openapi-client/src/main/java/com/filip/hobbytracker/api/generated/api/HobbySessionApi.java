@@ -27,14 +27,13 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import com.filip.hobbytracker.api.generated.model.DeleteUserById403Response;
 import com.filip.hobbytracker.api.generated.model.GetAuthMe404Response;
 import com.filip.hobbytracker.api.generated.model.GetHobbySessionById200Response;
+import com.filip.hobbytracker.api.generated.model.GetHobbySessionById403Response;
 import com.filip.hobbytracker.api.generated.model.GetHobbySessionUserByUserId200Response;
-import com.filip.hobbytracker.api.generated.model.PatchHobbySessionById400Response;
-import com.filip.hobbytracker.api.generated.model.PatchHobbySessionByIdRequest;
-import com.filip.hobbytracker.api.generated.model.PatchUserById403Response;
-import com.filip.hobbytracker.api.generated.model.PostHobbySessionRequest;
+import com.filip.hobbytracker.api.generated.model.GetHobbySessionUserByUserId403Response;
+import com.filip.hobbytracker.api.generated.model.PatchHobbySessionById413Response;
+import com.filip.hobbytracker.api.generated.model.PostUserAvatar400Response;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -670,7 +669,12 @@ public class HobbySessionApi {
     /**
      * Build call for patchHobbySessionById
      * @param id  (required)
-     * @param patchHobbySessionByIdRequest  (required)
+     * @param hobbyId  (optional)
+     * @param startTime  (optional)
+     * @param endTime  (optional)
+     * @param notes  (optional)
+     * @param images  (optional)
+     * @param deletedImageKeys  (optional)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -682,9 +686,10 @@ public class HobbySessionApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call patchHobbySessionByIdCall(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchHobbySessionByIdRequest patchHobbySessionByIdRequest, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call patchHobbySessionByIdCall(@javax.annotation.Nonnull String id, @javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, @javax.annotation.Nullable List<String> deletedImageKeys, final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -698,7 +703,7 @@ public class HobbySessionApi {
             basePath = null;
         }
 
-        Object localVarPostBody = patchHobbySessionByIdRequest;
+        Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/hobby-session/{id}"
@@ -710,6 +715,30 @@ public class HobbySessionApi {
         Map<String, String> localVarCookieParams = new HashMap<String, String>();
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+        if (hobbyId != null) {
+            localVarFormParams.put("hobbyId", hobbyId);
+        }
+
+        if (startTime != null) {
+            localVarFormParams.put("startTime", startTime);
+        }
+
+        if (endTime != null) {
+            localVarFormParams.put("endTime", endTime);
+        }
+
+        if (notes != null) {
+            localVarFormParams.put("notes", notes);
+        }
+
+        if (images != null) {
+            localVarFormParams.put("images", images);
+        }
+
+        if (deletedImageKeys != null) {
+            localVarFormParams.put("deletedImageKeys", deletedImageKeys);
+        }
+
         final String[] localVarAccepts = {
             "application/json"
         };
@@ -719,7 +748,7 @@ public class HobbySessionApi {
         }
 
         final String[] localVarContentTypes = {
-            "application/json"
+            "multipart/form-data"
         };
         final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
         if (localVarContentType != null) {
@@ -731,18 +760,13 @@ public class HobbySessionApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call patchHobbySessionByIdValidateBeforeCall(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchHobbySessionByIdRequest patchHobbySessionByIdRequest, final ApiCallback _callback) throws ApiException {
+    private okhttp3.Call patchHobbySessionByIdValidateBeforeCall(@javax.annotation.Nonnull String id, @javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, @javax.annotation.Nullable List<String> deletedImageKeys, final ApiCallback _callback) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException("Missing the required parameter 'id' when calling patchHobbySessionById(Async)");
         }
 
-        // verify the required parameter 'patchHobbySessionByIdRequest' is set
-        if (patchHobbySessionByIdRequest == null) {
-            throw new ApiException("Missing the required parameter 'patchHobbySessionByIdRequest' when calling patchHobbySessionById(Async)");
-        }
-
-        return patchHobbySessionByIdCall(id, patchHobbySessionByIdRequest, _callback);
+        return patchHobbySessionByIdCall(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys, _callback);
 
     }
 
@@ -750,7 +774,12 @@ public class HobbySessionApi {
      * 
      * 
      * @param id  (required)
-     * @param patchHobbySessionByIdRequest  (required)
+     * @param hobbyId  (optional)
+     * @param startTime  (optional)
+     * @param endTime  (optional)
+     * @param notes  (optional)
+     * @param images  (optional)
+     * @param deletedImageKeys  (optional)
      * @return GetHobbySessionById200Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -761,10 +790,11 @@ public class HobbySessionApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public GetHobbySessionById200Response patchHobbySessionById(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchHobbySessionByIdRequest patchHobbySessionByIdRequest) throws ApiException {
-        ApiResponse<GetHobbySessionById200Response> localVarResp = patchHobbySessionByIdWithHttpInfo(id, patchHobbySessionByIdRequest);
+    public GetHobbySessionById200Response patchHobbySessionById(@javax.annotation.Nonnull String id, @javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, @javax.annotation.Nullable List<String> deletedImageKeys) throws ApiException {
+        ApiResponse<GetHobbySessionById200Response> localVarResp = patchHobbySessionByIdWithHttpInfo(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys);
         return localVarResp.getData();
     }
 
@@ -772,7 +802,12 @@ public class HobbySessionApi {
      * 
      * 
      * @param id  (required)
-     * @param patchHobbySessionByIdRequest  (required)
+     * @param hobbyId  (optional)
+     * @param startTime  (optional)
+     * @param endTime  (optional)
+     * @param notes  (optional)
+     * @param images  (optional)
+     * @param deletedImageKeys  (optional)
      * @return ApiResponse&lt;GetHobbySessionById200Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -783,10 +818,11 @@ public class HobbySessionApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<GetHobbySessionById200Response> patchHobbySessionByIdWithHttpInfo(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchHobbySessionByIdRequest patchHobbySessionByIdRequest) throws ApiException {
-        okhttp3.Call localVarCall = patchHobbySessionByIdValidateBeforeCall(id, patchHobbySessionByIdRequest, null);
+    public ApiResponse<GetHobbySessionById200Response> patchHobbySessionByIdWithHttpInfo(@javax.annotation.Nonnull String id, @javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, @javax.annotation.Nullable List<String> deletedImageKeys) throws ApiException {
+        okhttp3.Call localVarCall = patchHobbySessionByIdValidateBeforeCall(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys, null);
         Type localVarReturnType = new TypeToken<GetHobbySessionById200Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
@@ -795,7 +831,12 @@ public class HobbySessionApi {
      *  (asynchronously)
      * 
      * @param id  (required)
-     * @param patchHobbySessionByIdRequest  (required)
+     * @param hobbyId  (optional)
+     * @param startTime  (optional)
+     * @param endTime  (optional)
+     * @param notes  (optional)
+     * @param images  (optional)
+     * @param deletedImageKeys  (optional)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -807,18 +848,23 @@ public class HobbySessionApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call patchHobbySessionByIdAsync(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchHobbySessionByIdRequest patchHobbySessionByIdRequest, final ApiCallback<GetHobbySessionById200Response> _callback) throws ApiException {
+    public okhttp3.Call patchHobbySessionByIdAsync(@javax.annotation.Nonnull String id, @javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, @javax.annotation.Nullable List<String> deletedImageKeys, final ApiCallback<GetHobbySessionById200Response> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = patchHobbySessionByIdValidateBeforeCall(id, patchHobbySessionByIdRequest, _callback);
+        okhttp3.Call localVarCall = patchHobbySessionByIdValidateBeforeCall(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys, _callback);
         Type localVarReturnType = new TypeToken<GetHobbySessionById200Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
     /**
      * Build call for postHobbySession
-     * @param postHobbySessionRequest  (required)
+     * @param hobbyId  (required)
+     * @param startTime  (required)
+     * @param endTime  (required)
+     * @param notes  (optional)
+     * @param images  (optional)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -828,9 +874,10 @@ public class HobbySessionApi {
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call postHobbySessionCall(@javax.annotation.Nonnull PostHobbySessionRequest postHobbySessionRequest, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call postHobbySessionCall(@javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -844,7 +891,7 @@ public class HobbySessionApi {
             basePath = null;
         }
 
-        Object localVarPostBody = postHobbySessionRequest;
+        Object localVarPostBody = null;
 
         // create path and map variables
         String localVarPath = "/hobby-session";
@@ -855,6 +902,26 @@ public class HobbySessionApi {
         Map<String, String> localVarCookieParams = new HashMap<String, String>();
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
+        if (hobbyId != null) {
+            localVarFormParams.put("hobbyId", hobbyId);
+        }
+
+        if (startTime != null) {
+            localVarFormParams.put("startTime", startTime);
+        }
+
+        if (endTime != null) {
+            localVarFormParams.put("endTime", endTime);
+        }
+
+        if (notes != null) {
+            localVarFormParams.put("notes", notes);
+        }
+
+        if (images != null) {
+            localVarFormParams.put("images", images);
+        }
+
         final String[] localVarAccepts = {
             "application/json"
         };
@@ -864,7 +931,7 @@ public class HobbySessionApi {
         }
 
         final String[] localVarContentTypes = {
-            "application/json"
+            "multipart/form-data"
         };
         final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
         if (localVarContentType != null) {
@@ -876,20 +943,34 @@ public class HobbySessionApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call postHobbySessionValidateBeforeCall(@javax.annotation.Nonnull PostHobbySessionRequest postHobbySessionRequest, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter 'postHobbySessionRequest' is set
-        if (postHobbySessionRequest == null) {
-            throw new ApiException("Missing the required parameter 'postHobbySessionRequest' when calling postHobbySession(Async)");
+    private okhttp3.Call postHobbySessionValidateBeforeCall(@javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, final ApiCallback _callback) throws ApiException {
+        // verify the required parameter 'hobbyId' is set
+        if (hobbyId == null) {
+            throw new ApiException("Missing the required parameter 'hobbyId' when calling postHobbySession(Async)");
         }
 
-        return postHobbySessionCall(postHobbySessionRequest, _callback);
+        // verify the required parameter 'startTime' is set
+        if (startTime == null) {
+            throw new ApiException("Missing the required parameter 'startTime' when calling postHobbySession(Async)");
+        }
+
+        // verify the required parameter 'endTime' is set
+        if (endTime == null) {
+            throw new ApiException("Missing the required parameter 'endTime' when calling postHobbySession(Async)");
+        }
+
+        return postHobbySessionCall(hobbyId, startTime, endTime, notes, images, _callback);
 
     }
 
     /**
      * 
      * 
-     * @param postHobbySessionRequest  (required)
+     * @param hobbyId  (required)
+     * @param startTime  (required)
+     * @param endTime  (required)
+     * @param notes  (optional)
+     * @param images  (optional)
      * @return GetHobbySessionById200Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -898,17 +979,22 @@ public class HobbySessionApi {
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public GetHobbySessionById200Response postHobbySession(@javax.annotation.Nonnull PostHobbySessionRequest postHobbySessionRequest) throws ApiException {
-        ApiResponse<GetHobbySessionById200Response> localVarResp = postHobbySessionWithHttpInfo(postHobbySessionRequest);
+    public GetHobbySessionById200Response postHobbySession(@javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images) throws ApiException {
+        ApiResponse<GetHobbySessionById200Response> localVarResp = postHobbySessionWithHttpInfo(hobbyId, startTime, endTime, notes, images);
         return localVarResp.getData();
     }
 
     /**
      * 
      * 
-     * @param postHobbySessionRequest  (required)
+     * @param hobbyId  (required)
+     * @param startTime  (required)
+     * @param endTime  (required)
+     * @param notes  (optional)
+     * @param images  (optional)
      * @return ApiResponse&lt;GetHobbySessionById200Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -917,10 +1003,11 @@ public class HobbySessionApi {
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<GetHobbySessionById200Response> postHobbySessionWithHttpInfo(@javax.annotation.Nonnull PostHobbySessionRequest postHobbySessionRequest) throws ApiException {
-        okhttp3.Call localVarCall = postHobbySessionValidateBeforeCall(postHobbySessionRequest, null);
+    public ApiResponse<GetHobbySessionById200Response> postHobbySessionWithHttpInfo(@javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images) throws ApiException {
+        okhttp3.Call localVarCall = postHobbySessionValidateBeforeCall(hobbyId, startTime, endTime, notes, images, null);
         Type localVarReturnType = new TypeToken<GetHobbySessionById200Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
@@ -928,7 +1015,11 @@ public class HobbySessionApi {
     /**
      *  (asynchronously)
      * 
-     * @param postHobbySessionRequest  (required)
+     * @param hobbyId  (required)
+     * @param startTime  (required)
+     * @param endTime  (required)
+     * @param notes  (optional)
+     * @param images  (optional)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -938,11 +1029,12 @@ public class HobbySessionApi {
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call postHobbySessionAsync(@javax.annotation.Nonnull PostHobbySessionRequest postHobbySessionRequest, final ApiCallback<GetHobbySessionById200Response> _callback) throws ApiException {
+    public okhttp3.Call postHobbySessionAsync(@javax.annotation.Nullable String hobbyId, @javax.annotation.Nullable String startTime, @javax.annotation.Nullable String endTime, @javax.annotation.Nullable String notes, @javax.annotation.Nullable List<Object> images, final ApiCallback<GetHobbySessionById200Response> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = postHobbySessionValidateBeforeCall(postHobbySessionRequest, _callback);
+        okhttp3.Call localVarCall = postHobbySessionValidateBeforeCall(hobbyId, startTime, endTime, notes, images, _callback);
         Type localVarReturnType = new TypeToken<GetHobbySessionById200Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;

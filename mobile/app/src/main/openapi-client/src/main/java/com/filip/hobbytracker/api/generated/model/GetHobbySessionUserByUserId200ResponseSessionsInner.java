@@ -20,7 +20,9 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -79,6 +81,11 @@ public class GetHobbySessionUserByUserId200ResponseSessionsInner {
   @SerializedName(SERIALIZED_NAME_NOTES)
   @javax.annotation.Nullable
   private String notes;
+
+  public static final String SERIALIZED_NAME_IMAGE_URLS = "imageUrls";
+  @SerializedName(SERIALIZED_NAME_IMAGE_URLS)
+  @javax.annotation.Nonnull
+  private List<String> imageUrls = new ArrayList<>();
 
   public static final String SERIALIZED_NAME_CREATED_AT = "createdAt";
   @SerializedName(SERIALIZED_NAME_CREATED_AT)
@@ -207,6 +214,33 @@ public class GetHobbySessionUserByUserId200ResponseSessionsInner {
   }
 
 
+  public GetHobbySessionUserByUserId200ResponseSessionsInner imageUrls(@javax.annotation.Nonnull List<String> imageUrls) {
+    this.imageUrls = imageUrls;
+    return this;
+  }
+
+  public GetHobbySessionUserByUserId200ResponseSessionsInner addImageUrlsItem(String imageUrlsItem) {
+    if (this.imageUrls == null) {
+      this.imageUrls = new ArrayList<>();
+    }
+    this.imageUrls.add(imageUrlsItem);
+    return this;
+  }
+
+  /**
+   * Get imageUrls
+   * @return imageUrls
+   */
+  @javax.annotation.Nonnull
+  public List<String> getImageUrls() {
+    return imageUrls;
+  }
+
+  public void setImageUrls(@javax.annotation.Nonnull List<String> imageUrls) {
+    this.imageUrls = imageUrls;
+  }
+
+
   public GetHobbySessionUserByUserId200ResponseSessionsInner createdAt(@javax.annotation.Nullable String createdAt) {
     this.createdAt = createdAt;
     return this;
@@ -261,13 +295,14 @@ public class GetHobbySessionUserByUserId200ResponseSessionsInner {
         Objects.equals(this.startTime, getHobbySessionUserByUserId200ResponseSessionsInner.startTime) &&
         Objects.equals(this.endTime, getHobbySessionUserByUserId200ResponseSessionsInner.endTime) &&
         Objects.equals(this.notes, getHobbySessionUserByUserId200ResponseSessionsInner.notes) &&
+        Objects.equals(this.imageUrls, getHobbySessionUserByUserId200ResponseSessionsInner.imageUrls) &&
         Objects.equals(this.createdAt, getHobbySessionUserByUserId200ResponseSessionsInner.createdAt) &&
         Objects.equals(this.updatedAt, getHobbySessionUserByUserId200ResponseSessionsInner.updatedAt);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, hobbyId, userId, startTime, endTime, notes, createdAt, updatedAt);
+    return Objects.hash(id, hobbyId, userId, startTime, endTime, notes, imageUrls, createdAt, updatedAt);
   }
 
   @Override
@@ -280,6 +315,7 @@ public class GetHobbySessionUserByUserId200ResponseSessionsInner {
     sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
     sb.append("    endTime: ").append(toIndentedString(endTime)).append("\n");
     sb.append("    notes: ").append(toIndentedString(notes)).append("\n");
+    sb.append("    imageUrls: ").append(toIndentedString(imageUrls)).append("\n");
     sb.append("    createdAt: ").append(toIndentedString(createdAt)).append("\n");
     sb.append("    updatedAt: ").append(toIndentedString(updatedAt)).append("\n");
     sb.append("}");
@@ -300,10 +336,10 @@ public class GetHobbySessionUserByUserId200ResponseSessionsInner {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("id", "hobbyId", "userId", "startTime", "endTime", "notes", "createdAt", "updatedAt"));
+    openapiFields = new HashSet<String>(Arrays.asList("id", "hobbyId", "userId", "startTime", "endTime", "notes", "imageUrls", "createdAt", "updatedAt"));
 
     // a set of required properties/fields (JSON key names)
-    openapiRequiredFields = new HashSet<String>(Arrays.asList("id", "hobbyId", "userId", "startTime", "endTime", "notes", "createdAt", "updatedAt"));
+    openapiRequiredFields = new HashSet<String>(Arrays.asList("id", "hobbyId", "userId", "startTime", "endTime", "notes", "imageUrls", "createdAt", "updatedAt"));
   }
 
   /**
@@ -351,6 +387,12 @@ public class GetHobbySessionUserByUserId200ResponseSessionsInner {
       }
       if ((jsonObj.get("notes") != null && !jsonObj.get("notes").isJsonNull()) && !jsonObj.get("notes").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "Expected the field `notes` to be a primitive type in the JSON string but got `%s`", jsonObj.get("notes").toString()));
+      }
+      // ensure the required json array is present
+      if (jsonObj.get("imageUrls") == null) {
+        throw new IllegalArgumentException("Expected the field `linkedContent` to be an array in the JSON string but got `null`");
+      } else if (!jsonObj.get("imageUrls").isJsonArray()) {
+        throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "Expected the field `imageUrls` to be an array in the JSON string but got `%s`", jsonObj.get("imageUrls").toString()));
       }
       if ((jsonObj.get("createdAt") != null && !jsonObj.get("createdAt").isJsonNull()) && !jsonObj.get("createdAt").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "Expected the field `createdAt` to be a primitive type in the JSON string but got `%s`", jsonObj.get("createdAt").toString()));

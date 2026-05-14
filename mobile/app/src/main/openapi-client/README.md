@@ -85,7 +85,7 @@ import com.filip.hobbytracker.api.invoker.ApiException;
 import com.filip.hobbytracker.api.invoker.Configuration;
 import com.filip.hobbytracker.api.invoker.auth.*;
 import com.filip.hobbytracker.api.generated.model.*;
-import com.filip.hobbytracker.api.generated.api.AddApi;
+import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -104,13 +104,12 @@ public class Example {
     // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
     //refreshTokenCookie.setApiKeyPrefix("Token");
 
-    AddApi apiInstance = new AddApi(defaultClient);
-    String hobbyId = "hobbyId_example"; // String | 
+    AuthenticationApi apiInstance = new AuthenticationApi(defaultClient);
     try {
-      PostAuthLogout200Response result = apiInstance.postHobbyAddToProfileByHobbyId(hobbyId);
+      PostAuthLogin200Response result = apiInstance.getAuthMe();
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling AddApi#postHobbyAddToProfileByHobbyId");
+      System.err.println("Exception when calling AuthenticationApi#getAuthMe");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -127,22 +126,11 @@ All URIs are relative to *http://localhost*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*AddApi* | [**postHobbyAddToProfileByHobbyId**](docs/AddApi.md#postHobbyAddToProfileByHobbyId) | **POST** /hobby/add-to-profile/{hobbyId} | 
 *AuthenticationApi* | [**getAuthMe**](docs/AuthenticationApi.md#getAuthMe) | **GET** /auth/me | 
 *AuthenticationApi* | [**postAuthLogin**](docs/AuthenticationApi.md#postAuthLogin) | **POST** /auth/login | 
 *AuthenticationApi* | [**postAuthLogout**](docs/AuthenticationApi.md#postAuthLogout) | **POST** /auth/logout | 
 *AuthenticationApi* | [**postAuthLogoutOtherDevices**](docs/AuthenticationApi.md#postAuthLogoutOtherDevices) | **POST** /auth/logout-other-devices | 
 *AuthenticationApi* | [**postAuthRegister**](docs/AuthenticationApi.md#postAuthRegister) | **POST** /auth/register | 
-*CreateApi* | [**postHobbySession**](docs/CreateApi.md#postHobbySession) | **POST** /hobby-session | 
-*CreateNewApi* | [**postHobby**](docs/CreateNewApi.md#postHobby) | **POST** /hobby | 
-*DeleteApi* | [**deleteHobbySessionById**](docs/DeleteApi.md#deleteHobbySessionById) | **DELETE** /hobby-session/{id} | 
-*DeleteApi* | [**deleteUserById**](docs/DeleteApi.md#deleteUserById) | **DELETE** /user/{id} | 
-*GetByHobbyApi* | [**getHobbySessionHobbyByHobbyId**](docs/GetByHobbyApi.md#getHobbySessionHobbyByHobbyId) | **GET** /hobby-session/hobby/{hobbyId} | 
-*GetByIdApi* | [**getHobbyById**](docs/GetByIdApi.md#getHobbyById) | **GET** /hobby/{id} | 
-*GetByIdApi* | [**getHobbySessionById**](docs/GetByIdApi.md#getHobbySessionById) | **GET** /hobby-session/{id} | 
-*GetByIdApi* | [**getUserById**](docs/GetByIdApi.md#getUserById) | **GET** /user/{id} | 
-*GetByUserApi* | [**getHobbySessionUserByUserId**](docs/GetByUserApi.md#getHobbySessionUserByUserId) | **GET** /hobby-session/user/{userId} | 
-*GetByUserApi* | [**getHobbyUserByUserId**](docs/GetByUserApi.md#getHobbyUserByUserId) | **GET** /hobby/user/{userId} | 
 *HealthCheckApi* | [**getHealth**](docs/HealthCheckApi.md#getHealth) | **GET** /health | 
 *HobbyApi* | [**deleteHobbyRemoveFromProfileByHobbyId**](docs/HobbyApi.md#deleteHobbyRemoveFromProfileByHobbyId) | **DELETE** /hobby/remove-from-profile/{hobbyId} | 
 *HobbyApi* | [**getHobby**](docs/HobbyApi.md#getHobby) | **GET** /hobby | 
@@ -156,31 +144,26 @@ Class | Method | HTTP request | Description
 *HobbySessionApi* | [**getHobbySessionUserByUserId**](docs/HobbySessionApi.md#getHobbySessionUserByUserId) | **GET** /hobby-session/user/{userId} | 
 *HobbySessionApi* | [**patchHobbySessionById**](docs/HobbySessionApi.md#patchHobbySessionById) | **PATCH** /hobby-session/{id} | 
 *HobbySessionApi* | [**postHobbySession**](docs/HobbySessionApi.md#postHobbySession) | **POST** /hobby-session | 
-*RemoveApi* | [**deleteHobbyRemoveFromProfileByHobbyId**](docs/RemoveApi.md#deleteHobbyRemoveFromProfileByHobbyId) | **DELETE** /hobby/remove-from-profile/{hobbyId} | 
-*SearchApi* | [**getHobby**](docs/SearchApi.md#getHobby) | **GET** /hobby | 
-*UpdateApi* | [**patchHobbySessionById**](docs/UpdateApi.md#patchHobbySessionById) | **PATCH** /hobby-session/{id} | 
-*UpdateApi* | [**patchUserById**](docs/UpdateApi.md#patchUserById) | **PATCH** /user/{id} | 
-*UserApi* | [**deleteUserById**](docs/UserApi.md#deleteUserById) | **DELETE** /user/{id} | 
+*UserApi* | [**deleteUserMe**](docs/UserApi.md#deleteUserMe) | **DELETE** /user/me | 
 *UserApi* | [**getUserById**](docs/UserApi.md#getUserById) | **GET** /user/{id} | 
-*UserApi* | [**patchUserById**](docs/UserApi.md#patchUserById) | **PATCH** /user/{id} | 
+*UserApi* | [**patchUserMe**](docs/UserApi.md#patchUserMe) | **PATCH** /user/me | 
+*UserApi* | [**postUserAvatar**](docs/UserApi.md#postUserAvatar) | **POST** /user/avatar | 
 
 
 ## Documentation for Models
 
- - [DeleteUserById403Response](docs/DeleteUserById403Response.md)
- - [GetAuthMe401Response](docs/GetAuthMe401Response.md)
  - [GetAuthMe404Response](docs/GetAuthMe404Response.md)
  - [GetHealth200Response](docs/GetHealth200Response.md)
  - [GetHobbySessionById200Response](docs/GetHobbySessionById200Response.md)
+ - [GetHobbySessionById403Response](docs/GetHobbySessionById403Response.md)
  - [GetHobbySessionUserByUserId200Response](docs/GetHobbySessionUserByUserId200Response.md)
  - [GetHobbySessionUserByUserId200ResponseSessionsInner](docs/GetHobbySessionUserByUserId200ResponseSessionsInner.md)
  - [GetHobbySessionUserByUserId200ResponseStats](docs/GetHobbySessionUserByUserId200ResponseStats.md)
+ - [GetHobbySessionUserByUserId403Response](docs/GetHobbySessionUserByUserId403Response.md)
  - [GetHobbyUserByUserId200ResponseInner](docs/GetHobbyUserByUserId200ResponseInner.md)
  - [GetUserById200Response](docs/GetUserById200Response.md)
- - [PatchHobbySessionById400Response](docs/PatchHobbySessionById400Response.md)
- - [PatchHobbySessionByIdRequest](docs/PatchHobbySessionByIdRequest.md)
- - [PatchUserById403Response](docs/PatchUserById403Response.md)
- - [PatchUserByIdRequest](docs/PatchUserByIdRequest.md)
+ - [PatchHobbySessionById413Response](docs/PatchHobbySessionById413Response.md)
+ - [PatchUserMeRequest](docs/PatchUserMeRequest.md)
  - [PostAuthLogin200Response](docs/PostAuthLogin200Response.md)
  - [PostAuthLogin401Response](docs/PostAuthLogin401Response.md)
  - [PostAuthLoginRequest](docs/PostAuthLoginRequest.md)
@@ -190,7 +173,9 @@ Class | Method | HTTP request | Description
  - [PostAuthRegister500Response](docs/PostAuthRegister500Response.md)
  - [PostAuthRegisterRequest](docs/PostAuthRegisterRequest.md)
  - [PostHobbyRequest](docs/PostHobbyRequest.md)
- - [PostHobbySessionRequest](docs/PostHobbySessionRequest.md)
+ - [PostUserAvatar400Response](docs/PostUserAvatar400Response.md)
+ - [PostUserAvatar413Response](docs/PostUserAvatar413Response.md)
+ - [PostUserAvatar500Response](docs/PostUserAvatar500Response.md)
 
 
 <a id="documentation-for-authorization"></a>

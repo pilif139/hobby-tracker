@@ -326,7 +326,7 @@ public class Example {
 
 <a id="patchHobbySessionById"></a>
 # **patchHobbySessionById**
-> GetHobbySessionById200Response patchHobbySessionById(id, patchHobbySessionByIdRequest)
+> GetHobbySessionById200Response patchHobbySessionById(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys)
 
 
 
@@ -359,9 +359,14 @@ public class Example {
 
     HobbySessionApi apiInstance = new HobbySessionApi(defaultClient);
     String id = "id_example"; // String | 
-    PatchHobbySessionByIdRequest patchHobbySessionByIdRequest = new PatchHobbySessionByIdRequest(); // PatchHobbySessionByIdRequest | 
+    String hobbyId = "hobbyId_example"; // String | 
+    String startTime = "startTime_example"; // String | 
+    String endTime = "endTime_example"; // String | 
+    String notes = "notes_example"; // String | 
+    List<Object> images = Arrays.asList(null); // List<Object> | 
+    List<String> deletedImageKeys = Arrays.asList(); // List<String> | 
     try {
-      GetHobbySessionById200Response result = apiInstance.patchHobbySessionById(id, patchHobbySessionByIdRequest);
+      GetHobbySessionById200Response result = apiInstance.patchHobbySessionById(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling HobbySessionApi#patchHobbySessionById");
@@ -379,7 +384,12 @@ public class Example {
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
 | **id** | **String**|  | |
-| **patchHobbySessionByIdRequest** | [**PatchHobbySessionByIdRequest**](PatchHobbySessionByIdRequest.md)|  | |
+| **hobbyId** | **String**|  | [optional] |
+| **startTime** | **String**|  | [optional] |
+| **endTime** | **String**|  | [optional] |
+| **notes** | **String**|  | [optional] |
+| **images** | [**List&lt;Object&gt;**](Object.md)|  | [optional] |
+| **deletedImageKeys** | [**List&lt;String&gt;**](String.md)|  | [optional] |
 
 ### Return type
 
@@ -391,7 +401,7 @@ public class Example {
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 ### HTTP response details
@@ -401,10 +411,11 @@ public class Example {
 | **400** | Bad Request |  -  |
 | **403** | Forbidden |  -  |
 | **404** | Not Found |  -  |
+| **413** | Content Too Large |  -  |
 
 <a id="postHobbySession"></a>
 # **postHobbySession**
-> GetHobbySessionById200Response postHobbySession(postHobbySessionRequest)
+> GetHobbySessionById200Response postHobbySession(hobbyId, startTime, endTime, notes, images)
 
 
 
@@ -436,9 +447,13 @@ public class Example {
     //refreshTokenCookie.setApiKeyPrefix("Token");
 
     HobbySessionApi apiInstance = new HobbySessionApi(defaultClient);
-    PostHobbySessionRequest postHobbySessionRequest = new PostHobbySessionRequest(); // PostHobbySessionRequest | 
+    String hobbyId = "hobbyId_example"; // String | 
+    String startTime = "startTime_example"; // String | 
+    String endTime = "endTime_example"; // String | 
+    String notes = "notes_example"; // String | 
+    List<Object> images = Arrays.asList(null); // List<Object> | 
     try {
-      GetHobbySessionById200Response result = apiInstance.postHobbySession(postHobbySessionRequest);
+      GetHobbySessionById200Response result = apiInstance.postHobbySession(hobbyId, startTime, endTime, notes, images);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling HobbySessionApi#postHobbySession");
@@ -455,7 +470,11 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **postHobbySessionRequest** | [**PostHobbySessionRequest**](PostHobbySessionRequest.md)|  | |
+| **hobbyId** | **String**|  | |
+| **startTime** | **String**|  | |
+| **endTime** | **String**|  | |
+| **notes** | **String**|  | [optional] |
+| **images** | [**List&lt;Object&gt;**](Object.md)|  | [optional] |
 
 ### Return type
 
@@ -467,7 +486,7 @@ public class Example {
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: multipart/form-data
  - **Accept**: application/json
 
 ### HTTP response details
@@ -475,4 +494,5 @@ public class Example {
 |-------------|-------------|------------------|
 | **201** | Created session |  -  |
 | **400** | Bad Request |  -  |
+| **413** | Content Too Large |  -  |
 

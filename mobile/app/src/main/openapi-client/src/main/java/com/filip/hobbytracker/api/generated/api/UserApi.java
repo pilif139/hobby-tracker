@@ -27,12 +27,13 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import com.filip.hobbytracker.api.generated.model.DeleteUserById403Response;
 import com.filip.hobbytracker.api.generated.model.GetAuthMe404Response;
 import com.filip.hobbytracker.api.generated.model.GetUserById200Response;
-import com.filip.hobbytracker.api.generated.model.PatchUserById403Response;
-import com.filip.hobbytracker.api.generated.model.PatchUserByIdRequest;
+import com.filip.hobbytracker.api.generated.model.PatchUserMeRequest;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogin200Response;
+import com.filip.hobbytracker.api.generated.model.PostUserAvatar400Response;
+import com.filip.hobbytracker.api.generated.model.PostUserAvatar413Response;
+import com.filip.hobbytracker.api.generated.model.PostUserAvatar500Response;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -78,8 +79,7 @@ public class UserApi {
     }
 
     /**
-     * Build call for deleteUserById
-     * @param id  (required)
+     * Build call for deleteUserMe
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -88,11 +88,10 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call deleteUserByIdCall(@javax.annotation.Nonnull String id, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call deleteUserMeCall(final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -109,8 +108,7 @@ public class UserApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/user/{id}"
-            .replace("{" + "id" + "}", localVarApiClient.escapeString(id.toString()));
+        String localVarPath = "/user/me";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -138,38 +136,30 @@ public class UserApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call deleteUserByIdValidateBeforeCall(@javax.annotation.Nonnull String id, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException("Missing the required parameter 'id' when calling deleteUserById(Async)");
-        }
-
-        return deleteUserByIdCall(id, _callback);
+    private okhttp3.Call deleteUserMeValidateBeforeCall(final ApiCallback _callback) throws ApiException {
+        return deleteUserMeCall(_callback);
 
     }
 
     /**
      * 
      * 
-     * @param id  (required)
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public void deleteUserById(@javax.annotation.Nonnull String id) throws ApiException {
-        deleteUserByIdWithHttpInfo(id);
+    public void deleteUserMe() throws ApiException {
+        deleteUserMeWithHttpInfo();
     }
 
     /**
      * 
      * 
-     * @param id  (required)
      * @return ApiResponse&lt;Void&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -177,19 +167,17 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<Void> deleteUserByIdWithHttpInfo(@javax.annotation.Nonnull String id) throws ApiException {
-        okhttp3.Call localVarCall = deleteUserByIdValidateBeforeCall(id, null);
+    public ApiResponse<Void> deleteUserMeWithHttpInfo() throws ApiException {
+        okhttp3.Call localVarCall = deleteUserMeValidateBeforeCall(null);
         return localVarApiClient.execute(localVarCall);
     }
 
     /**
      *  (asynchronously)
      * 
-     * @param id  (required)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -198,13 +186,12 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call deleteUserByIdAsync(@javax.annotation.Nonnull String id, final ApiCallback<Void> _callback) throws ApiException {
+    public okhttp3.Call deleteUserMeAsync(final ApiCallback<Void> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = deleteUserByIdValidateBeforeCall(id, _callback);
+        okhttp3.Call localVarCall = deleteUserMeValidateBeforeCall(_callback);
         localVarApiClient.executeAsync(localVarCall, _callback);
         return localVarCall;
     }
@@ -340,9 +327,8 @@ public class UserApi {
         return localVarCall;
     }
     /**
-     * Build call for patchUserById
-     * @param id  (required)
-     * @param patchUserByIdRequest  (required)
+     * Build call for patchUserMe
+     * @param patchUserMeRequest  (required)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -351,11 +337,9 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call patchUserByIdCall(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchUserByIdRequest patchUserByIdRequest, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call patchUserMeCall(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest, final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -369,11 +353,10 @@ public class UserApi {
             basePath = null;
         }
 
-        Object localVarPostBody = patchUserByIdRequest;
+        Object localVarPostBody = patchUserMeRequest;
 
         // create path and map variables
-        String localVarPath = "/user/{id}"
-            .replace("{" + "id" + "}", localVarApiClient.escapeString(id.toString()));
+        String localVarPath = "/user/me";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -402,26 +385,20 @@ public class UserApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call patchUserByIdValidateBeforeCall(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchUserByIdRequest patchUserByIdRequest, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException("Missing the required parameter 'id' when calling patchUserById(Async)");
+    private okhttp3.Call patchUserMeValidateBeforeCall(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest, final ApiCallback _callback) throws ApiException {
+        // verify the required parameter 'patchUserMeRequest' is set
+        if (patchUserMeRequest == null) {
+            throw new ApiException("Missing the required parameter 'patchUserMeRequest' when calling patchUserMe(Async)");
         }
 
-        // verify the required parameter 'patchUserByIdRequest' is set
-        if (patchUserByIdRequest == null) {
-            throw new ApiException("Missing the required parameter 'patchUserByIdRequest' when calling patchUserById(Async)");
-        }
-
-        return patchUserByIdCall(id, patchUserByIdRequest, _callback);
+        return patchUserMeCall(patchUserMeRequest, _callback);
 
     }
 
     /**
      * 
      * 
-     * @param id  (required)
-     * @param patchUserByIdRequest  (required)
+     * @param patchUserMeRequest  (required)
      * @return PostAuthLogin200Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -429,20 +406,17 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public PostAuthLogin200Response patchUserById(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchUserByIdRequest patchUserByIdRequest) throws ApiException {
-        ApiResponse<PostAuthLogin200Response> localVarResp = patchUserByIdWithHttpInfo(id, patchUserByIdRequest);
+    public PostAuthLogin200Response patchUserMe(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest) throws ApiException {
+        ApiResponse<PostAuthLogin200Response> localVarResp = patchUserMeWithHttpInfo(patchUserMeRequest);
         return localVarResp.getData();
     }
 
     /**
      * 
      * 
-     * @param id  (required)
-     * @param patchUserByIdRequest  (required)
+     * @param patchUserMeRequest  (required)
      * @return ApiResponse&lt;PostAuthLogin200Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
@@ -450,12 +424,10 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<PostAuthLogin200Response> patchUserByIdWithHttpInfo(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchUserByIdRequest patchUserByIdRequest) throws ApiException {
-        okhttp3.Call localVarCall = patchUserByIdValidateBeforeCall(id, patchUserByIdRequest, null);
+    public ApiResponse<PostAuthLogin200Response> patchUserMeWithHttpInfo(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest) throws ApiException {
+        okhttp3.Call localVarCall = patchUserMeValidateBeforeCall(patchUserMeRequest, null);
         Type localVarReturnType = new TypeToken<PostAuthLogin200Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
@@ -463,8 +435,7 @@ public class UserApi {
     /**
      *  (asynchronously)
      * 
-     * @param id  (required)
-     * @param patchUserByIdRequest  (required)
+     * @param patchUserMeRequest  (required)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -473,15 +444,152 @@ public class UserApi {
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
         <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-        <tr><td> 403 </td><td> Forbidden </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call patchUserByIdAsync(@javax.annotation.Nonnull String id, @javax.annotation.Nonnull PatchUserByIdRequest patchUserByIdRequest, final ApiCallback<PostAuthLogin200Response> _callback) throws ApiException {
+    public okhttp3.Call patchUserMeAsync(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest, final ApiCallback<PostAuthLogin200Response> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = patchUserByIdValidateBeforeCall(id, patchUserByIdRequest, _callback);
+        okhttp3.Call localVarCall = patchUserMeValidateBeforeCall(patchUserMeRequest, _callback);
         Type localVarReturnType = new TypeToken<PostAuthLogin200Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for postUserAvatar
+     * @param _file  (required)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call postUserAvatarCall(@javax.annotation.Nullable Object _file, final ApiCallback _callback) throws ApiException {
+        String basePath = null;
+        // Operation Servers
+        String[] localBasePaths = new String[] {  };
+
+        // Determine Base Path to Use
+        if (localCustomBaseUrl != null){
+            basePath = localCustomBaseUrl;
+        } else if ( localBasePaths.length > 0 ) {
+            basePath = localBasePaths[localHostIndex];
+        } else {
+            basePath = null;
+        }
+
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/user/avatar";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        if (_file != null) {
+            localVarFormParams.put("file", _file);
+        }
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+            "multipart/form-data"
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        if (localVarContentType != null) {
+            localVarHeaderParams.put("Content-Type", localVarContentType);
+        }
+
+        String[] localVarAuthNames = new String[] { "accessTokenCookie", "refreshTokenCookie" };
+        return localVarApiClient.buildCall(basePath, localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call postUserAvatarValidateBeforeCall(@javax.annotation.Nullable Object _file, final ApiCallback _callback) throws ApiException {
+        // verify the required parameter '_file' is set
+        if (_file == null) {
+            throw new ApiException("Missing the required parameter '_file' when calling postUserAvatar(Async)");
+        }
+
+        return postUserAvatarCall(_file, _callback);
+
+    }
+
+    /**
+     * 
+     * 
+     * @param _file  (required)
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+     </table>
+     */
+    public void postUserAvatar(@javax.annotation.Nullable Object _file) throws ApiException {
+        postUserAvatarWithHttpInfo(_file);
+    }
+
+    /**
+     * 
+     * 
+     * @param _file  (required)
+     * @return ApiResponse&lt;Void&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<Void> postUserAvatarWithHttpInfo(@javax.annotation.Nullable Object _file) throws ApiException {
+        okhttp3.Call localVarCall = postUserAvatarValidateBeforeCall(_file, null);
+        return localVarApiClient.execute(localVarCall);
+    }
+
+    /**
+     *  (asynchronously)
+     * 
+     * @param _file  (required)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
+        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
+        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
+        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call postUserAvatarAsync(@javax.annotation.Nullable Object _file, final ApiCallback<Void> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = postUserAvatarValidateBeforeCall(_file, _callback);
+        localVarApiClient.executeAsync(localVarCall, _callback);
         return localVarCall;
     }
 }
