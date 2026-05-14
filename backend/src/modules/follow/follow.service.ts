@@ -54,6 +54,10 @@ export class FollowService {
     return this.followRepository.findByFollowingId(userId);
   }
 
+  async getFollowingIds(userId: string): Promise<string[]> {
+    return this.followRepository.getFollowingIds(userId);
+  }
+
   async getFollowCounts(userId: string) {
     await this.assertUsersExist(userId);
     return this.followRepository.getFollowCounts(userId);
