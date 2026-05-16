@@ -1,10 +1,17 @@
 import { cloudflareTest } from '@cloudflare/vitest-pool-workers';
 import { defineConfig } from 'vitest/config';
 
+const rootDir = new URL('./', import.meta.url).pathname;
+
 export default defineConfig({
   resolve: {
     alias: {
-      '@': new URL('./', import.meta.url).pathname,
+      '@': rootDir,
+      // Wasm in @cf-wasm/photon is not resolved in vitest-pool-workers; swap for a shim.
+      '@cf-wasm/photon': new URL(
+        './tests/__mocks__/cf-wasm-photon.ts',
+        import.meta.url,
+      ).pathname,
     },
   },
 
