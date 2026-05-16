@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
 import { createMiddleware } from 'hono/factory';
 import { AuthService } from '../modules/auth/auth.service';
+import { createFeedService } from '../modules/feed/feed.factory';
 import { createFollowService } from '../modules/follow/follow.factory';
 import { createUserService } from '../modules/user/user.factory';
 import { createHobbyService } from '@/src/modules/hobby/hobby.factory';
@@ -113,6 +114,11 @@ const scopedServiceFactories: PartialServiceFactoryMap<Services> = {
   hobbySession: (c) =>
     createHobbySessionService(c.env.DB, c.env.R2, c.env.R2_BUCKET_URL),
   follow: (c) => createFollowService(c.env.DB, c.env.R2),
+  feed: (c, registry) => {
+    const followService =
+      registry.getScoped('follow') ?? createFollowService(c.env.DB, c.env.R2);
+    return createFeedService(c.env.DB, followService, c.env.R2_BUCKET_URL);
+  },
 };
 
 const transientServiceFactories: PartialServiceFactoryMap<Services> = {};
