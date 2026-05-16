@@ -162,12 +162,17 @@ export class HobbySessionRepository {
       httpMetadata: { contentType },
     });
 
-    await this.prisma.hobbySessionFile.create({
-      data: {
-        storageObjectKey: key,
-        hobbySessionId: sessionId,
-      },
-    });
+    try {
+      await this.prisma.hobbySessionFile.create({
+        data: {
+          storageObjectKey: key,
+          hobbySessionId: sessionId,
+        },
+      });
+    } catch (error: unknown) {
+      await this.bucket.delete(key);
+      throw error;
+    }
 
     return key;
   }
