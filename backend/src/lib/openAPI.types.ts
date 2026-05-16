@@ -1,11 +1,16 @@
 import { resolver } from 'hono-openapi';
 import z from 'zod';
 
-export const jsonResponse = (schema: z.ZodType, description: string = '') => ({
+export const jsonResponse = (
+  schema: z.ZodType,
+  description: string = '',
+  example?: unknown,
+) => ({
   description,
   content: {
     'application/json': {
       schema: resolver(schema),
+      ...(example ? { example } : {}),
     },
   },
 });
@@ -18,24 +23,51 @@ export const BaseErrorResponse = BaseMessageResponse.extend({
   cause: z.string().optional(),
 });
 
-// TODO: maybe we don't need this, we can just use BaseMessageResponse and BaseErrorResponse because response validator doesnt handle default values
-export const createMessageResponse = (defaultMessage: string) =>
-  BaseMessageResponse.extend({ message: z.string().default(defaultMessage) });
+export const response = {
+  /** 200 OK - Success response with your schema */
+  success: (schema: z.ZodType, description = 'Success') =>
+    jsonResponse(schema, description),
 
-export const createErrorResponse = (defaultMessage: string) =>
-  BaseErrorResponse.extend({ message: z.string().default(defaultMessage) });
+  /** 201 Created - Resource created successfully */
+  created: (schema: z.ZodType, description = 'Created') =>
+    jsonResponse(schema, description),
 
-export const NotFoundResponseSchema = createMessageResponse('Not Found');
-export const UnauthorizedResponseSchema = createErrorResponse(
-  'Credentials are invalid',
-);
-export const InternalServerErrorResponseSchema = createErrorResponse(
-  'Internal server error',
-);
-export const BadRequestResponseSchema = createErrorResponse('Bad request');
-export const ForbiddenResponseSchema = createErrorResponse('Forbidden');
+  /** 204 No Content - Success with empty body */
+  noContent: (description = 'No Content') => ({ description }),
 
-export const NoContentResponseSchema = z.null();
+  /** 400 Bad Request - Invalid input data */
+  badRequest: (
+    description = 'Bad Request',
+    example = { message: 'Bad request' },
+  ) => jsonResponse(BaseErrorResponse, description, example),
 
-export const ContentTooLargeResponseSchema =
-  createErrorResponse('Content too large');
+  /** 401 Unauthorized - Authentication required or failed */
+  unauthorized: (
+    description = 'Unauthorized',
+    example = { message: 'Credentials are invalid' },
+  ) => jsonResponse(BaseErrorResponse, description, example),
+
+  /** 403 Forbidden - Authenticated but not permitted */
+  forbidden: (description = 'Forbidden', example = { message: 'Forbidden' }) =>
+    jsonResponse(BaseErrorResponse, description, example),
+
+  /** 404 Not Found - Resource does not exist */
+  notFound: (description = 'Not Found', example = { message: 'Not Found' }) =>
+    jsonResponse(BaseMessageResponse, description, example),
+
+  /** 409 Conflict - Resource conflict (e.g., already exists) */
+  conflict: (description = 'Conflict', example = { message: 'Conflict' }) =>
+    jsonResponse(BaseMessageResponse, description, example),
+
+  /** 413 Content Too Large - Request entity too large */
+  contentTooLarge: (
+    description = 'Content Too Large',
+    example = { message: 'Content too large' },
+  ) => jsonResponse(BaseErrorResponse, description, example),
+
+  /** 500 Internal Server Error - Unexpected server error */
+  serverError: (
+    description = 'Internal Server Error',
+    example = { message: 'Internal server error' },
+  ) => jsonResponse(BaseErrorResponse, description, example),
+};
