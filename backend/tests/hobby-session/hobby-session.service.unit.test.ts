@@ -4,6 +4,7 @@ import { HobbySessionService } from '@/src/modules/hobby-session/hobby-session.s
 
 const createRepositoryMock = () => ({
   findById: vi.fn(),
+  findByIdWithFiles: vi.fn(),
   findByHobbyId: vi.fn(),
   findByHobbyIdAndUserId: vi.fn(),
   findByUserIdPaginated: vi.fn(),
@@ -12,13 +13,25 @@ const createRepositoryMock = () => ({
   create: vi.fn(),
   update: vi.fn(),
   delete: vi.fn(),
+  deleteSessionFiles: vi.fn(),
+  uploadSessionFile: vi.fn(),
 });
 
 describe('HobbySessionService (unit)', () => {
   it('maps create input IDs into Prisma connect objects', async () => {
     const repositoryMock = createRepositoryMock();
-    const created = { id: 's1' };
-    repositoryMock.create.mockResolvedValue(created);
+    repositoryMock.create.mockResolvedValue({ id: 's1' });
+    repositoryMock.findByIdWithFiles.mockResolvedValue({
+      id: 's1',
+      hobbyId: 'h1',
+      userId: 'u1',
+      startTime: new Date('2026-04-01T10:00:00.000Z'),
+      endTime: new Date('2026-04-01T11:00:00.000Z'),
+      notes: 'focus',
+      createdAt: new Date('2026-04-01T11:00:00.000Z'),
+      updatedAt: new Date('2026-04-01T11:00:00.000Z'),
+      files: [],
+    });
 
     const service = new HobbySessionService(
       repositoryMock as unknown as HobbySessionRepository,
@@ -33,7 +46,18 @@ describe('HobbySessionService (unit)', () => {
       userId: 'u1',
     });
 
-    expect(result).toBe(created);
+    expect(result).toEqual({
+      id: 's1',
+      hobbyId: 'h1',
+      userId: 'u1',
+      startTime: new Date('2026-04-01T10:00:00.000Z'),
+      endTime: new Date('2026-04-01T11:00:00.000Z'),
+      notes: 'focus',
+      createdAt: new Date('2026-04-01T11:00:00.000Z'),
+      updatedAt: new Date('2026-04-01T11:00:00.000Z'),
+      imageUrls: [],
+    });
+    expect(repositoryMock.findByIdWithFiles).toHaveBeenCalledWith('s1');
     expect(repositoryMock.create).toHaveBeenCalledWith({
       startTime: '2026-04-01T10:00:00.000Z',
       endTime: '2026-04-01T11:00:00.000Z',
@@ -45,8 +69,18 @@ describe('HobbySessionService (unit)', () => {
 
   it('maps optional update relation IDs into Prisma connect objects', async () => {
     const repositoryMock = createRepositoryMock();
-    const updated = { id: 's1' };
-    repositoryMock.update.mockResolvedValue(updated);
+    repositoryMock.update.mockResolvedValue({ id: 's1' });
+    repositoryMock.findByIdWithFiles.mockResolvedValue({
+      id: 's1',
+      hobbyId: 'h2',
+      userId: 'u9',
+      startTime: new Date('2026-04-02T09:00:00.000Z'),
+      endTime: new Date('2026-04-02T10:00:00.000Z'),
+      notes: 'updated',
+      createdAt: new Date('2026-04-01T11:00:00.000Z'),
+      updatedAt: new Date('2026-04-03T08:00:00.000Z'),
+      files: [],
+    });
 
     const service = new HobbySessionService(
       repositoryMock as unknown as HobbySessionRepository,
@@ -58,11 +92,22 @@ describe('HobbySessionService (unit)', () => {
       notes: 'updated',
     });
 
-    expect(result).toBe(updated);
+    expect(result).toEqual({
+      id: 's1',
+      hobbyId: 'h2',
+      userId: 'u9',
+      startTime: new Date('2026-04-02T09:00:00.000Z'),
+      endTime: new Date('2026-04-02T10:00:00.000Z'),
+      notes: 'updated',
+      createdAt: new Date('2026-04-01T11:00:00.000Z'),
+      updatedAt: new Date('2026-04-03T08:00:00.000Z'),
+      imageUrls: [],
+    });
     expect(repositoryMock.update).toHaveBeenCalledWith('s1', {
       notes: 'updated',
       hobby: { connect: { id: 'h2' } },
     });
+    expect(repositoryMock.findByIdWithFiles).toHaveBeenCalledWith('s1');
   });
 
   it('returns sessions and computed streak stats for user paginated query', async () => {
@@ -71,11 +116,13 @@ describe('HobbySessionService (unit)', () => {
       {
         id: 's1',
         hobbyId: 'h1',
+        userId: 'u1',
         startTime: new Date('2026-04-01T10:00:00.000Z'),
         endTime: new Date('2026-04-01T11:00:00.000Z'),
         notes: null,
         createdAt: new Date('2026-04-01T11:00:00.000Z'),
         updatedAt: new Date('2026-04-01T11:00:00.000Z'),
+        files: [],
       },
     ]);
 

@@ -7,6 +7,7 @@ import type { AppContext } from '@/src/types';
 
 const createRepositoryMock = () => ({
   findById: vi.fn(),
+  findByIdWithFiles: vi.fn(),
   findByHobbyId: vi.fn(),
   findByHobbyIdAndUserId: vi.fn(),
   findByUserIdPaginated: vi.fn(),
@@ -15,11 +16,9 @@ const createRepositoryMock = () => ({
   create: vi.fn(),
   update: vi.fn(),
   delete: vi.fn(),
+  deleteSessionFiles: vi.fn(),
+  uploadSessionFile: vi.fn(),
 });
-
-interface CreatedSessionResponse {
-  id: string;
-}
 
 interface UserSessionsResponse {
   sessions: unknown[];
@@ -65,21 +64,37 @@ describe('Hobby Session controller (integration)', () => {
       createdAt: new Date('2026-04-09T11:00:00.000Z'),
       updatedAt: new Date('2026-04-09T11:00:00.000Z'),
     });
+    repositoryMock.findByIdWithFiles.mockResolvedValue({
+      id: 's1',
+      hobbyId: 'h1',
+      userId,
+      startTime: new Date('2026-04-09T10:00:00.000Z'),
+      endTime: new Date('2026-04-09T11:00:00.000Z'),
+      notes: 'focus',
+      createdAt: new Date('2026-04-09T11:00:00.000Z'),
+      updatedAt: new Date('2026-04-09T11:00:00.000Z'),
+      files: [],
+    });
+
+    const form = new FormData();
+    form.set('hobbyId', 'h1');
+    form.set('startTime', '2026-04-09T10:00:00.000Z');
+    form.set('endTime', '2026-04-09T11:00:00.000Z');
+    form.set('notes', 'focus');
 
     const response = await app.request('http://localhost/hobby-session', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        hobbyId: 'h1',
-        startTime: '2026-04-09T10:00:00.000Z',
-        endTime: '2026-04-09T11:00:00.000Z',
-        notes: 'focus',
-      }),
+      body: form,
     });
 
     expect(response.status).toBe(201);
-    const body: CreatedSessionResponse = await response.json();
-    expect(body.id).toBe('s1');
+    const body = await response.json();
+    expect(body).toEqual(
+      expect.objectContaining({
+        id: 's1',
+        imageUrls: [],
+      }),
+    );
     expect(repositoryMock.create).toHaveBeenCalledOnce();
   });
 
@@ -89,9 +104,7 @@ describe('Hobby Session controller (integration)', () => {
     );
 
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toEqual({
-      message: 'Unauthorized user',
-    });
+    expect(await response.text()).toBe('Unauthorized user');
   });
 
   it('GET /hobby-session/user/:userId validates date range and returns 400', async () => {
@@ -100,9 +113,7 @@ describe('Hobby Session controller (integration)', () => {
     );
 
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toEqual({
-      message: 'from must be before or equal to to',
-    });
+    expect(await response.text()).toBe('from must be before or equal to to');
   });
 
   it('GET /hobby-session/user/:userId returns sessions + stats', async () => {
@@ -110,11 +121,13 @@ describe('Hobby Session controller (integration)', () => {
       {
         id: 's1',
         hobbyId: 'h1',
+        userId,
         startTime: new Date('2026-04-09T10:00:00.000Z'),
         endTime: new Date('2026-04-09T11:00:00.000Z'),
         notes: null,
         createdAt: new Date('2026-04-09T11:00:00.000Z'),
         updatedAt: new Date('2026-04-09T11:00:00.000Z'),
+        files: [],
       },
     ]);
     repositoryMock.getAnalytics.mockResolvedValue({
