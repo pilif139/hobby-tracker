@@ -38,6 +38,13 @@ export class UserService {
     });
   }
 
+  async updatePassword(id: string, newPasswordRaw: string) {
+    const hashedPassword = await createHash(newPasswordRaw);
+    return this.userRepository.update(id, {
+      password: hashedPassword,
+    });
+  }
+
   async delete(id: string) {
     return this.userRepository.delete(id);
   }

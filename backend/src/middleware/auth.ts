@@ -8,7 +8,12 @@ import authConfig, {
 import type { AppContext } from '../types';
 
 // we dont want to allow user to login or register if they are already logged in
-const GUEST_ONLY_PATHS = ['/auth/login', '/auth/register'];
+const GUEST_ONLY_PATHS = [
+  '/auth/login',
+  '/auth/register',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+];
 const DEVELOPMENT_PATHS = ['/doc', '/scalar', '/health'];
 
 export const authMiddleware = createMiddleware<AppContext>(async (c, next) => {

@@ -18,6 +18,9 @@ id = "7a439afc4184493c9c00d2cd9037778a"
 binding = "R2"
 bucket_name = "hobby-tracker"
 
+[[send_email]]
+name = "SEND_EMAIL"
+
 [observability]
 enabled = false
 head_sampling_rate = 1

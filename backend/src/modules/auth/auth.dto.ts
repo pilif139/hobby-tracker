@@ -36,6 +36,17 @@ export const LoginSchema = z.object({
   password: UserPasswordSchema,
 });
 
+export const ForgotPasswordSchema = z.object({
+  email: z.email({
+    error: 'Invalid email address',
+  }),
+});
+
+export const ResetPasswordSchema = z.object({
+  token: z.string(),
+  newPassword: UserPasswordSchema,
+});
+
 export type LoginDto = z.infer<typeof LoginSchema>;
 export type RegisterDto = z.infer<typeof RegisterSchema>;
 

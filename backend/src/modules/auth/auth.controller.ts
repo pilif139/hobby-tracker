@@ -8,7 +8,12 @@ import authConfig, {
   COOKIE_REFRESH_TOKEN_NAME,
   getAuthCookieOptions,
 } from './auth.config';
-import { LoginSchema, RegisterSchema } from './auth.dto';
+import {
+  ForgotPasswordSchema,
+  LoginSchema,
+  RegisterSchema,
+  ResetPasswordSchema,
+} from './auth.dto';
 import {
   jsonResponse,
   BadRequestResponseSchema,
@@ -206,6 +211,64 @@ app.post(
       getAuthCookieOptions(c, authConfig.refreshTokenExpirationTime),
     );
     return c.json({ message: 'Logged out from other devices' });
+  },
+);
+
+app.post(
+  '/forgot-password',
+  describeRoute({
+    tags: ['Authentication'],
+    responses: {
+      200: jsonResponse(BaseMessageResponse, 'Success'),
+      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+    },
+  }),
+  validator('json', ForgotPasswordSchema),
+  async (c) => {
+    const authService = c.get('services').auth;
+    const { email } = c.req.valid('json');
+
+    const userService = c.get('services').user;
+    const user = await userService.getByEmail(email);
+    if (!user) {
+      throw new HTTPException(404, { message: 'User not found' });
+    }
+
+    const token = await authService.generatePasswordResetToken(user.id);
+    // when users click on the link, the frontend will send request to /reset-password with the token and the new password
+    const resetLink = `${c.env.FRONTEND_DOMAIN}/reset-password?token=${token}`;
+
+    await authService.sendPasswordResetEmail(email, resetLink);
+
+    return c.json({ message: 'Password reset email sent' });
+  },
+);
+
+app.post(
+  '/reset-password',
+  describeRoute({
+    tags: ['Authentication'],
+    responses: {
+      200: jsonResponse(BaseMessageResponse, 'Success'),
+      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
+    },
+  }),
+  validator('json', ResetPasswordSchema),
+  async (c) => {
+    const authService = c.get('services').auth;
+    const { token, newPassword } = c.req.valid('json');
+
+    const userId = await authService.validatePasswordResetToken(token);
+    if (!userId) {
+      throw new HTTPException(400, { message: 'Invalid or expired token' });
+    }
+
+    const userService = c.get('services').user;
+    await userService.updatePassword(userId, newPassword);
+
+    await authService.invalidatePasswordResetToken(userId);
+
+    return c.json({ message: 'Password reset successful' });
   },
 );
 

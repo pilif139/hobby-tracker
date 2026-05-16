@@ -108,6 +108,7 @@ const scopedServiceFactories: PartialServiceFactoryMap<Services> = {
       c.env.authKV,
       c.env.ACCESS_TOKEN_SECRET,
       c.env.REFRESH_TOKEN_SECRET,
+      c.env.SEND_EMAIL,
     );
   },
   hobby: (c) => createHobbyService(c.env.DB),

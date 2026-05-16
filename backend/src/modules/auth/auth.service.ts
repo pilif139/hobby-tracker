@@ -1,4 +1,6 @@
+import { EmailMessage } from 'cloudflare:email';
 import { sign, verify } from 'hono/jwt';
+import { createMimeMessage } from 'mimetext';
 import type { CreateUserDto } from '../user/user.dto';
 import authConfig from './auth.config';
 import type { JWTRefreshToken, KVRefreshToken } from './auth.dto';
@@ -11,6 +13,7 @@ export class AuthService {
     private authKV: KVNamespace,
     private ACCESS_TOKEN_SECRET: string,
     private REFRESH_TOKEN_SECRET: string,
+    private SEND_EMAIL?: SendEmail,
   ) {}
 
   async register(user: CreateUserDto) {
@@ -152,6 +155,26 @@ export class AuthService {
     await this.authKV.delete(`userId:${userId}`);
   }
 
+  async generatePasswordResetToken(userId: string) {
+    const token = crypto.getRandomValues(new Uint8Array(32)).join('');
+
+    // Store token with 1 hour expiration
+    await this.authKV.put(`passwordReset:${token}`, userId, {
+      expirationTtl: 3600,
+    });
+
+    return token;
+  }
+
+  async validatePasswordResetToken(token: string) {
+    const userId = await this.authKV.get(`passwordReset:${token}`);
+    return userId;
+  }
+
+  async invalidatePasswordResetToken(token: string) {
+    await this.authKV.delete(`passwordReset:${token}`);
+  }
+
   private async createJWT(
     payload: Record<string, unknown>,
     expiresIn: number,
@@ -167,5 +190,29 @@ export class AuthService {
       secret,
       'HS256',
     );
+  }
+
+  async sendPasswordResetEmail(email: string, resetLink: string) {
+    if (!this.SEND_EMAIL) {
+      throw new Error('SEND_EMAIL binding is not configured.');
+    }
+
+    const msg = createMimeMessage();
+    msg.setSender({ name: 'Hobby Tracker', addr: 'noreply@your-domain.com' }); // TODO: configure mail in cloudflare dashboard
+    msg.setRecipient(email);
+    msg.setSubject('Password Reset Request');
+    msg.addMessage({
+      contentType: 'text/plain',
+      data: `You requested a password reset. Click the link to reset your password: ${resetLink}`,
+    });
+
+    const messageContent = msg.asRaw();
+    const rawEmail = new EmailMessage(
+      'noreply@your-domain.com', // TODO: Replace with actual domain sender
+      email,
+      messageContent,
+    );
+
+    await this.SEND_EMAIL.send(rawEmail);
   }
 }

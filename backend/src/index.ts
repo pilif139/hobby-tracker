@@ -15,6 +15,7 @@ import devOnly from './middleware/dev-only';
 import { loggerMiddleware } from './middleware/logger';
 import { authController } from './modules/auth/auth.controller';
 import feedController from './modules/feed/feed.controller';
+import followController from './modules/follow/follow.controller';
 import hobbyController from './modules/hobby/hobby.controller';
 import hobbySessionController from './modules/hobby-session/hobby-session.controller';
 import userController from './modules/user/user.controller';
@@ -42,6 +43,7 @@ app.route('/user', userController);
 app.route('/hobby', hobbyController);
 app.route('/hobby-session', hobbySessionController);
 app.route('/feed', feedController);
+app.route('/follow', followController);
 
 app.get(
   '/health',

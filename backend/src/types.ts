@@ -10,11 +10,13 @@ export interface Bindings {
   DB: D1Database;
   authKV: KVNamespace;
   R2: R2Bucket;
+  SEND_EMAIL: SendEmail;
   ALLOWED_ORIGINS: string;
   ENVIRONMENT: 'development' | 'production';
   R2_BUCKET_URL: string;
   ACCESS_TOKEN_SECRET: string;
   REFRESH_TOKEN_SECRET: string;
+  FRONTEND_DOMAIN: string;
 }
 
 export interface Variables {
