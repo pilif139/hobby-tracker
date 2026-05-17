@@ -14,8 +14,8 @@ import {
 } from './hobby.errors';
 import {
   BaseMessageResponse,
-  NotFoundResponseSchema,
   jsonResponse,
+  response,
 } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
@@ -73,7 +73,7 @@ hobbyController.get(
     tags: ['Hobby'],
     responses: {
       200: jsonResponse(HobbyResponseSchema, 'Hobby'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      404: response.notFound(),
     },
   }),
   validator('param', z.object({ id: z.string() })),
@@ -112,8 +112,8 @@ hobbyController.post(
     tags: ['Hobby'],
     responses: {
       200: jsonResponse(z.object({ message: z.string() }), 'Added'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
-      409: jsonResponse(BaseMessageResponse, 'Conflict'),
+      404: response.notFound('Not Found'),
+      409: response.conflict(),
     },
   }),
   validator('param', z.object({ hobbyId: z.string() })),

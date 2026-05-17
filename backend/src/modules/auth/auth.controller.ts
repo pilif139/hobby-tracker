@@ -11,11 +11,8 @@ import authConfig, {
 import { LoginSchema, RegisterSchema } from './auth.dto';
 import {
   jsonResponse,
-  BadRequestResponseSchema,
   BaseMessageResponse,
-  InternalServerErrorResponseSchema,
-  NotFoundResponseSchema,
-  UnauthorizedResponseSchema,
+  response,
 } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
@@ -34,7 +31,7 @@ app.post(
           },
         },
       },
-      401: jsonResponse(UnauthorizedResponseSchema, 'Unauthorized'),
+      401: response.unauthorized(),
     },
   }),
   validator('json', LoginSchema),
@@ -84,11 +81,8 @@ app.post(
           },
         },
       },
-      403: jsonResponse(UnauthorizedResponseSchema, 'Forbidden'),
-      500: jsonResponse(
-        InternalServerErrorResponseSchema,
-        'Internal Server Error',
-      ),
+      403: response.forbidden(),
+      500: response.serverError(),
     },
   }),
   validator('json', RegisterSchema),
@@ -126,7 +120,7 @@ app.get(
     tags: ['Authentication'],
     responses: {
       200: jsonResponse(UserSafeSchema, 'Current authenticated user'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      404: response.notFound(),
     },
   }),
   async (c) => {
@@ -168,7 +162,7 @@ app.post(
     tags: ['Authentication'],
     responses: {
       200: jsonResponse(BaseMessageResponse, 'Success'),
-      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
+      400: response.badRequest(),
     },
   }),
   async (c) => {

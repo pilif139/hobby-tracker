@@ -16,13 +16,7 @@ import {
   UserSafeSchema,
 } from './user.dto';
 import { InvalidImageFileExtensionException } from '@/src/lib/image';
-import {
-  NotFoundResponseSchema,
-  jsonResponse,
-  BadRequestResponseSchema,
-  InternalServerErrorResponseSchema,
-  ContentTooLargeResponseSchema,
-} from '@/src/lib/openAPI.types';
+import { jsonResponse, response } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
 const userController = new Hono<AppContext>();
@@ -33,7 +27,7 @@ userController.get(
     tags: ['User'],
     responses: {
       200: jsonResponse(UserProfileSchema, 'User Profile'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      404: response.notFound(),
     },
   }),
   validator('param', z.object({ id: z.string() })),
@@ -61,8 +55,8 @@ userController.delete(
   describeRoute({
     tags: ['User'],
     responses: {
-      204: { description: 'No Content' },
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      204: response.noContent(),
+      404: response.notFound(),
     },
   }),
   async (c) => {
@@ -110,12 +104,9 @@ userController.post(
     tags: ['User'],
     responses: {
       200: { description: 'Avatar uploaded successfully' },
-      413: jsonResponse(ContentTooLargeResponseSchema, 'Content Too Large'),
-      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
-      500: jsonResponse(
-        InternalServerErrorResponseSchema,
-        'Internal Server Error',
-      ),
+      413: response.contentTooLarge(),
+      400: response.badRequest(),
+      500: response.serverError(),
     },
   }),
   bodyLimit({

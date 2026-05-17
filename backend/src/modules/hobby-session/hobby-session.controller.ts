@@ -18,13 +18,7 @@ import {
   getDateErrorMessage,
 } from '@/src/lib/date-filter';
 import { InvalidImageFileExtensionException } from '@/src/lib/image';
-import {
-  BadRequestResponseSchema,
-  ContentTooLargeResponseSchema,
-  ForbiddenResponseSchema,
-  NotFoundResponseSchema,
-  jsonResponse,
-} from '@/src/lib/openAPI.types';
+import { jsonResponse, response } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
 const hobbySessionController = new Hono<AppContext>();
@@ -38,7 +32,7 @@ hobbySessionController.get(
         hobbySessionListResponseSchema,
         'User Hobby Sessions with stats',
       ),
-      403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
+      403: response.forbidden(),
     },
   }),
   validator('param', z.object({ userId: z.string() })),
@@ -168,8 +162,8 @@ hobbySessionController.get(
     tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(hobbySessionResponseSchema, 'Hobby Session'),
-      403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      403: response.forbidden(),
+      404: response.notFound(),
     },
   }),
   validator('param', z.object({ id: z.string() })),
@@ -196,9 +190,9 @@ hobbySessionController.post(
   describeRoute({
     tags: ['Hobby Session'],
     responses: {
-      201: jsonResponse(hobbySessionResponseSchema, 'Created session'),
-      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
-      413: jsonResponse(ContentTooLargeResponseSchema, 'Content Too Large'),
+      201: response.created(hobbySessionResponseSchema),
+      400: response.badRequest(),
+      413: response.contentTooLarge(),
     },
   }),
   bodyLimit({
@@ -253,10 +247,10 @@ hobbySessionController.patch(
     tags: ['Hobby Session'],
     responses: {
       200: jsonResponse(hobbySessionResponseSchema, 'Updated session'),
-      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
-      403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
-      413: jsonResponse(ContentTooLargeResponseSchema, 'Content Too Large'),
+      400: response.badRequest(),
+      403: response.forbidden(),
+      404: response.notFound(),
+      413: response.contentTooLarge(),
     },
   }),
   bodyLimit({
@@ -328,9 +322,9 @@ hobbySessionController.delete(
   describeRoute({
     tags: ['Hobby Session'],
     responses: {
-      204: { description: 'No Content' },
-      403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      204: response.noContent(),
+      403: response.forbidden(),
+      404: response.notFound(),
     },
   }),
   validator('param', z.object({ id: z.string() })),

@@ -2,12 +2,7 @@ import { Hono } from 'hono/quick';
 import { describeRoute, validator } from 'hono-openapi';
 import { followDto, followResponseSchema } from './follow.dto';
 import { FollowUserNotFoundError } from './follow.service';
-import {
-  BadRequestResponseSchema,
-  ForbiddenResponseSchema,
-  jsonResponse,
-  NotFoundResponseSchema,
-} from '@/src/lib/openAPI.types';
+import { jsonResponse, response } from '@/src/lib/openAPI.types';
 import type { AppContext } from '@/src/types';
 
 const followController = new Hono<AppContext>();
@@ -18,9 +13,9 @@ followController.post(
     tags: ['Follow'],
     responses: {
       200: jsonResponse(followResponseSchema, 'Follow Result'),
-      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
-      403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      400: response.badRequest(),
+      403: response.forbidden(),
+      404: response.notFound(),
     },
   }),
   validator('json', followDto),
@@ -56,9 +51,9 @@ followController.delete(
     tags: ['Follow'],
     responses: {
       200: jsonResponse(followResponseSchema, 'Unfollow Result'),
-      400: jsonResponse(BadRequestResponseSchema, 'Bad Request'),
-      403: jsonResponse(ForbiddenResponseSchema, 'Forbidden'),
-      404: jsonResponse(NotFoundResponseSchema, 'Not Found'),
+      400: response.badRequest(),
+      403: response.forbidden(),
+      404: response.notFound(),
     },
   }),
   validator('json', followDto),
