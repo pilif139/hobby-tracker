@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.filip.hobbytracker.repository.AuthRepository;
+import com.filip.hobbytracker.repository.BaseRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.textfield.TextInputEditText;
 
