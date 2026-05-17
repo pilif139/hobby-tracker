@@ -32,9 +32,7 @@ import com.filip.hobbytracker.api.generated.model.PostAuthLogin200Response;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogin401Response;
 import com.filip.hobbytracker.api.generated.model.PostAuthLoginRequest;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogout200Response;
-import com.filip.hobbytracker.api.generated.model.PostAuthLogoutOtherDevices200Response;
-import com.filip.hobbytracker.api.generated.model.PostAuthLogoutOtherDevices400Response;
-import com.filip.hobbytracker.api.generated.model.PostAuthRegister500Response;
+import com.filip.hobbytracker.api.generated.model.PostAuthRegister403Response;
 import com.filip.hobbytracker.api.generated.model.PostAuthRegisterRequest;
 
 import java.lang.reflect.Type;
@@ -515,7 +513,7 @@ public class AuthenticationApi {
     /**
      * 
      * 
-     * @return PostAuthLogoutOtherDevices200Response
+     * @return PostAuthLogout200Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -525,15 +523,15 @@ public class AuthenticationApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
      </table>
      */
-    public PostAuthLogoutOtherDevices200Response postAuthLogoutOtherDevices() throws ApiException {
-        ApiResponse<PostAuthLogoutOtherDevices200Response> localVarResp = postAuthLogoutOtherDevicesWithHttpInfo();
+    public PostAuthLogout200Response postAuthLogoutOtherDevices() throws ApiException {
+        ApiResponse<PostAuthLogout200Response> localVarResp = postAuthLogoutOtherDevicesWithHttpInfo();
         return localVarResp.getData();
     }
 
     /**
      * 
      * 
-     * @return ApiResponse&lt;PostAuthLogoutOtherDevices200Response&gt;
+     * @return ApiResponse&lt;PostAuthLogout200Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -543,9 +541,9 @@ public class AuthenticationApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<PostAuthLogoutOtherDevices200Response> postAuthLogoutOtherDevicesWithHttpInfo() throws ApiException {
+    public ApiResponse<PostAuthLogout200Response> postAuthLogoutOtherDevicesWithHttpInfo() throws ApiException {
         okhttp3.Call localVarCall = postAuthLogoutOtherDevicesValidateBeforeCall(null);
-        Type localVarReturnType = new TypeToken<PostAuthLogoutOtherDevices200Response>(){}.getType();
+        Type localVarReturnType = new TypeToken<PostAuthLogout200Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
@@ -563,10 +561,10 @@ public class AuthenticationApi {
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call postAuthLogoutOtherDevicesAsync(final ApiCallback<PostAuthLogoutOtherDevices200Response> _callback) throws ApiException {
+    public okhttp3.Call postAuthLogoutOtherDevicesAsync(final ApiCallback<PostAuthLogout200Response> _callback) throws ApiException {
 
         okhttp3.Call localVarCall = postAuthLogoutOtherDevicesValidateBeforeCall(_callback);
-        Type localVarReturnType = new TypeToken<PostAuthLogoutOtherDevices200Response>(){}.getType();
+        Type localVarReturnType = new TypeToken<PostAuthLogout200Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }

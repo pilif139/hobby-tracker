@@ -35,6 +35,8 @@ paths:
         "401":
           content:
             application/json:
+              example:
+                message: Credentials are invalid
               schema:
                 $ref: "#/components/schemas/postAuthLogin_401_response"
           description: Unauthorized
@@ -68,14 +70,18 @@ paths:
         "403":
           content:
             application/json:
+              example:
+                message: Forbidden
               schema:
-                $ref: "#/components/schemas/postAuthLogin_401_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Forbidden
         "500":
           content:
             application/json:
+              example:
+                message: Internal server error
               schema:
-                $ref: "#/components/schemas/postAuthRegister_500_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Internal Server Error
       tags:
       - Authentication
@@ -95,6 +101,8 @@ paths:
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
                 $ref: "#/components/schemas/getAuthMe_404_response"
           description: Not Found
@@ -124,13 +132,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/postAuthLogoutOtherDevices_200_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Success
         "400":
           content:
             application/json:
+              example:
+                message: Bad request
               schema:
-                $ref: "#/components/schemas/postAuthLogoutOtherDevices_400_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Bad Request
       tags:
       - Authentication
@@ -158,8 +168,10 @@ paths:
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
       tags:
       - User
@@ -174,8 +186,10 @@ paths:
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
       tags:
       - User
@@ -216,20 +230,26 @@ paths:
         "400":
           content:
             application/json:
+              example:
+                message: Bad request
               schema:
-                $ref: "#/components/schemas/postUserAvatar_400_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Bad Request
         "413":
           content:
             application/json:
+              example:
+                message: Content too large
               schema:
-                $ref: "#/components/schemas/postUserAvatar_413_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Content Too Large
         "500":
           content:
             application/json:
+              example:
+                message: Internal server error
               schema:
-                $ref: "#/components/schemas/postUserAvatar_500_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Internal Server Error
       tags:
       - User
@@ -344,8 +364,10 @@ paths:
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
       tags:
       - Hobby
@@ -373,12 +395,16 @@ paths:
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
         "409":
           content:
             application/json:
+              example:
+                message: Conflict
               schema:
                 $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Conflict
@@ -475,8 +501,10 @@ paths:
         "403":
           content:
             application/json:
+              example:
+                message: Forbidden
               schema:
-                $ref: "#/components/schemas/getHobbySessionUserByUserId_403_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Forbidden
       tags:
       - Hobby Session
@@ -553,14 +581,18 @@ paths:
         "403":
           content:
             application/json:
+              example:
+                message: Forbidden
               schema:
-                $ref: "#/components/schemas/getHobbySessionById_403_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Forbidden
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
       tags:
       - Hobby Session
@@ -586,14 +618,18 @@ paths:
         "403":
           content:
             application/json:
+              example:
+                message: Forbidden
               schema:
-                $ref: "#/components/schemas/getHobbySessionById_403_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Forbidden
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
       tags:
       - Hobby Session
@@ -625,26 +661,34 @@ paths:
         "400":
           content:
             application/json:
+              example:
+                message: Bad request
               schema:
-                $ref: "#/components/schemas/postUserAvatar_400_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Bad Request
         "403":
           content:
             application/json:
+              example:
+                message: Forbidden
               schema:
-                $ref: "#/components/schemas/getHobbySessionById_403_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Forbidden
         "404":
           content:
             application/json:
+              example:
+                message: Not Found
               schema:
-                $ref: "#/components/schemas/getAuthMe_404_response"
+                $ref: "#/components/schemas/postAuthLogout_200_response"
           description: Not Found
         "413":
           content:
             application/json:
+              example:
+                message: Content too large
               schema:
-                $ref: "#/components/schemas/patchHobbySessionById_413_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Content Too Large
       tags:
       - Hobby Session
@@ -666,22 +710,140 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/getHobbySessionById_200_response"
-          description: Created session
+          description: Created
         "400":
           content:
             application/json:
+              example:
+                message: Bad request
               schema:
-                $ref: "#/components/schemas/postUserAvatar_400_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Bad Request
         "413":
           content:
             application/json:
+              example:
+                message: Content too large
               schema:
-                $ref: "#/components/schemas/patchHobbySessionById_413_response"
+                $ref: "#/components/schemas/postAuthRegister_403_response"
           description: Content Too Large
       tags:
       - Hobby Session
       x-content-type: multipart/form-data
+      x-accepts:
+      - application/json
+  /feed:
+    get:
+      operationId: getFeed
+      parameters:
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: cursor
+        required: false
+        schema:
+          nullable: true
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getFeed_200_response"
+          description: Paginated feed of followed users sessions
+      tags:
+      - Feed
+      x-accepts:
+      - application/json
+  /feed/follow-suggestions/hobby:
+    get:
+      operationId: getFeedFollowSuggestionsHobby
+      parameters:
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 20
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getFeedFollowSuggestionsHobby_200_response"
+          description: Users who share your hobbies
+      tags:
+      - Feed
+      x-accepts:
+      - application/json
+  /feed/follow-suggestions/social:
+    get:
+      operationId: getFeedFollowSuggestionsSocial
+      parameters:
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 20
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getFeedFollowSuggestionsSocial_200_response"
+          description: Users followed by people you follow
+      tags:
+      - Feed
+      x-accepts:
+      - application/json
+  /feed/hobby-suggestions:
+    get:
+      operationId: getFeedHobbySuggestions
+      parameters:
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          maximum: 20
+          minimum: 1
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: period
+        required: false
+        schema:
+          enum:
+          - week
+          - month
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getFeedHobbySuggestions_200_response"
+          description: Trending hobbies you have not joined
+      tags:
+      - Feed
       x-accepts:
       - application/json
   /health:
@@ -706,34 +868,32 @@ paths:
       - application/json
 components:
   schemas:
-    postUserAvatar_413_response:
-      example:
-        cause: cause
-        message: Content too large
-      properties:
-        message:
-          default: Content too large
-          type: string
-        cause:
-          nullable: true
-          type: string
-    postAuthLogoutOtherDevices_400_response:
-      example:
-        cause: cause
-        message: Bad request
-      properties:
-        message:
-          default: Bad request
-          type: string
-        cause:
-          nullable: true
-          type: string
     patchUserMe_request:
       properties:
         name:
           maxLength: 100
           minLength: 2
           type: string
+    getFeedHobbySuggestions_200_response:
+      example:
+        suggestions:
+        - userCount: 6.027456183070403
+          sessionCount: 0.8008281904610115
+          name: name
+          description: description
+          id: id
+        - userCount: 6.027456183070403
+          sessionCount: 0.8008281904610115
+          name: name
+          description: description
+          id: id
+      properties:
+        suggestions:
+          items:
+            $ref: "#/components/schemas/getFeedHobbySuggestions_200_response_suggestions_inner"
+          type: array
+      required:
+      - suggestions
     postHobby_request:
       properties:
         name:
@@ -846,6 +1006,25 @@ components:
       required:
       - sessions
       - stats
+    getFeed_200_response_sessions_inner_user:
+      example:
+        avatarUrl: avatarUrl
+        name: name
+        id: id
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        avatarUrl:
+          nullable: true
+          type: string
+      required:
+      - avatarUrl
+      - id
+      - name
     getUserById_200_response:
       example:
         createdAt: 2000-01-23T04:56:07.000+00:00
@@ -914,6 +1093,62 @@ components:
           type: string
       required:
       - status
+    getFeed_200_response:
+      example:
+        nextCursor: nextCursor
+        sessions:
+        - createdAt: createdAt
+          notes: notes
+          imageUrls:
+          - imageUrls
+          - imageUrls
+          startTime: startTime
+          id: id
+          endTime: endTime
+          user:
+            avatarUrl: avatarUrl
+            name: name
+            id: id
+          hobby:
+            name: name
+            id: id
+        - createdAt: createdAt
+          notes: notes
+          imageUrls:
+          - imageUrls
+          - imageUrls
+          startTime: startTime
+          id: id
+          endTime: endTime
+          user:
+            avatarUrl: avatarUrl
+            name: name
+            id: id
+          hobby:
+            name: name
+            id: id
+      properties:
+        sessions:
+          items:
+            $ref: "#/components/schemas/getFeed_200_response_sessions_inner"
+          type: array
+        nextCursor:
+          nullable: true
+          type: string
+      required:
+      - nextCursor
+      - sessions
+    postAuthRegister_403_response:
+      example:
+        cause: cause
+        message: message
+      properties:
+        message:
+          type: string
+        cause:
+          type: string
+      required:
+      - message
     postAuthLogin_request:
       properties:
         email:
@@ -947,6 +1182,24 @@ components:
       - email
       - name
       - password
+    getFeedFollowSuggestionsSocial_200_response:
+      example:
+        suggestions:
+        - avatarUrl: avatarUrl
+          name: name
+          mutualConnectionCount: 0.8008281904610115
+          id: id
+        - avatarUrl: avatarUrl
+          name: name
+          mutualConnectionCount: 0.8008281904610115
+          id: id
+      properties:
+        suggestions:
+          items:
+            $ref: "#/components/schemas/getFeedFollowSuggestionsSocial_200_response_suggestions_inner"
+          type: array
+      required:
+      - suggestions
     getHobbyUserByUserId_200_response_inner:
       example:
         sessionCount: 0.8008281904610115
@@ -975,75 +1228,132 @@ components:
         file: {}
       required:
       - file
+    getFeedFollowSuggestionsHobby_200_response:
+      example:
+        suggestions:
+        - sharedHobbyCount: 0.8008281904610115
+          avatarUrl: avatarUrl
+          name: name
+          id: id
+          sharedHobbies:
+          - sharedHobbies
+          - sharedHobbies
+        - sharedHobbyCount: 0.8008281904610115
+          avatarUrl: avatarUrl
+          name: name
+          id: id
+          sharedHobbies:
+          - sharedHobbies
+          - sharedHobbies
+      properties:
+        suggestions:
+          items:
+            $ref: "#/components/schemas/getFeedFollowSuggestionsHobby_200_response_suggestions_inner"
+          type: array
+      required:
+      - suggestions
     postAuthLogout_200_response:
       example:
         message: message
       properties:
         message:
-          nullable: true
           type: string
       required:
       - message
-    patchHobbySessionById_413_response:
+    getFeedHobbySuggestions_200_response_suggestions_inner:
       example:
-        cause: cause
-        message: Content too large
+        userCount: 6.027456183070403
+        sessionCount: 0.8008281904610115
+        name: name
+        description: description
+        id: id
       properties:
-        message:
-          default: Content too large
+        id:
+          nullable: true
           type: string
-        cause:
+        name:
+          nullable: true
           type: string
-    postUserAvatar_400_response:
-      example:
-        cause: cause
-        message: Bad request
-      properties:
-        message:
-          default: Bad request
+        description:
+          nullable: true
           type: string
-        cause:
-          type: string
-    getHobbySessionById_403_response:
-      example:
-        cause: cause
-        message: Forbidden
-      properties:
-        message:
-          default: Forbidden
-          type: string
-        cause:
-          type: string
+        sessionCount:
+          type: number
+        userCount:
+          type: number
+      required:
+      - description
+      - id
+      - name
+      - sessionCount
+      - userCount
     postAuthLogin_401_response:
       example:
         cause: cause
-        message: Credentials are invalid
-      properties:
-        message:
-          default: Credentials are invalid
-          type: string
-        cause:
-          nullable: true
-          type: string
-    postAuthLogoutOtherDevices_200_response:
-      example:
         message: message
       properties:
         message:
-          type: string
-      required:
-      - message
-    getHobbySessionUserByUserId_403_response:
-      example:
-        cause: cause
-        message: Forbidden
-      properties:
-        message:
-          default: Forbidden
+          nullable: true
           type: string
         cause:
           nullable: true
           type: string
+      required:
+      - message
+    getFeedFollowSuggestionsSocial_200_response_suggestions_inner:
+      example:
+        avatarUrl: avatarUrl
+        name: name
+        mutualConnectionCount: 0.8008281904610115
+        id: id
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        avatarUrl:
+          nullable: true
+          type: string
+        mutualConnectionCount:
+          type: number
+      required:
+      - avatarUrl
+      - id
+      - mutualConnectionCount
+      - name
+    getFeedFollowSuggestionsHobby_200_response_suggestions_inner:
+      example:
+        sharedHobbyCount: 0.8008281904610115
+        avatarUrl: avatarUrl
+        name: name
+        id: id
+        sharedHobbies:
+        - sharedHobbies
+        - sharedHobbies
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        avatarUrl:
+          nullable: true
+          type: string
+        sharedHobbyCount:
+          type: number
+        sharedHobbies:
+          items:
+            type: string
+          type: array
+      required:
+      - avatarUrl
+      - id
+      - name
+      - sharedHobbies
+      - sharedHobbyCount
     postAuthLogin_200_response:
       example:
         name: name
@@ -1065,23 +1375,15 @@ components:
       - email
       - id
       - name
-    postUserAvatar_500_response:
-      example:
-        cause: cause
-        message: Internal server error
-      properties:
-        message:
-          default: Internal server error
-          type: string
-        cause:
-          type: string
     getAuthMe_404_response:
       example:
-        message: Not Found
+        message: message
       properties:
         message:
-          default: Not Found
+          nullable: true
           type: string
+      required:
+      - message
     postHobbySession_request:
       properties:
         hobbyId:
@@ -1104,6 +1406,20 @@ components:
       - endTime
       - hobbyId
       - startTime
+    getFeed_200_response_sessions_inner_hobby:
+      example:
+        name: name
+        id: id
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+      required:
+      - id
+      - name
     getHobbySessionById_200_response:
       example:
         createdAt: createdAt
@@ -1149,17 +1465,6 @@ components:
       - startTime
       - updatedAt
       - userId
-    postAuthRegister_500_response:
-      example:
-        cause: cause
-        message: Internal server error
-      properties:
-        message:
-          default: Internal server error
-          type: string
-        cause:
-          nullable: true
-          type: string
     getHobbySessionUserByUserId_200_response_sessions_inner:
       example:
         createdAt: createdAt
@@ -1213,6 +1518,56 @@ components:
       - startTime
       - updatedAt
       - userId
+    getFeed_200_response_sessions_inner:
+      example:
+        createdAt: createdAt
+        notes: notes
+        imageUrls:
+        - imageUrls
+        - imageUrls
+        startTime: startTime
+        id: id
+        endTime: endTime
+        user:
+          avatarUrl: avatarUrl
+          name: name
+          id: id
+        hobby:
+          name: name
+          id: id
+      properties:
+        id:
+          nullable: true
+          type: string
+        startTime:
+          nullable: true
+          type: string
+        endTime:
+          nullable: true
+          type: string
+        notes:
+          nullable: true
+          type: string
+        imageUrls:
+          items:
+            type: string
+          type: array
+        createdAt:
+          nullable: true
+          type: string
+        user:
+          $ref: "#/components/schemas/getFeed_200_response_sessions_inner_user"
+        hobby:
+          $ref: "#/components/schemas/getFeed_200_response_sessions_inner_hobby"
+      required:
+      - createdAt
+      - endTime
+      - hobby
+      - id
+      - imageUrls
+      - notes
+      - startTime
+      - user
   securitySchemes:
     accessTokenCookie:
       in: cookie

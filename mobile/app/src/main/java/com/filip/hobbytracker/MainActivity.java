@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.filip.hobbytracker.api.ApiProvider;
-import com.filip.hobbytracker.api.generated.model.PostAuthLoginRequest;
-import com.filip.hobbytracker.api.invoker.ApiException;
+import com.filip.hobbytracker.repository.AuthRepository;
+import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.concurrent.ExecutorService;
@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private AuthRepository authRepository;
 
     private TextInputEditText emailInput;
     private TextInputEditText passwordInput;
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
         errorText = findViewById(R.id.errorText);
         loginProgress = findViewById(R.id.loginProgress);
         loginButton = findViewById(R.id.loginButton);
+
+        authRepository = new AuthRepository(this, executor);
 
         loginButton.setOnClickListener(v -> login());
     }
@@ -59,36 +62,19 @@ public class MainActivity extends AppCompatActivity {
         setLoading(true);
         errorText.setText("");
 
-        executor.execute(() -> {
-            try {
-                PostAuthLoginRequest request = new PostAuthLoginRequest()
-                        .email(email)
-                        .password(password);
-
-                ApiProvider.authenticationApi().postAuthLogin(request);
-
-                runOnUiThread(() -> {
+        authRepository.login(email, password, result -> {
+            runOnUiThread(() -> {
+                if (result.status == Resource.Status.LOADING) {
+                    setLoading(true);
+                } else if (result.status == Resource.Status.SUCCESS) {
                     setLoading(false);
                     startActivity(new Intent(this, HomeActivity.class));
                     finish();
-                });
-            } catch (ApiException e) {
-                String errorMessage = getString(R.string.error_login_failed);
-                if (e.getResponseBody() != null && !e.getResponseBody().isBlank()) {
-                    errorMessage = e.getResponseBody();
+                } else if (result.status == Resource.Status.ERROR) {
+                    setLoading(false);
+                    showError(result.message != null ? result.message : getString(R.string.error_login_failed));
                 }
-
-                String finalErrorMessage = errorMessage;
-                runOnUiThread(() -> {
-                    setLoading(false);
-                    showError(finalErrorMessage);
-                });
-            } catch (Exception e) {
-                runOnUiThread(() -> {
-                    setLoading(false);
-                    showError(getString(R.string.error_network));
-                });
-            }
+            });
         });
     }
 

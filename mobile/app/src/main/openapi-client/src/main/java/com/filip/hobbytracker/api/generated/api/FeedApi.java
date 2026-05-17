@@ -27,11 +27,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import com.filip.hobbytracker.api.generated.model.GetUserById200Response;
-import com.filip.hobbytracker.api.generated.model.PatchUserMeRequest;
-import com.filip.hobbytracker.api.generated.model.PostAuthLogin200Response;
-import com.filip.hobbytracker.api.generated.model.PostAuthLogout200Response;
-import com.filip.hobbytracker.api.generated.model.PostAuthRegister403Response;
+import com.filip.hobbytracker.api.generated.model.GetFeed200Response;
+import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsHobby200Response;
+import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsSocial200Response;
+import com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200Response;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,16 +38,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserApi {
+public class FeedApi {
     private ApiClient localVarApiClient;
     private int localHostIndex;
     private String localCustomBaseUrl;
 
-    public UserApi() {
+    public FeedApi() {
         this(Configuration.getDefaultApiClient());
     }
 
-    public UserApi(ApiClient apiClient) {
+    public FeedApi(ApiClient apiClient) {
         this.localVarApiClient = apiClient;
     }
 
@@ -77,7 +76,9 @@ public class UserApi {
     }
 
     /**
-     * Build call for deleteUserMe
+     * Build call for getFeed
+     * @param limit  (optional)
+     * @param cursor  (optional)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -85,11 +86,10 @@ public class UserApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Paginated feed of followed users sessions </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call deleteUserMeCall(final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call getFeedCall(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -106,7 +106,7 @@ public class UserApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/user/me";
+        String localVarPath = "/feed";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -114,124 +114,13 @@ public class UserApi {
         Map<String, String> localVarCookieParams = new HashMap<String, String>();
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
+        if (limit != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("limit", limit));
         }
 
-        final String[] localVarContentTypes = {
-        };
-        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
-        if (localVarContentType != null) {
-            localVarHeaderParams.put("Content-Type", localVarContentType);
+        if (cursor != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("cursor", cursor));
         }
-
-        String[] localVarAuthNames = new String[] { "accessTokenCookie", "refreshTokenCookie" };
-        return localVarApiClient.buildCall(basePath, localVarPath, "DELETE", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private okhttp3.Call deleteUserMeValidateBeforeCall(final ApiCallback _callback) throws ApiException {
-        return deleteUserMeCall(_callback);
-
-    }
-
-    /**
-     * 
-     * 
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
-     </table>
-     */
-    public void deleteUserMe() throws ApiException {
-        deleteUserMeWithHttpInfo();
-    }
-
-    /**
-     * 
-     * 
-     * @return ApiResponse&lt;Void&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
-     </table>
-     */
-    public ApiResponse<Void> deleteUserMeWithHttpInfo() throws ApiException {
-        okhttp3.Call localVarCall = deleteUserMeValidateBeforeCall(null);
-        return localVarApiClient.execute(localVarCall);
-    }
-
-    /**
-     *  (asynchronously)
-     * 
-     * @param _callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 204 </td><td> No Content </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
-     </table>
-     */
-    public okhttp3.Call deleteUserMeAsync(final ApiCallback<Void> _callback) throws ApiException {
-
-        okhttp3.Call localVarCall = deleteUserMeValidateBeforeCall(_callback);
-        localVarApiClient.executeAsync(localVarCall, _callback);
-        return localVarCall;
-    }
-    /**
-     * Build call for getUserById
-     * @param id  (required)
-     * @param _callback Callback for upload/download progress
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> User Profile </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
-     </table>
-     */
-    public okhttp3.Call getUserByIdCall(@javax.annotation.Nullable String id, final ApiCallback _callback) throws ApiException {
-        String basePath = null;
-        // Operation Servers
-        String[] localBasePaths = new String[] {  };
-
-        // Determine Base Path to Use
-        if (localCustomBaseUrl != null){
-            basePath = localCustomBaseUrl;
-        } else if ( localBasePaths.length > 0 ) {
-            basePath = localBasePaths[localHostIndex];
-        } else {
-            basePath = null;
-        }
-
-        Object localVarPostBody = null;
-
-        // create path and map variables
-        String localVarPath = "/user/{id}"
-            .replace("{" + "id" + "}", localVarApiClient.escapeString(id.toString()));
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
         final String[] localVarAccepts = {
             "application/json"
@@ -253,59 +142,55 @@ public class UserApi {
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call getUserByIdValidateBeforeCall(@javax.annotation.Nullable String id, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter 'id' is set
-        if (id == null) {
-            throw new ApiException("Missing the required parameter 'id' when calling getUserById(Async)");
-        }
-
-        return getUserByIdCall(id, _callback);
+    private okhttp3.Call getFeedValidateBeforeCall(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback _callback) throws ApiException {
+        return getFeedCall(limit, cursor, _callback);
 
     }
 
     /**
      * 
      * 
-     * @param id  (required)
-     * @return GetUserById200Response
+     * @param limit  (optional)
+     * @param cursor  (optional)
+     * @return GetFeed200Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> User Profile </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Paginated feed of followed users sessions </td><td>  -  </td></tr>
      </table>
      */
-    public GetUserById200Response getUserById(@javax.annotation.Nullable String id) throws ApiException {
-        ApiResponse<GetUserById200Response> localVarResp = getUserByIdWithHttpInfo(id);
+    public GetFeed200Response getFeed(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor) throws ApiException {
+        ApiResponse<GetFeed200Response> localVarResp = getFeedWithHttpInfo(limit, cursor);
         return localVarResp.getData();
     }
 
     /**
      * 
      * 
-     * @param id  (required)
-     * @return ApiResponse&lt;GetUserById200Response&gt;
+     * @param limit  (optional)
+     * @param cursor  (optional)
+     * @return ApiResponse&lt;GetFeed200Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> User Profile </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Paginated feed of followed users sessions </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<GetUserById200Response> getUserByIdWithHttpInfo(@javax.annotation.Nullable String id) throws ApiException {
-        okhttp3.Call localVarCall = getUserByIdValidateBeforeCall(id, null);
-        Type localVarReturnType = new TypeToken<GetUserById200Response>(){}.getType();
+    public ApiResponse<GetFeed200Response> getFeedWithHttpInfo(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor) throws ApiException {
+        okhttp3.Call localVarCall = getFeedValidateBeforeCall(limit, cursor, null);
+        Type localVarReturnType = new TypeToken<GetFeed200Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
     /**
      *  (asynchronously)
      * 
-     * @param id  (required)
+     * @param limit  (optional)
+     * @param cursor  (optional)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -313,20 +198,19 @@ public class UserApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> User Profile </td><td>  -  </td></tr>
-        <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Paginated feed of followed users sessions </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call getUserByIdAsync(@javax.annotation.Nullable String id, final ApiCallback<GetUserById200Response> _callback) throws ApiException {
+    public okhttp3.Call getFeedAsync(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String cursor, final ApiCallback<GetFeed200Response> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = getUserByIdValidateBeforeCall(id, _callback);
-        Type localVarReturnType = new TypeToken<GetUserById200Response>(){}.getType();
+        okhttp3.Call localVarCall = getFeedValidateBeforeCall(limit, cursor, _callback);
+        Type localVarReturnType = new TypeToken<GetFeed200Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
     /**
-     * Build call for patchUserMe
-     * @param patchUserMeRequest  (required)
+     * Build call for getFeedFollowSuggestionsHobby
+     * @param limit  (optional)
      * @param _callback Callback for upload/download progress
      * @return Call to execute
      * @throws ApiException If fail to serialize the request body object
@@ -334,140 +218,10 @@ public class UserApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Users who share your hobbies </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call patchUserMeCall(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest, final ApiCallback _callback) throws ApiException {
-        String basePath = null;
-        // Operation Servers
-        String[] localBasePaths = new String[] {  };
-
-        // Determine Base Path to Use
-        if (localCustomBaseUrl != null){
-            basePath = localCustomBaseUrl;
-        } else if ( localBasePaths.length > 0 ) {
-            basePath = localBasePaths[localHostIndex];
-        } else {
-            basePath = null;
-        }
-
-        Object localVarPostBody = patchUserMeRequest;
-
-        // create path and map variables
-        String localVarPath = "/user/me";
-
-        List<Pair> localVarQueryParams = new ArrayList<Pair>();
-        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
-        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
-        Map<String, String> localVarCookieParams = new HashMap<String, String>();
-        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
-
-        final String[] localVarAccepts = {
-            "application/json"
-        };
-        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
-        if (localVarAccept != null) {
-            localVarHeaderParams.put("Accept", localVarAccept);
-        }
-
-        final String[] localVarContentTypes = {
-            "application/json"
-        };
-        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
-        if (localVarContentType != null) {
-            localVarHeaderParams.put("Content-Type", localVarContentType);
-        }
-
-        String[] localVarAuthNames = new String[] { "accessTokenCookie", "refreshTokenCookie" };
-        return localVarApiClient.buildCall(basePath, localVarPath, "PATCH", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private okhttp3.Call patchUserMeValidateBeforeCall(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter 'patchUserMeRequest' is set
-        if (patchUserMeRequest == null) {
-            throw new ApiException("Missing the required parameter 'patchUserMeRequest' when calling patchUserMe(Async)");
-        }
-
-        return patchUserMeCall(patchUserMeRequest, _callback);
-
-    }
-
-    /**
-     * 
-     * 
-     * @param patchUserMeRequest  (required)
-     * @return PostAuthLogin200Response
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-     </table>
-     */
-    public PostAuthLogin200Response patchUserMe(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest) throws ApiException {
-        ApiResponse<PostAuthLogin200Response> localVarResp = patchUserMeWithHttpInfo(patchUserMeRequest);
-        return localVarResp.getData();
-    }
-
-    /**
-     * 
-     * 
-     * @param patchUserMeRequest  (required)
-     * @return ApiResponse&lt;PostAuthLogin200Response&gt;
-     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-     </table>
-     */
-    public ApiResponse<PostAuthLogin200Response> patchUserMeWithHttpInfo(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest) throws ApiException {
-        okhttp3.Call localVarCall = patchUserMeValidateBeforeCall(patchUserMeRequest, null);
-        Type localVarReturnType = new TypeToken<PostAuthLogin200Response>(){}.getType();
-        return localVarApiClient.execute(localVarCall, localVarReturnType);
-    }
-
-    /**
-     *  (asynchronously)
-     * 
-     * @param patchUserMeRequest  (required)
-     * @param _callback The callback to be executed when the API call finishes
-     * @return The request call
-     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Updated User </td><td>  -  </td></tr>
-     </table>
-     */
-    public okhttp3.Call patchUserMeAsync(@javax.annotation.Nonnull PatchUserMeRequest patchUserMeRequest, final ApiCallback<PostAuthLogin200Response> _callback) throws ApiException {
-
-        okhttp3.Call localVarCall = patchUserMeValidateBeforeCall(patchUserMeRequest, _callback);
-        Type localVarReturnType = new TypeToken<PostAuthLogin200Response>(){}.getType();
-        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
-        return localVarCall;
-    }
-    /**
-     * Build call for postUserAvatar
-     * @param _file  (required)
-     * @param _callback Callback for upload/download progress
-     * @return Call to execute
-     * @throws ApiException If fail to serialize the request body object
-     * @http.response.details
-     <table border="1">
-       <caption>Response Details</caption>
-        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
-        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
-        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
-        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
-     </table>
-     */
-    public okhttp3.Call postUserAvatarCall(@javax.annotation.Nullable Object _file, final ApiCallback _callback) throws ApiException {
+    public okhttp3.Call getFeedFollowSuggestionsHobbyCall(@javax.annotation.Nullable Integer limit, final ApiCallback _callback) throws ApiException {
         String basePath = null;
         // Operation Servers
         String[] localBasePaths = new String[] {  };
@@ -484,7 +238,7 @@ public class UserApi {
         Object localVarPostBody = null;
 
         // create path and map variables
-        String localVarPath = "/user/avatar";
+        String localVarPath = "/feed/follow-suggestions/hobby";
 
         List<Pair> localVarQueryParams = new ArrayList<Pair>();
         List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
@@ -492,8 +246,8 @@ public class UserApi {
         Map<String, String> localVarCookieParams = new HashMap<String, String>();
         Map<String, Object> localVarFormParams = new HashMap<String, Object>();
 
-        if (_file != null) {
-            localVarFormParams.put("file", _file);
+        if (limit != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("limit", limit));
         }
 
         final String[] localVarAccepts = {
@@ -505,7 +259,6 @@ public class UserApi {
         }
 
         final String[] localVarContentTypes = {
-            "multipart/form-data"
         };
         final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
         if (localVarContentType != null) {
@@ -513,64 +266,56 @@ public class UserApi {
         }
 
         String[] localVarAuthNames = new String[] { "accessTokenCookie", "refreshTokenCookie" };
-        return localVarApiClient.buildCall(basePath, localVarPath, "POST", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+        return localVarApiClient.buildCall(basePath, localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
     }
 
     @SuppressWarnings("rawtypes")
-    private okhttp3.Call postUserAvatarValidateBeforeCall(@javax.annotation.Nullable Object _file, final ApiCallback _callback) throws ApiException {
-        // verify the required parameter '_file' is set
-        if (_file == null) {
-            throw new ApiException("Missing the required parameter '_file' when calling postUserAvatar(Async)");
-        }
-
-        return postUserAvatarCall(_file, _callback);
+    private okhttp3.Call getFeedFollowSuggestionsHobbyValidateBeforeCall(@javax.annotation.Nullable Integer limit, final ApiCallback _callback) throws ApiException {
+        return getFeedFollowSuggestionsHobbyCall(limit, _callback);
 
     }
 
     /**
      * 
      * 
-     * @param _file  (required)
+     * @param limit  (optional)
+     * @return GetFeedFollowSuggestionsHobby200Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
-        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
-        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
-        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Users who share your hobbies </td><td>  -  </td></tr>
      </table>
      */
-    public void postUserAvatar(@javax.annotation.Nullable Object _file) throws ApiException {
-        postUserAvatarWithHttpInfo(_file);
+    public GetFeedFollowSuggestionsHobby200Response getFeedFollowSuggestionsHobby(@javax.annotation.Nullable Integer limit) throws ApiException {
+        ApiResponse<GetFeedFollowSuggestionsHobby200Response> localVarResp = getFeedFollowSuggestionsHobbyWithHttpInfo(limit);
+        return localVarResp.getData();
     }
 
     /**
      * 
      * 
-     * @param _file  (required)
-     * @return ApiResponse&lt;Void&gt;
+     * @param limit  (optional)
+     * @return ApiResponse&lt;GetFeedFollowSuggestionsHobby200Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
-        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
-        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
-        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Users who share your hobbies </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<Void> postUserAvatarWithHttpInfo(@javax.annotation.Nullable Object _file) throws ApiException {
-        okhttp3.Call localVarCall = postUserAvatarValidateBeforeCall(_file, null);
-        return localVarApiClient.execute(localVarCall);
+    public ApiResponse<GetFeedFollowSuggestionsHobby200Response> getFeedFollowSuggestionsHobbyWithHttpInfo(@javax.annotation.Nullable Integer limit) throws ApiException {
+        okhttp3.Call localVarCall = getFeedFollowSuggestionsHobbyValidateBeforeCall(limit, null);
+        Type localVarReturnType = new TypeToken<GetFeedFollowSuggestionsHobby200Response>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
     /**
      *  (asynchronously)
      * 
-     * @param _file  (required)
+     * @param limit  (optional)
      * @param _callback The callback to be executed when the API call finishes
      * @return The request call
      * @throws ApiException If fail to process the API call, e.g. serializing the request body object
@@ -578,16 +323,272 @@ public class UserApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 200 </td><td> Avatar uploaded successfully </td><td>  -  </td></tr>
-        <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
-        <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
-        <tr><td> 500 </td><td> Internal Server Error </td><td>  -  </td></tr>
+        <tr><td> 200 </td><td> Users who share your hobbies </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call postUserAvatarAsync(@javax.annotation.Nullable Object _file, final ApiCallback<Void> _callback) throws ApiException {
+    public okhttp3.Call getFeedFollowSuggestionsHobbyAsync(@javax.annotation.Nullable Integer limit, final ApiCallback<GetFeedFollowSuggestionsHobby200Response> _callback) throws ApiException {
 
-        okhttp3.Call localVarCall = postUserAvatarValidateBeforeCall(_file, _callback);
-        localVarApiClient.executeAsync(localVarCall, _callback);
+        okhttp3.Call localVarCall = getFeedFollowSuggestionsHobbyValidateBeforeCall(limit, _callback);
+        Type localVarReturnType = new TypeToken<GetFeedFollowSuggestionsHobby200Response>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for getFeedFollowSuggestionsSocial
+     * @param limit  (optional)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Users followed by people you follow </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getFeedFollowSuggestionsSocialCall(@javax.annotation.Nullable Integer limit, final ApiCallback _callback) throws ApiException {
+        String basePath = null;
+        // Operation Servers
+        String[] localBasePaths = new String[] {  };
+
+        // Determine Base Path to Use
+        if (localCustomBaseUrl != null){
+            basePath = localCustomBaseUrl;
+        } else if ( localBasePaths.length > 0 ) {
+            basePath = localBasePaths[localHostIndex];
+        } else {
+            basePath = null;
+        }
+
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/feed/follow-suggestions/social";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        if (limit != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("limit", limit));
+        }
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        if (localVarContentType != null) {
+            localVarHeaderParams.put("Content-Type", localVarContentType);
+        }
+
+        String[] localVarAuthNames = new String[] { "accessTokenCookie", "refreshTokenCookie" };
+        return localVarApiClient.buildCall(basePath, localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getFeedFollowSuggestionsSocialValidateBeforeCall(@javax.annotation.Nullable Integer limit, final ApiCallback _callback) throws ApiException {
+        return getFeedFollowSuggestionsSocialCall(limit, _callback);
+
+    }
+
+    /**
+     * 
+     * 
+     * @param limit  (optional)
+     * @return GetFeedFollowSuggestionsSocial200Response
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Users followed by people you follow </td><td>  -  </td></tr>
+     </table>
+     */
+    public GetFeedFollowSuggestionsSocial200Response getFeedFollowSuggestionsSocial(@javax.annotation.Nullable Integer limit) throws ApiException {
+        ApiResponse<GetFeedFollowSuggestionsSocial200Response> localVarResp = getFeedFollowSuggestionsSocialWithHttpInfo(limit);
+        return localVarResp.getData();
+    }
+
+    /**
+     * 
+     * 
+     * @param limit  (optional)
+     * @return ApiResponse&lt;GetFeedFollowSuggestionsSocial200Response&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Users followed by people you follow </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<GetFeedFollowSuggestionsSocial200Response> getFeedFollowSuggestionsSocialWithHttpInfo(@javax.annotation.Nullable Integer limit) throws ApiException {
+        okhttp3.Call localVarCall = getFeedFollowSuggestionsSocialValidateBeforeCall(limit, null);
+        Type localVarReturnType = new TypeToken<GetFeedFollowSuggestionsSocial200Response>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     *  (asynchronously)
+     * 
+     * @param limit  (optional)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Users followed by people you follow </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getFeedFollowSuggestionsSocialAsync(@javax.annotation.Nullable Integer limit, final ApiCallback<GetFeedFollowSuggestionsSocial200Response> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getFeedFollowSuggestionsSocialValidateBeforeCall(limit, _callback);
+        Type localVarReturnType = new TypeToken<GetFeedFollowSuggestionsSocial200Response>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
+        return localVarCall;
+    }
+    /**
+     * Build call for getFeedHobbySuggestions
+     * @param limit  (optional)
+     * @param period  (optional)
+     * @param _callback Callback for upload/download progress
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Trending hobbies you have not joined </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getFeedHobbySuggestionsCall(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String period, final ApiCallback _callback) throws ApiException {
+        String basePath = null;
+        // Operation Servers
+        String[] localBasePaths = new String[] {  };
+
+        // Determine Base Path to Use
+        if (localCustomBaseUrl != null){
+            basePath = localCustomBaseUrl;
+        } else if ( localBasePaths.length > 0 ) {
+            basePath = localBasePaths[localHostIndex];
+        } else {
+            basePath = null;
+        }
+
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/feed/hobby-suggestions";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        Map<String, String> localVarCookieParams = new HashMap<String, String>();
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        if (limit != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("limit", limit));
+        }
+
+        if (period != null) {
+            localVarQueryParams.addAll(localVarApiClient.parameterToPair("period", period));
+        }
+
+        final String[] localVarAccepts = {
+            "application/json"
+        };
+        final String localVarAccept = localVarApiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) {
+            localVarHeaderParams.put("Accept", localVarAccept);
+        }
+
+        final String[] localVarContentTypes = {
+        };
+        final String localVarContentType = localVarApiClient.selectHeaderContentType(localVarContentTypes);
+        if (localVarContentType != null) {
+            localVarHeaderParams.put("Content-Type", localVarContentType);
+        }
+
+        String[] localVarAuthNames = new String[] { "accessTokenCookie", "refreshTokenCookie" };
+        return localVarApiClient.buildCall(basePath, localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarCookieParams, localVarFormParams, localVarAuthNames, _callback);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private okhttp3.Call getFeedHobbySuggestionsValidateBeforeCall(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String period, final ApiCallback _callback) throws ApiException {
+        return getFeedHobbySuggestionsCall(limit, period, _callback);
+
+    }
+
+    /**
+     * 
+     * 
+     * @param limit  (optional)
+     * @param period  (optional)
+     * @return GetFeedHobbySuggestions200Response
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Trending hobbies you have not joined </td><td>  -  </td></tr>
+     </table>
+     */
+    public GetFeedHobbySuggestions200Response getFeedHobbySuggestions(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String period) throws ApiException {
+        ApiResponse<GetFeedHobbySuggestions200Response> localVarResp = getFeedHobbySuggestionsWithHttpInfo(limit, period);
+        return localVarResp.getData();
+    }
+
+    /**
+     * 
+     * 
+     * @param limit  (optional)
+     * @param period  (optional)
+     * @return ApiResponse&lt;GetFeedHobbySuggestions200Response&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Trending hobbies you have not joined </td><td>  -  </td></tr>
+     </table>
+     */
+    public ApiResponse<GetFeedHobbySuggestions200Response> getFeedHobbySuggestionsWithHttpInfo(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String period) throws ApiException {
+        okhttp3.Call localVarCall = getFeedHobbySuggestionsValidateBeforeCall(limit, period, null);
+        Type localVarReturnType = new TypeToken<GetFeedHobbySuggestions200Response>(){}.getType();
+        return localVarApiClient.execute(localVarCall, localVarReturnType);
+    }
+
+    /**
+     *  (asynchronously)
+     * 
+     * @param limit  (optional)
+     * @param period  (optional)
+     * @param _callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     * @http.response.details
+     <table border="1">
+       <caption>Response Details</caption>
+        <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
+        <tr><td> 200 </td><td> Trending hobbies you have not joined </td><td>  -  </td></tr>
+     </table>
+     */
+    public okhttp3.Call getFeedHobbySuggestionsAsync(@javax.annotation.Nullable Integer limit, @javax.annotation.Nullable String period, final ApiCallback<GetFeedHobbySuggestions200Response> _callback) throws ApiException {
+
+        okhttp3.Call localVarCall = getFeedHobbySuggestionsValidateBeforeCall(limit, period, _callback);
+        Type localVarReturnType = new TypeToken<GetFeedHobbySuggestions200Response>(){}.getType();
+        localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
 }

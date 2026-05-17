@@ -52,13 +52,13 @@ import com.filip.hobbytracker.api.invoker.JSON;
 public class PostAuthLogout200Response {
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   private String message;
 
   public PostAuthLogout200Response() {
   }
 
-  public PostAuthLogout200Response message(@javax.annotation.Nullable String message) {
+  public PostAuthLogout200Response message(@javax.annotation.Nonnull String message) {
     this.message = message;
     return this;
   }
@@ -67,12 +67,12 @@ public class PostAuthLogout200Response {
    * Get message
    * @return message
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   public String getMessage() {
     return message;
   }
 
-  public void setMessage(@javax.annotation.Nullable String message) {
+  public void setMessage(@javax.annotation.Nonnull String message) {
     this.message = message;
   }
 
@@ -152,7 +152,7 @@ public class PostAuthLogout200Response {
         }
       }
         JsonObject jsonObj = jsonElement.getAsJsonObject();
-      if ((jsonObj.get("message") != null && !jsonObj.get("message").isJsonNull()) && !jsonObj.get("message").isJsonPrimitive()) {
+      if (!jsonObj.get("message").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "Expected the field `message` to be a primitive type in the JSON string but got `%s`", jsonObj.get("message").toString()));
       }
   }

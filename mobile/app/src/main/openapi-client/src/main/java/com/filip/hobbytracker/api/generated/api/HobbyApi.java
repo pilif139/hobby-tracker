@@ -28,7 +28,6 @@ import java.io.IOException;
 
 
 import java.math.BigDecimal;
-import com.filip.hobbytracker.api.generated.model.GetAuthMe404Response;
 import com.filip.hobbytracker.api.generated.model.GetHobbyUserByUserId200ResponseInner;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogout200Response;
 import com.filip.hobbytracker.api.generated.model.PostHobbyRequest;

@@ -46,19 +46,24 @@ import java.util.Set;
 import com.filip.hobbytracker.api.invoker.JSON;
 
 /**
- * GetAuthMe404Response
+ * PostAuthRegister403Response
  */
 @javax.annotation.Generated(value = "org.openapitools.codegen.languages.JavaClientCodegen", comments = "Generator version: 7.21.0")
-public class GetAuthMe404Response {
+public class PostAuthRegister403Response {
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   private String message;
 
-  public GetAuthMe404Response() {
+  public static final String SERIALIZED_NAME_CAUSE = "cause";
+  @SerializedName(SERIALIZED_NAME_CAUSE)
+  @javax.annotation.Nullable
+  private String cause;
+
+  public PostAuthRegister403Response() {
   }
 
-  public GetAuthMe404Response message(@javax.annotation.Nullable String message) {
+  public PostAuthRegister403Response message(@javax.annotation.Nonnull String message) {
     this.message = message;
     return this;
   }
@@ -67,13 +72,32 @@ public class GetAuthMe404Response {
    * Get message
    * @return message
    */
-  @javax.annotation.Nullable
+  @javax.annotation.Nonnull
   public String getMessage() {
     return message;
   }
 
-  public void setMessage(@javax.annotation.Nullable String message) {
+  public void setMessage(@javax.annotation.Nonnull String message) {
     this.message = message;
+  }
+
+
+  public PostAuthRegister403Response cause(@javax.annotation.Nullable String cause) {
+    this.cause = cause;
+    return this;
+  }
+
+  /**
+   * Get cause
+   * @return cause
+   */
+  @javax.annotation.Nullable
+  public String getCause() {
+    return cause;
+  }
+
+  public void setCause(@javax.annotation.Nullable String cause) {
+    this.cause = cause;
   }
 
 
@@ -86,20 +110,22 @@ public class GetAuthMe404Response {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GetAuthMe404Response getAuthMe404Response = (GetAuthMe404Response) o;
-    return Objects.equals(this.message, getAuthMe404Response.message);
+    PostAuthRegister403Response postAuthRegister403Response = (PostAuthRegister403Response) o;
+    return Objects.equals(this.message, postAuthRegister403Response.message) &&
+        Objects.equals(this.cause, postAuthRegister403Response.cause);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(message);
+    return Objects.hash(message, cause);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GetAuthMe404Response {\n");
+    sb.append("class PostAuthRegister403Response {\n");
     sb.append("    message: ").append(toIndentedString(message)).append("\n");
+    sb.append("    cause: ").append(toIndentedString(cause)).append("\n");
     sb.append("}");
     return sb.toString();
   }
@@ -118,7 +144,7 @@ public class GetAuthMe404Response {
 
   static {
     // a set of all properties/fields (JSON key names)
-    openapiFields = new HashSet<String>(Arrays.asList("message"));
+    openapiFields = new HashSet<String>(Arrays.asList("message", "cause"));
 
     // a set of required properties/fields (JSON key names)
     openapiRequiredFields = new HashSet<String>(Arrays.asList("message"));
@@ -128,32 +154,35 @@ public class GetAuthMe404Response {
    * Validates the JSON Element and throws an exception if issues found
    *
    * @param jsonElement JSON Element
-   * @throws IOException if the JSON Element is invalid with respect to GetAuthMe404Response
+   * @throws IOException if the JSON Element is invalid with respect to PostAuthRegister403Response
    */
   public static void validateJsonElement(JsonElement jsonElement) throws IOException {
       if (jsonElement == null) {
-        if (!GetAuthMe404Response.openapiRequiredFields.isEmpty()) { // has required fields but JSON element is null
-          throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The required field(s) %s in GetAuthMe404Response is not found in the empty JSON string", GetAuthMe404Response.openapiRequiredFields.toString()));
+        if (!PostAuthRegister403Response.openapiRequiredFields.isEmpty()) { // has required fields but JSON element is null
+          throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The required field(s) %s in PostAuthRegister403Response is not found in the empty JSON string", PostAuthRegister403Response.openapiRequiredFields.toString()));
         }
       }
 
       Set<Map.Entry<String, JsonElement>> entries = jsonElement.getAsJsonObject().entrySet();
       // check to see if the JSON string contains additional fields
       for (Map.Entry<String, JsonElement> entry : entries) {
-        if (!GetAuthMe404Response.openapiFields.contains(entry.getKey())) {
-          throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The field `%s` in the JSON string is not defined in the `GetAuthMe404Response` properties. JSON: %s", entry.getKey(), jsonElement.toString()));
+        if (!PostAuthRegister403Response.openapiFields.contains(entry.getKey())) {
+          throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The field `%s` in the JSON string is not defined in the `PostAuthRegister403Response` properties. JSON: %s", entry.getKey(), jsonElement.toString()));
         }
       }
 
       // check to make sure all required properties/fields are present in the JSON string
-      for (String requiredField : GetAuthMe404Response.openapiRequiredFields) {
+      for (String requiredField : PostAuthRegister403Response.openapiRequiredFields) {
         if (jsonElement.getAsJsonObject().get(requiredField) == null) {
           throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The required field `%s` is not found in the JSON string: %s", requiredField, jsonElement.toString()));
         }
       }
         JsonObject jsonObj = jsonElement.getAsJsonObject();
-      if ((jsonObj.get("message") != null && !jsonObj.get("message").isJsonNull()) && !jsonObj.get("message").isJsonPrimitive()) {
+      if (!jsonObj.get("message").isJsonPrimitive()) {
         throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "Expected the field `message` to be a primitive type in the JSON string but got `%s`", jsonObj.get("message").toString()));
+      }
+      if ((jsonObj.get("cause") != null && !jsonObj.get("cause").isJsonNull()) && !jsonObj.get("cause").isJsonPrimitive()) {
+        throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "Expected the field `cause` to be a primitive type in the JSON string but got `%s`", jsonObj.get("cause").toString()));
       }
   }
 
@@ -161,22 +190,22 @@ public class GetAuthMe404Response {
     @SuppressWarnings("unchecked")
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-       if (!GetAuthMe404Response.class.isAssignableFrom(type.getRawType())) {
-         return null; // this class only serializes 'GetAuthMe404Response' and its subtypes
+       if (!PostAuthRegister403Response.class.isAssignableFrom(type.getRawType())) {
+         return null; // this class only serializes 'PostAuthRegister403Response' and its subtypes
        }
        final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-       final TypeAdapter<GetAuthMe404Response> thisAdapter
-                        = gson.getDelegateAdapter(this, TypeToken.get(GetAuthMe404Response.class));
+       final TypeAdapter<PostAuthRegister403Response> thisAdapter
+                        = gson.getDelegateAdapter(this, TypeToken.get(PostAuthRegister403Response.class));
 
-       return (TypeAdapter<T>) new TypeAdapter<GetAuthMe404Response>() {
+       return (TypeAdapter<T>) new TypeAdapter<PostAuthRegister403Response>() {
            @Override
-           public void write(JsonWriter out, GetAuthMe404Response value) throws IOException {
+           public void write(JsonWriter out, PostAuthRegister403Response value) throws IOException {
              JsonObject obj = thisAdapter.toJsonTree(value).getAsJsonObject();
              elementAdapter.write(out, obj);
            }
 
            @Override
-           public GetAuthMe404Response read(JsonReader in) throws IOException {
+           public PostAuthRegister403Response read(JsonReader in) throws IOException {
              JsonElement jsonElement = elementAdapter.read(in);
              validateJsonElement(jsonElement);
              return thisAdapter.fromJsonTree(jsonElement);
@@ -187,18 +216,18 @@ public class GetAuthMe404Response {
   }
 
   /**
-   * Create an instance of GetAuthMe404Response given an JSON string
+   * Create an instance of PostAuthRegister403Response given an JSON string
    *
    * @param jsonString JSON string
-   * @return An instance of GetAuthMe404Response
-   * @throws IOException if the JSON string is invalid with respect to GetAuthMe404Response
+   * @return An instance of PostAuthRegister403Response
+   * @throws IOException if the JSON string is invalid with respect to PostAuthRegister403Response
    */
-  public static GetAuthMe404Response fromJson(String jsonString) throws IOException {
-    return JSON.getGson().fromJson(jsonString, GetAuthMe404Response.class);
+  public static PostAuthRegister403Response fromJson(String jsonString) throws IOException {
+    return JSON.getGson().fromJson(jsonString, PostAuthRegister403Response.class);
   }
 
   /**
-   * Convert an instance of GetAuthMe404Response to an JSON string
+   * Convert an instance of PostAuthRegister403Response to an JSON string
    *
    * @return JSON string
    */
