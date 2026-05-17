@@ -35,9 +35,35 @@ public class AuthRepository {
 
                 ApiProvider.authenticationApi().postAuthLogin(request);
                 callback.onResult(Resource.success(null));
-                
+
             } catch (ApiException e) {
                 String errorMessage = context.getString(R.string.error_login_failed);
+                if (e.getResponseBody() != null && !e.getResponseBody().trim().isEmpty()) {
+                    errorMessage = e.getResponseBody();
+                }
+                callback.onResult(Resource.error(errorMessage, null));
+
+            } catch (Exception e) {
+                callback.onResult(Resource.error(context.getString(R.string.error_network), null));
+            }
+        });
+    }
+
+    public void register(String email, String password, AuthCallback callback) {
+        callback.onResult(Resource.loading(null));
+
+        executor.execute(() -> {
+            try {
+                com.filip.hobbytracker.api.generated.model.PostAuthRegisterRequest request = 
+                        new com.filip.hobbytracker.api.generated.model.PostAuthRegisterRequest()
+                        .email(email)
+                        .password(password);
+
+                ApiProvider.authenticationApi().postAuthRegister(request);
+                callback.onResult(Resource.success(null));
+                
+            } catch (ApiException e) {
+                String errorMessage = context.getString(R.string.error_registration_failed);
                 if (e.getResponseBody() != null && !e.getResponseBody().trim().isEmpty()) {
                     errorMessage = e.getResponseBody();
                 }
