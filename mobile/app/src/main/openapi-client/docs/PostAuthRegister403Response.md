@@ -1,6 +1,6 @@
 
 
-# PostAuthLogin401Response
+# PostAuthRegister403Response
 
 
 ## Properties

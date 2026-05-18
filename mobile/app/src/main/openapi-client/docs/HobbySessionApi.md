@@ -492,7 +492,7 @@ public class Example {
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **201** | Created session |  -  |
+| **201** | Created |  -  |
 | **400** | Bad Request |  -  |
 | **413** | Content Too Large |  -  |
 

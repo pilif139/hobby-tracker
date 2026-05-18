@@ -54,7 +54,7 @@ public class PostAuthLogin401Response {
   public static final String SERIALIZED_NAME_MESSAGE = "message";
   @SerializedName(SERIALIZED_NAME_MESSAGE)
   @javax.annotation.Nullable
-  private String message = "Credentials are invalid";
+  private String message;
 
   public static final String SERIALIZED_NAME_CAUSE = "cause";
   @SerializedName(SERIALIZED_NAME_CAUSE)
@@ -159,7 +159,7 @@ public class PostAuthLogin401Response {
     openapiFields = new HashSet<String>(Arrays.asList("message", "cause"));
 
     // a set of required properties/fields (JSON key names)
-    openapiRequiredFields = new HashSet<String>(0);
+    openapiRequiredFields = new HashSet<String>(Arrays.asList("message"));
   }
 
   /**
@@ -180,6 +180,13 @@ public class PostAuthLogin401Response {
       for (Map.Entry<String, JsonElement> entry : entries) {
         if (!PostAuthLogin401Response.openapiFields.contains(entry.getKey())) {
           throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The field `%s` in the JSON string is not defined in the `PostAuthLogin401Response` properties. JSON: %s", entry.getKey(), jsonElement.toString()));
+        }
+      }
+
+      // check to make sure all required properties/fields are present in the JSON string
+      for (String requiredField : PostAuthLogin401Response.openapiRequiredFields) {
+        if (jsonElement.getAsJsonObject().get(requiredField) == null) {
+          throw new IllegalArgumentException(String.format(java.util.Locale.ROOT, "The required field `%s` is not found in the JSON string: %s", requiredField, jsonElement.toString()));
         }
       }
         JsonObject jsonObj = jsonElement.getAsJsonObject();

@@ -1,14 +1,14 @@
 
 
-# PostAuthLogin401Response
+# GetFeed200ResponseSessionsInnerHobby
 
 
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**message** | **String** |  |  |
-|**cause** | **String** |  |  [optional] |
+|**id** | **String** |  |  |
+|**name** | **String** |  |  |
 
 
 

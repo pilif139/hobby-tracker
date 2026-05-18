@@ -8,4 +8,12 @@
     <string name="error_login_failed">Login failed.</string>
     <string name="error_network">Network error. Try again.</string>
     <string name="login_success">Logged in. Empty page.</string>
+
+    <string name="onboarding_title">Welcome to Hobby Tracker</string>
+    <string name="btn_existing_user">I already have an account</string>
+    <string name="btn_new_user">I am a new user</string>
+
+    <string name="register_title">Create Account</string>
+    <string name="register_button">Register</string>
+    <string name="error_registration_failed">Registration failed.</string>
 </resources>

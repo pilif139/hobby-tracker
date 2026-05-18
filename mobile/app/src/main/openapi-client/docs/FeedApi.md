@@ -1,19 +1,18 @@
-# AuthenticationApi
+# FeedApi
 
 All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**getAuthMe**](AuthenticationApi.md#getAuthMe) | **GET** /auth/me |  |
-| [**postAuthLogin**](AuthenticationApi.md#postAuthLogin) | **POST** /auth/login |  |
-| [**postAuthLogout**](AuthenticationApi.md#postAuthLogout) | **POST** /auth/logout |  |
-| [**postAuthLogoutOtherDevices**](AuthenticationApi.md#postAuthLogoutOtherDevices) | **POST** /auth/logout-other-devices |  |
-| [**postAuthRegister**](AuthenticationApi.md#postAuthRegister) | **POST** /auth/register |  |
+| [**getFeed**](FeedApi.md#getFeed) | **GET** /feed |  |
+| [**getFeedFollowSuggestionsHobby**](FeedApi.md#getFeedFollowSuggestionsHobby) | **GET** /feed/follow-suggestions/hobby |  |
+| [**getFeedFollowSuggestionsSocial**](FeedApi.md#getFeedFollowSuggestionsSocial) | **GET** /feed/follow-suggestions/social |  |
+| [**getFeedHobbySuggestions**](FeedApi.md#getFeedHobbySuggestions) | **GET** /feed/hobby-suggestions |  |
 
 
-<a id="getAuthMe"></a>
-# **getAuthMe**
-> PostAuthLogin200Response getAuthMe()
+<a id="getFeed"></a>
+# **getFeed**
+> GetFeed200Response getFeed(limit, cursor)
 
 
 
@@ -25,7 +24,7 @@ import com.filip.hobbytracker.api.invoker.ApiException;
 import com.filip.hobbytracker.api.invoker.Configuration;
 import com.filip.hobbytracker.api.invoker.auth.*;
 import com.filip.hobbytracker.api.invoker.models.*;
-import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
+import com.filip.hobbytracker.api.generated.api.FeedApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -44,83 +43,14 @@ public class Example {
     // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
     //refreshTokenCookie.setApiKeyPrefix("Token");
 
-    AuthenticationApi apiInstance = new AuthenticationApi(defaultClient);
+    FeedApi apiInstance = new FeedApi(defaultClient);
+    Integer limit = 56; // Integer | 
+    String cursor = "cursor_example"; // String | 
     try {
-      PostAuthLogin200Response result = apiInstance.getAuthMe();
+      GetFeed200Response result = apiInstance.getFeed(limit, cursor);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling AuthenticationApi#getAuthMe");
-      System.err.println("Status code: " + e.getCode());
-      System.err.println("Reason: " + e.getResponseBody());
-      System.err.println("Response headers: " + e.getResponseHeaders());
-      e.printStackTrace();
-    }
-  }
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**PostAuthLogin200Response**](PostAuthLogin200Response.md)
-
-### Authorization
-
-[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Current authenticated user |  -  |
-| **404** | Not Found |  -  |
-
-<a id="postAuthLogin"></a>
-# **postAuthLogin**
-> PostAuthLogin200Response postAuthLogin(postAuthLoginRequest)
-
-
-
-### Example
-```java
-// Import classes:
-import com.filip.hobbytracker.api.invoker.ApiClient;
-import com.filip.hobbytracker.api.invoker.ApiException;
-import com.filip.hobbytracker.api.invoker.Configuration;
-import com.filip.hobbytracker.api.invoker.auth.*;
-import com.filip.hobbytracker.api.invoker.models.*;
-import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
-
-public class Example {
-  public static void main(String[] args) {
-    ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("http://localhost");
-    
-    // Configure API key authorization: accessTokenCookie
-    ApiKeyAuth accessTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("accessTokenCookie");
-    accessTokenCookie.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //accessTokenCookie.setApiKeyPrefix("Token");
-
-    // Configure API key authorization: refreshTokenCookie
-    ApiKeyAuth refreshTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("refreshTokenCookie");
-    refreshTokenCookie.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //refreshTokenCookie.setApiKeyPrefix("Token");
-
-    AuthenticationApi apiInstance = new AuthenticationApi(defaultClient);
-    PostAuthLoginRequest postAuthLoginRequest = new PostAuthLoginRequest(); // PostAuthLoginRequest | 
-    try {
-      PostAuthLogin200Response result = apiInstance.postAuthLogin(postAuthLoginRequest);
-      System.out.println(result);
-    } catch (ApiException e) {
-      System.err.println("Exception when calling AuthenticationApi#postAuthLogin");
+      System.err.println("Exception when calling FeedApi#getFeed");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -134,81 +64,12 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **postAuthLoginRequest** | [**PostAuthLoginRequest**](PostAuthLoginRequest.md)|  | |
+| **limit** | **Integer**|  | [optional] |
+| **cursor** | **String**|  | [optional] |
 
 ### Return type
 
-[**PostAuthLogin200Response**](PostAuthLogin200Response.md)
-
-### Authorization
-
-[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Successfully logged in |  * Set-Cookie -  <br>  |
-| **401** | Unauthorized |  -  |
-
-<a id="postAuthLogout"></a>
-# **postAuthLogout**
-> PostAuthLogout200Response postAuthLogout()
-
-
-
-### Example
-```java
-// Import classes:
-import com.filip.hobbytracker.api.invoker.ApiClient;
-import com.filip.hobbytracker.api.invoker.ApiException;
-import com.filip.hobbytracker.api.invoker.Configuration;
-import com.filip.hobbytracker.api.invoker.auth.*;
-import com.filip.hobbytracker.api.invoker.models.*;
-import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
-
-public class Example {
-  public static void main(String[] args) {
-    ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("http://localhost");
-    
-    // Configure API key authorization: accessTokenCookie
-    ApiKeyAuth accessTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("accessTokenCookie");
-    accessTokenCookie.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //accessTokenCookie.setApiKeyPrefix("Token");
-
-    // Configure API key authorization: refreshTokenCookie
-    ApiKeyAuth refreshTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("refreshTokenCookie");
-    refreshTokenCookie.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //refreshTokenCookie.setApiKeyPrefix("Token");
-
-    AuthenticationApi apiInstance = new AuthenticationApi(defaultClient);
-    try {
-      PostAuthLogout200Response result = apiInstance.postAuthLogout();
-      System.out.println(result);
-    } catch (ApiException e) {
-      System.err.println("Exception when calling AuthenticationApi#postAuthLogout");
-      System.err.println("Status code: " + e.getCode());
-      System.err.println("Reason: " + e.getResponseBody());
-      System.err.println("Response headers: " + e.getResponseHeaders());
-      e.printStackTrace();
-    }
-  }
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**PostAuthLogout200Response**](PostAuthLogout200Response.md)
+[**GetFeed200Response**](GetFeed200Response.md)
 
 ### Authorization
 
@@ -222,11 +83,11 @@ This endpoint does not need any parameter.
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Success |  -  |
+| **200** | Paginated feed of followed users sessions |  -  |
 
-<a id="postAuthLogoutOtherDevices"></a>
-# **postAuthLogoutOtherDevices**
-> PostAuthLogout200Response postAuthLogoutOtherDevices()
+<a id="getFeedFollowSuggestionsHobby"></a>
+# **getFeedFollowSuggestionsHobby**
+> GetFeedFollowSuggestionsHobby200Response getFeedFollowSuggestionsHobby(limit)
 
 
 
@@ -238,7 +99,7 @@ import com.filip.hobbytracker.api.invoker.ApiException;
 import com.filip.hobbytracker.api.invoker.Configuration;
 import com.filip.hobbytracker.api.invoker.auth.*;
 import com.filip.hobbytracker.api.invoker.models.*;
-import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
+import com.filip.hobbytracker.api.generated.api.FeedApi;
 
 public class Example {
   public static void main(String[] args) {
@@ -257,83 +118,13 @@ public class Example {
     // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
     //refreshTokenCookie.setApiKeyPrefix("Token");
 
-    AuthenticationApi apiInstance = new AuthenticationApi(defaultClient);
+    FeedApi apiInstance = new FeedApi(defaultClient);
+    Integer limit = 56; // Integer | 
     try {
-      PostAuthLogout200Response result = apiInstance.postAuthLogoutOtherDevices();
+      GetFeedFollowSuggestionsHobby200Response result = apiInstance.getFeedFollowSuggestionsHobby(limit);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling AuthenticationApi#postAuthLogoutOtherDevices");
-      System.err.println("Status code: " + e.getCode());
-      System.err.println("Reason: " + e.getResponseBody());
-      System.err.println("Response headers: " + e.getResponseHeaders());
-      e.printStackTrace();
-    }
-  }
-}
-```
-
-### Parameters
-This endpoint does not need any parameter.
-
-### Return type
-
-[**PostAuthLogout200Response**](PostAuthLogout200Response.md)
-
-### Authorization
-
-[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Success |  -  |
-| **400** | Bad Request |  -  |
-
-<a id="postAuthRegister"></a>
-# **postAuthRegister**
-> PostAuthLogin200Response postAuthRegister(postAuthRegisterRequest)
-
-
-
-### Example
-```java
-// Import classes:
-import com.filip.hobbytracker.api.invoker.ApiClient;
-import com.filip.hobbytracker.api.invoker.ApiException;
-import com.filip.hobbytracker.api.invoker.Configuration;
-import com.filip.hobbytracker.api.invoker.auth.*;
-import com.filip.hobbytracker.api.invoker.models.*;
-import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
-
-public class Example {
-  public static void main(String[] args) {
-    ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("http://localhost");
-    
-    // Configure API key authorization: accessTokenCookie
-    ApiKeyAuth accessTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("accessTokenCookie");
-    accessTokenCookie.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //accessTokenCookie.setApiKeyPrefix("Token");
-
-    // Configure API key authorization: refreshTokenCookie
-    ApiKeyAuth refreshTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("refreshTokenCookie");
-    refreshTokenCookie.setApiKey("YOUR API KEY");
-    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-    //refreshTokenCookie.setApiKeyPrefix("Token");
-
-    AuthenticationApi apiInstance = new AuthenticationApi(defaultClient);
-    PostAuthRegisterRequest postAuthRegisterRequest = new PostAuthRegisterRequest(); // PostAuthRegisterRequest | 
-    try {
-      PostAuthLogin200Response result = apiInstance.postAuthRegister(postAuthRegisterRequest);
-      System.out.println(result);
-    } catch (ApiException e) {
-      System.err.println("Exception when calling AuthenticationApi#postAuthRegister");
+      System.err.println("Exception when calling FeedApi#getFeedFollowSuggestionsHobby");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -347,11 +138,11 @@ public class Example {
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **postAuthRegisterRequest** | [**PostAuthRegisterRequest**](PostAuthRegisterRequest.md)|  | |
+| **limit** | **Integer**|  | [optional] |
 
 ### Return type
 
-[**PostAuthLogin200Response**](PostAuthLogin200Response.md)
+[**GetFeedFollowSuggestionsHobby200Response**](GetFeedFollowSuggestionsHobby200Response.md)
 
 ### Authorization
 
@@ -359,13 +150,159 @@ public class Example {
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-| **200** | Successfully registered user |  * Set-Cookie -  <br>  |
-| **403** | Forbidden |  -  |
-| **500** | Internal Server Error |  -  |
+| **200** | Users who share your hobbies |  -  |
+
+<a id="getFeedFollowSuggestionsSocial"></a>
+# **getFeedFollowSuggestionsSocial**
+> GetFeedFollowSuggestionsSocial200Response getFeedFollowSuggestionsSocial(limit)
+
+
+
+### Example
+```java
+// Import classes:
+import com.filip.hobbytracker.api.invoker.ApiClient;
+import com.filip.hobbytracker.api.invoker.ApiException;
+import com.filip.hobbytracker.api.invoker.Configuration;
+import com.filip.hobbytracker.api.invoker.auth.*;
+import com.filip.hobbytracker.api.invoker.models.*;
+import com.filip.hobbytracker.api.generated.api.FeedApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+    
+    // Configure API key authorization: accessTokenCookie
+    ApiKeyAuth accessTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("accessTokenCookie");
+    accessTokenCookie.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //accessTokenCookie.setApiKeyPrefix("Token");
+
+    // Configure API key authorization: refreshTokenCookie
+    ApiKeyAuth refreshTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("refreshTokenCookie");
+    refreshTokenCookie.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //refreshTokenCookie.setApiKeyPrefix("Token");
+
+    FeedApi apiInstance = new FeedApi(defaultClient);
+    Integer limit = 56; // Integer | 
+    try {
+      GetFeedFollowSuggestionsSocial200Response result = apiInstance.getFeedFollowSuggestionsSocial(limit);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling FeedApi#getFeedFollowSuggestionsSocial");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **limit** | **Integer**|  | [optional] |
+
+### Return type
+
+[**GetFeedFollowSuggestionsSocial200Response**](GetFeedFollowSuggestionsSocial200Response.md)
+
+### Authorization
+
+[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Users followed by people you follow |  -  |
+
+<a id="getFeedHobbySuggestions"></a>
+# **getFeedHobbySuggestions**
+> GetFeedHobbySuggestions200Response getFeedHobbySuggestions(limit, period)
+
+
+
+### Example
+```java
+// Import classes:
+import com.filip.hobbytracker.api.invoker.ApiClient;
+import com.filip.hobbytracker.api.invoker.ApiException;
+import com.filip.hobbytracker.api.invoker.Configuration;
+import com.filip.hobbytracker.api.invoker.auth.*;
+import com.filip.hobbytracker.api.invoker.models.*;
+import com.filip.hobbytracker.api.generated.api.FeedApi;
+
+public class Example {
+  public static void main(String[] args) {
+    ApiClient defaultClient = Configuration.getDefaultApiClient();
+    defaultClient.setBasePath("http://localhost");
+    
+    // Configure API key authorization: accessTokenCookie
+    ApiKeyAuth accessTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("accessTokenCookie");
+    accessTokenCookie.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //accessTokenCookie.setApiKeyPrefix("Token");
+
+    // Configure API key authorization: refreshTokenCookie
+    ApiKeyAuth refreshTokenCookie = (ApiKeyAuth) defaultClient.getAuthentication("refreshTokenCookie");
+    refreshTokenCookie.setApiKey("YOUR API KEY");
+    // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+    //refreshTokenCookie.setApiKeyPrefix("Token");
+
+    FeedApi apiInstance = new FeedApi(defaultClient);
+    Integer limit = 56; // Integer | 
+    String period = "week"; // String | 
+    try {
+      GetFeedHobbySuggestions200Response result = apiInstance.getFeedHobbySuggestions(limit, period);
+      System.out.println(result);
+    } catch (ApiException e) {
+      System.err.println("Exception when calling FeedApi#getFeedHobbySuggestions");
+      System.err.println("Status code: " + e.getCode());
+      System.err.println("Reason: " + e.getResponseBody());
+      System.err.println("Response headers: " + e.getResponseHeaders());
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **limit** | **Integer**|  | [optional] |
+| **period** | **String**|  | [optional] [enum: week, month] |
+
+### Return type
+
+[**GetFeedHobbySuggestions200Response**](GetFeedHobbySuggestions200Response.md)
+
+### Authorization
+
+[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Trending hobbies you have not joined |  -  |
 

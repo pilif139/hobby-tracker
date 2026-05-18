@@ -27,13 +27,10 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 
 
-import com.filip.hobbytracker.api.generated.model.GetAuthMe404Response;
 import com.filip.hobbytracker.api.generated.model.GetHobbySessionById200Response;
-import com.filip.hobbytracker.api.generated.model.GetHobbySessionById403Response;
 import com.filip.hobbytracker.api.generated.model.GetHobbySessionUserByUserId200Response;
-import com.filip.hobbytracker.api.generated.model.GetHobbySessionUserByUserId403Response;
-import com.filip.hobbytracker.api.generated.model.PatchHobbySessionById413Response;
-import com.filip.hobbytracker.api.generated.model.PostUserAvatar400Response;
+import com.filip.hobbytracker.api.generated.model.PostAuthLogout200Response;
+import com.filip.hobbytracker.api.generated.model.PostAuthRegister403Response;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -872,7 +869,7 @@ public class HobbySessionApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
+        <tr><td> 201 </td><td> Created </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
@@ -977,7 +974,7 @@ public class HobbySessionApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
+        <tr><td> 201 </td><td> Created </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
@@ -1001,7 +998,7 @@ public class HobbySessionApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
+        <tr><td> 201 </td><td> Created </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>
@@ -1027,7 +1024,7 @@ public class HobbySessionApi {
      <table border="1">
        <caption>Response Details</caption>
         <tr><td> Status Code </td><td> Description </td><td> Response Headers </td></tr>
-        <tr><td> 201 </td><td> Created session </td><td>  -  </td></tr>
+        <tr><td> 201 </td><td> Created </td><td>  -  </td></tr>
         <tr><td> 400 </td><td> Bad Request </td><td>  -  </td></tr>
         <tr><td> 413 </td><td> Content Too Large </td><td>  -  </td></tr>
      </table>

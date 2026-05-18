@@ -131,6 +131,10 @@ Class | Method | HTTP request | Description
 *AuthenticationApi* | [**postAuthLogout**](docs/AuthenticationApi.md#postAuthLogout) | **POST** /auth/logout | 
 *AuthenticationApi* | [**postAuthLogoutOtherDevices**](docs/AuthenticationApi.md#postAuthLogoutOtherDevices) | **POST** /auth/logout-other-devices | 
 *AuthenticationApi* | [**postAuthRegister**](docs/AuthenticationApi.md#postAuthRegister) | **POST** /auth/register | 
+*FeedApi* | [**getFeed**](docs/FeedApi.md#getFeed) | **GET** /feed | 
+*FeedApi* | [**getFeedFollowSuggestionsHobby**](docs/FeedApi.md#getFeedFollowSuggestionsHobby) | **GET** /feed/follow-suggestions/hobby | 
+*FeedApi* | [**getFeedFollowSuggestionsSocial**](docs/FeedApi.md#getFeedFollowSuggestionsSocial) | **GET** /feed/follow-suggestions/social | 
+*FeedApi* | [**getFeedHobbySuggestions**](docs/FeedApi.md#getFeedHobbySuggestions) | **GET** /feed/hobby-suggestions | 
 *HealthCheckApi* | [**getHealth**](docs/HealthCheckApi.md#getHealth) | **GET** /health | 
 *HobbyApi* | [**deleteHobbyRemoveFromProfileByHobbyId**](docs/HobbyApi.md#deleteHobbyRemoveFromProfileByHobbyId) | **DELETE** /hobby/remove-from-profile/{hobbyId} | 
 *HobbyApi* | [**getHobby**](docs/HobbyApi.md#getHobby) | **GET** /hobby | 
@@ -153,29 +157,31 @@ Class | Method | HTTP request | Description
 ## Documentation for Models
 
  - [GetAuthMe404Response](docs/GetAuthMe404Response.md)
+ - [GetFeed200Response](docs/GetFeed200Response.md)
+ - [GetFeed200ResponseSessionsInner](docs/GetFeed200ResponseSessionsInner.md)
+ - [GetFeed200ResponseSessionsInnerHobby](docs/GetFeed200ResponseSessionsInnerHobby.md)
+ - [GetFeed200ResponseSessionsInnerUser](docs/GetFeed200ResponseSessionsInnerUser.md)
+ - [GetFeedFollowSuggestionsHobby200Response](docs/GetFeedFollowSuggestionsHobby200Response.md)
+ - [GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner](docs/GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner.md)
+ - [GetFeedFollowSuggestionsSocial200Response](docs/GetFeedFollowSuggestionsSocial200Response.md)
+ - [GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner](docs/GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner.md)
+ - [GetFeedHobbySuggestions200Response](docs/GetFeedHobbySuggestions200Response.md)
+ - [GetFeedHobbySuggestions200ResponseSuggestionsInner](docs/GetFeedHobbySuggestions200ResponseSuggestionsInner.md)
  - [GetHealth200Response](docs/GetHealth200Response.md)
  - [GetHobbySessionById200Response](docs/GetHobbySessionById200Response.md)
- - [GetHobbySessionById403Response](docs/GetHobbySessionById403Response.md)
  - [GetHobbySessionUserByUserId200Response](docs/GetHobbySessionUserByUserId200Response.md)
  - [GetHobbySessionUserByUserId200ResponseSessionsInner](docs/GetHobbySessionUserByUserId200ResponseSessionsInner.md)
  - [GetHobbySessionUserByUserId200ResponseStats](docs/GetHobbySessionUserByUserId200ResponseStats.md)
- - [GetHobbySessionUserByUserId403Response](docs/GetHobbySessionUserByUserId403Response.md)
  - [GetHobbyUserByUserId200ResponseInner](docs/GetHobbyUserByUserId200ResponseInner.md)
  - [GetUserById200Response](docs/GetUserById200Response.md)
- - [PatchHobbySessionById413Response](docs/PatchHobbySessionById413Response.md)
  - [PatchUserMeRequest](docs/PatchUserMeRequest.md)
  - [PostAuthLogin200Response](docs/PostAuthLogin200Response.md)
  - [PostAuthLogin401Response](docs/PostAuthLogin401Response.md)
  - [PostAuthLoginRequest](docs/PostAuthLoginRequest.md)
  - [PostAuthLogout200Response](docs/PostAuthLogout200Response.md)
- - [PostAuthLogoutOtherDevices200Response](docs/PostAuthLogoutOtherDevices200Response.md)
- - [PostAuthLogoutOtherDevices400Response](docs/PostAuthLogoutOtherDevices400Response.md)
- - [PostAuthRegister500Response](docs/PostAuthRegister500Response.md)
+ - [PostAuthRegister403Response](docs/PostAuthRegister403Response.md)
  - [PostAuthRegisterRequest](docs/PostAuthRegisterRequest.md)
  - [PostHobbyRequest](docs/PostHobbyRequest.md)
- - [PostUserAvatar400Response](docs/PostUserAvatar400Response.md)
- - [PostUserAvatar413Response](docs/PostUserAvatar413Response.md)
- - [PostUserAvatar500Response](docs/PostUserAvatar500Response.md)
 
 
 <a id="documentation-for-authorization"></a>
