@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
 import { useCurrentUser } from '../current-user/CurrentUserContext';
-import LoginSchema from './LoginSchema';
-import type { PostAuthLoginRequest } from '@/api/generated/api';
+import RegisterSchema from './RegisterSchema';
+import type { PostAuthRegisterRequest } from '@/api/generated/api';
 import { authApiClient } from '@/api';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,29 +12,30 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { MeshGradientBackground } from '@/components/ui/mesh-gradient';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const { setCurrentUser } = useCurrentUser();
 
   const form = useForm({
     defaultValues: {
+      name: '',
       email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value);
+      await registerMutation.mutateAsync(value);
     },
     validators: {
-      onChangeAsync: LoginSchema,
+      onChangeAsync: RegisterSchema,
       onChangeAsyncDebounceMs: 500,
     },
   });
 
-  const loginMutation = useMutation({
-    mutationKey: ['login'],
-    mutationFn: async (input: PostAuthLoginRequest) => {
-      const res = await authApiClient.postAuthLogin({
-        postAuthLoginRequest: input,
+  const registerMutation = useMutation({
+    mutationKey: ['register'],
+    mutationFn: async (input: PostAuthRegisterRequest) => {
+      const res = await authApiClient.postAuthRegister({
+        postAuthRegisterRequest: input,
       });
       return res.data;
     },
@@ -57,10 +58,10 @@ export default function LoginPage() {
           <div className="mx-auto w-full max-w-sm space-y-6">
             <div className="flex flex-col gap-y-2 text-center">
               <h1 className="text-3xl font-bold tracking-tight">
-                Login to your account
+                Create your account
               </h1>
               <p className="text-sm text-muted-foreground">
-                Enter your email below to login to your account
+                Enter your details below to start tracking your hobbies
               </p>
             </div>
 
@@ -73,6 +74,30 @@ export default function LoginPage() {
               }}
             >
               <div className="grid gap-4">
+                <form.Field name="name">
+                  {(field) => {
+                    const isInvalid =
+                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    return (
+                      <Field data-invalid={isInvalid} className="grid gap-2">
+                        <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                        <Input
+                          id={field.name}
+                          type="text"
+                          placeholder="John Doe"
+                          value={field.state.value}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                          aria-invalid={isInvalid}
+                        />
+                        {isInvalid && (
+                          <FieldError errors={field.state.meta.errors} />
+                        )}
+                      </Field>
+                    );
+                  }}
+                </form.Field>
+
                 <form.Field name="email">
                   {(field) => {
                     const isInvalid =
@@ -122,12 +147,12 @@ export default function LoginPage() {
                   }}
                 </form.Field>
 
-                {loginMutation.error && (
+                {registerMutation.error && (
                   <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive rounded-md">
                     <ItemMedia variant="icon">
                       <TriangleAlert className="h-4 w-4" />
                     </ItemMedia>
-                    <ItemContent>{loginMutation.error.message}</ItemContent>
+                    <ItemContent>{registerMutation.error.message}</ItemContent>
                   </Item>
                 )}
 
@@ -136,11 +161,11 @@ export default function LoginPage() {
                     <Button
                       type="submit"
                       className="w-full mt-2"
-                      disabled={isSubmitting || loginMutation.isPending}
+                      disabled={isSubmitting || registerMutation.isPending}
                     >
-                      {isSubmitting || loginMutation.isPending
-                        ? 'Signing in…'
-                        : 'Sign in'}
+                      {isSubmitting || registerMutation.isPending
+                        ? 'Creating account…'
+                        : 'Sign up'}
                     </Button>
                   )}
                 </form.Subscribe>
@@ -148,12 +173,12 @@ export default function LoginPage() {
             </form>
 
             <p className="text-muted-foreground text-center text-sm mt-6">
-              Don&apos;t have an account?{' '}
+              Already have an account?{' '}
               <Link
-                to="/register"
+                to="/login"
                 className="text-primary underline-offset-4 hover:underline font-medium"
               >
-                Sign up
+                Log in
               </Link>
             </p>
           </div>
