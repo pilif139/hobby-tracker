@@ -1,9 +1,12 @@
 import { sign, verify } from 'hono/jwt';
+import z from 'zod';
 import type { CreateUserDto } from '../user/user.dto';
 import authConfig from './auth.config';
 import type { JWTRefreshToken, KVRefreshToken } from './auth.dto';
 import { compareHash } from '@/src/lib/hash';
 import type { UserService } from '@/src/modules/user/user.service';
+
+const refreshTokenSchema = z.object({ refreshToken: z.string() });
 
 export class AuthService {
   constructor(
@@ -137,7 +140,12 @@ export class AuthService {
       const storedToken = await this.authKV.get(
         `userId:${decodedPayload.userId}`,
       );
-      const parsed = JSON.parse(storedToken ?? '') as KVRefreshToken;
+
+      if (!storedToken) {
+        return null;
+      }
+
+      const parsed = refreshTokenSchema.parse(JSON.parse(storedToken));
       if (parsed.refreshToken !== decodedPayload.token) {
         return null;
       }

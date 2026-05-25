@@ -10,22 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root';
 import { Route as IndexRouteImport } from './routes/index';
-import { Route as LoginIndexRouteImport } from './routes/login/index';
 import { Route as RegisterIndexRouteImport } from './routes/register/index';
+import { Route as LoginIndexRouteImport } from './routes/login/index';
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any);
-const LoginIndexRoute = LoginIndexRouteImport.update({
-  id: '/login/',
-  path: '/login/',
-  getParentRoute: () => rootRouteImport,
-} as any);
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any);
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any);
 
@@ -68,18 +68,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    '/login/': {
-      id: '/login/';
-      path: '/login';
-      fullPath: '/login/';
-      preLoaderRoute: typeof LoginIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     '/register/': {
       id: '/register/';
       path: '/register';
       fullPath: '/register/';
       preLoaderRoute: typeof RegisterIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/login/': {
+      id: '/login/';
+      path: '/login';
+      fullPath: '/login/';
+      preLoaderRoute: typeof LoginIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
   }
