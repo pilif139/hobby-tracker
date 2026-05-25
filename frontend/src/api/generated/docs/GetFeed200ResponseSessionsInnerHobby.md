@@ -1,21 +1,21 @@
-# PostAuthLogin401Response
+# GetFeed200ResponseSessionsInnerHobby
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**message** | **string** |  | [default to undefined]
-**cause** | **string** |  | [optional] [default to undefined]
+**id** | **string** |  | [default to undefined]
+**name** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { PostAuthLogin401Response } from './api';
+import { GetFeed200ResponseSessionsInnerHobby } from './api';
 
-const instance: PostAuthLogin401Response = {
-    message,
-    cause,
+const instance: GetFeed200ResponseSessionsInnerHobby = {
+    id,
+    name,
 };
 ```
 

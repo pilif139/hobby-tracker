@@ -23,9 +23,64 @@ import type { RequestArgs } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerMap } from './base';
 
-export interface DeleteUserById403Response {
-    'message'?: string;
-    'cause'?: string | null;
+export interface DeleteFollowRequest {
+    'followerId': string | null;
+    'followingId': string | null;
+}
+export interface GetAuthMe404Response {
+    'message': string | null;
+}
+export interface GetFeed200Response {
+    'sessions': Array<GetFeed200ResponseSessionsInner>;
+    'nextCursor': string | null;
+}
+export interface GetFeed200ResponseSessionsInner {
+    'id': string | null;
+    'startTime': string | null;
+    'endTime': string | null;
+    'notes': string | null;
+    'imageUrls': Array<string>;
+    'createdAt': string | null;
+    'user': GetFeed200ResponseSessionsInnerUser;
+    'hobby': GetFeed200ResponseSessionsInnerHobby;
+}
+export interface GetFeed200ResponseSessionsInnerHobby {
+    'id': string | null;
+    'name': string | null;
+}
+export interface GetFeed200ResponseSessionsInnerUser {
+    'id': string | null;
+    'name': string | null;
+    'avatarUrl': string | null;
+}
+export interface GetFeedFollowSuggestionsHobby200Response {
+    'suggestions': Array<GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner>;
+}
+export interface GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner {
+    'id': string | null;
+    'name': string | null;
+    'avatarUrl': string | null;
+    'sharedHobbyCount': number;
+    'sharedHobbies': Array<string>;
+}
+export interface GetFeedFollowSuggestionsSocial200Response {
+    'suggestions': Array<GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner>;
+}
+export interface GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner {
+    'id': string | null;
+    'name': string | null;
+    'avatarUrl': string | null;
+    'mutualConnectionCount': number;
+}
+export interface GetFeedHobbySuggestions200Response {
+    'suggestions': Array<GetFeedHobbySuggestions200ResponseSuggestionsInner>;
+}
+export interface GetFeedHobbySuggestions200ResponseSuggestionsInner {
+    'id': string | null;
+    'name': string | null;
+    'description': string | null;
+    'sessionCount': number;
+    'userCount': number;
 }
 export interface GetHealth200Response {
     'status': GetHealth200ResponseStatusEnum;
@@ -35,6 +90,46 @@ export enum GetHealth200ResponseStatusEnum {
     Ok = 'ok'
 }
 
+export interface GetHobbySessionById200Response {
+    'id': string;
+    'hobbyId': string;
+    'userId': string;
+    'startTime': string;
+    'endTime': string;
+    'notes': string | null;
+    'imageUrls': Array<string>;
+    'createdAt': string;
+    'updatedAt': string;
+}
+export interface GetHobbySessionUserByUserId200Response {
+    'sessions': Array<GetHobbySessionUserByUserId200ResponseSessionsInner>;
+    'stats': GetHobbySessionUserByUserId200ResponseStats;
+}
+export interface GetHobbySessionUserByUserId200ResponseSessionsInner {
+    'id': string | null;
+    'hobbyId': string | null;
+    'userId': string | null;
+    'startTime': string | null;
+    'endTime': string | null;
+    'notes': string | null;
+    'imageUrls': Array<string | null>;
+    'createdAt': string | null;
+    'updatedAt': string | null;
+}
+export interface GetHobbySessionUserByUserId200ResponseStats {
+    'totalCount': number;
+    'totalDurationInSeconds': number;
+    'averageDurationInSeconds': number;
+    'minDurationInSeconds': number;
+    'maxDurationInSeconds': number;
+    'activeDaysCount': number;
+    'currentStreakDays': number;
+    'longestStreakDays': number;
+    'sessionsLast7Days': number;
+    'sessionsLast30Days': number;
+    'totalDurationLast7DaysInSeconds': number;
+    'totalDurationLast30DaysInSeconds': number;
+}
 export interface GetHobbyUserByUserId200ResponseInner {
     'id': string | null;
     'name': string | null;
@@ -50,14 +145,7 @@ export interface GetUserById200Response {
     'hobbiesCount': number;
     'hobbySessionsCount': number;
 }
-export interface GetUserById404Response {
-    'message'?: string;
-}
-export interface PatchUserById403Response {
-    'message'?: string;
-    'cause'?: string;
-}
-export interface PatchUserByIdRequest {
+export interface PatchUserMeRequest {
     'name'?: string;
 }
 export interface PostAuthLogin200Response {
@@ -66,7 +154,7 @@ export interface PostAuthLogin200Response {
     'name': string;
 }
 export interface PostAuthLogin401Response {
-    'message'?: string;
+    'message': string | null;
     'cause'?: string | null;
 }
 export interface PostAuthLoginRequest {
@@ -74,23 +162,23 @@ export interface PostAuthLoginRequest {
     'password': string;
 }
 export interface PostAuthLogout200Response {
-    'message': string | null;
-}
-export interface PostAuthLogoutOtherDevices200Response {
     'message': string;
 }
-export interface PostAuthLogoutOtherDevices400Response {
-    'message'?: string;
-    'cause'?: string | null;
-}
-export interface PostAuthRegister500Response {
-    'message'?: string;
-    'cause'?: string | null;
+export interface PostAuthRegister403Response {
+    'message': string;
+    'cause'?: string;
 }
 export interface PostAuthRegisterRequest {
     'email': string;
     'name': string;
     'password': string;
+}
+export interface PostFollow200Response {
+    'success': boolean;
+}
+export interface PostFollowRequest {
+    'followerId': string;
+    'followingId': string;
 }
 export interface PostHobbyRequest {
     'name': string;
@@ -98,21 +186,17 @@ export interface PostHobbyRequest {
 }
 
 /**
- * AddApi - axios parameter creator
+ * AuthenticationApi - axios parameter creator
  */
-export const AddApiAxiosParamCreator = function (configuration?: Configuration) {
+export const AuthenticationApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string | null} hobbyId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postHobbyAddToProfileByHobbyId: async (hobbyId: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hobbyId' is not null or undefined
-            assertParamExists('postHobbyAddToProfileByHobbyId', 'hobbyId', hobbyId)
-            const localVarPath = `/hobby/add-to-profile/{hobbyId}`
-                .replace(`{${"hobbyId"}}`, encodeURIComponent(String(hobbyId)));
+        getAuthMe: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/auth/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -120,7 +204,7 @@ export const AddApiAxiosParamCreator = function (configuration?: Configuration) 
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -139,77 +223,6 @@ export const AddApiAxiosParamCreator = function (configuration?: Configuration) 
                 options: localVarRequestOptions,
             };
         },
-    }
-};
-
-/**
- * AddApi - functional programming interface
- */
-export const AddApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = AddApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {string | null} hobbyId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async postHobbyAddToProfileByHobbyId(hobbyId: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogout200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postHobbyAddToProfileByHobbyId(hobbyId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AddApi.postHobbyAddToProfileByHobbyId']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * AddApi - factory interface
- */
-export const AddApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = AddApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {AddApiPostHobbyAddToProfileByHobbyIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        postHobbyAddToProfileByHobbyId(requestParameters: AddApiPostHobbyAddToProfileByHobbyIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogout200Response> {
-            return localVarFp.postHobbyAddToProfileByHobbyId(requestParameters.hobbyId, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for postHobbyAddToProfileByHobbyId operation in AddApi.
- */
-export interface AddApiPostHobbyAddToProfileByHobbyIdRequest {
-    readonly hobbyId: string | null
-}
-
-/**
- * AddApi - object-oriented interface
- */
-export class AddApi extends BaseAPI {
-    /**
-     * 
-     * @param {AddApiPostHobbyAddToProfileByHobbyIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public postHobbyAddToProfileByHobbyId(requestParameters: AddApiPostHobbyAddToProfileByHobbyIdRequest, options?: RawAxiosRequestConfig) {
-        return AddApiFp(this.configuration).postHobbyAddToProfileByHobbyId(requestParameters.hobbyId, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * AuthenticationApi - axios parameter creator
- */
-export const AuthenticationApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
         /**
          * 
          * @param {PostAuthLoginRequest} postAuthLoginRequest 
@@ -363,6 +376,17 @@ export const AuthenticationApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAuthMe(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogin200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAuthMe(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AuthenticationApi.getAuthMe']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @param {PostAuthLoginRequest} postAuthLoginRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -389,7 +413,7 @@ export const AuthenticationApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postAuthLogoutOtherDevices(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogoutOtherDevices200Response>> {
+        async postAuthLogoutOtherDevices(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogout200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postAuthLogoutOtherDevices(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuthenticationApi.postAuthLogoutOtherDevices']?.[localVarOperationServerIndex]?.url;
@@ -418,6 +442,14 @@ export const AuthenticationApiFactory = function (configuration?: Configuration,
     return {
         /**
          * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAuthMe(options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogin200Response> {
+            return localVarFp.getAuthMe(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {AuthenticationApiPostAuthLoginRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -438,7 +470,7 @@ export const AuthenticationApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postAuthLogoutOtherDevices(options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogoutOtherDevices200Response> {
+        postAuthLogoutOtherDevices(options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogout200Response> {
             return localVarFp.postAuthLogoutOtherDevices(options).then((request) => request(axios, basePath));
         },
         /**
@@ -471,6 +503,15 @@ export interface AuthenticationApiPostAuthRegisterRequest {
  * AuthenticationApi - object-oriented interface
  */
 export class AuthenticationApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getAuthMe(options?: RawAxiosRequestConfig) {
+        return AuthenticationApiFp(this.configuration).getAuthMe(options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @param {AuthenticationApiPostAuthLoginRequest} requestParameters Request parameters.
@@ -513,20 +554,415 @@ export class AuthenticationApi extends BaseAPI {
 
 
 /**
- * CreateNewApi - axios parameter creator
+ * FeedApi - axios parameter creator
  */
-export const CreateNewApiAxiosParamCreator = function (configuration?: Configuration) {
+export const FeedApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {PostHobbyRequest} postHobbyRequest 
+         * @param {number} [limit] 
+         * @param {string | null} [cursor] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postHobby: async (postHobbyRequest: PostHobbyRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'postHobbyRequest' is not null or undefined
-            assertParamExists('postHobby', 'postHobbyRequest', postHobbyRequest)
-            const localVarPath = `/hobby`;
+        getFeed: async (limit?: number, cursor?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/feed`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (cursor !== undefined) {
+                localVarQueryParameter['cursor'] = cursor;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeedFollowSuggestionsHobby: async (limit?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/feed/follow-suggestions/hobby`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeedFollowSuggestionsSocial: async (limit?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/feed/follow-suggestions/social`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {GetFeedHobbySuggestionsPeriodEnum} [period] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeedHobbySuggestions: async (limit?: number, period?: GetFeedHobbySuggestionsPeriodEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/feed/hobby-suggestions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (period !== undefined) {
+                localVarQueryParameter['period'] = period;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * FeedApi - functional programming interface
+ */
+export const FeedApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = FeedApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {string | null} [cursor] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFeed(limit?: number, cursor?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetFeed200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFeed(limit, cursor, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FeedApi.getFeed']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFeedFollowSuggestionsHobby(limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetFeedFollowSuggestionsHobby200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFeedFollowSuggestionsHobby(limit, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FeedApi.getFeedFollowSuggestionsHobby']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFeedFollowSuggestionsSocial(limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetFeedFollowSuggestionsSocial200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFeedFollowSuggestionsSocial(limit, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FeedApi.getFeedFollowSuggestionsSocial']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} [limit] 
+         * @param {GetFeedHobbySuggestionsPeriodEnum} [period] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getFeedHobbySuggestions(limit?: number, period?: GetFeedHobbySuggestionsPeriodEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetFeedHobbySuggestions200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getFeedHobbySuggestions(limit, period, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FeedApi.getFeedHobbySuggestions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * FeedApi - factory interface
+ */
+export const FeedApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = FeedApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {FeedApiGetFeedRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeed(requestParameters: FeedApiGetFeedRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<GetFeed200Response> {
+            return localVarFp.getFeed(requestParameters.limit, requestParameters.cursor, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {FeedApiGetFeedFollowSuggestionsHobbyRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeedFollowSuggestionsHobby(requestParameters: FeedApiGetFeedFollowSuggestionsHobbyRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<GetFeedFollowSuggestionsHobby200Response> {
+            return localVarFp.getFeedFollowSuggestionsHobby(requestParameters.limit, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {FeedApiGetFeedFollowSuggestionsSocialRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeedFollowSuggestionsSocial(requestParameters: FeedApiGetFeedFollowSuggestionsSocialRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<GetFeedFollowSuggestionsSocial200Response> {
+            return localVarFp.getFeedFollowSuggestionsSocial(requestParameters.limit, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {FeedApiGetFeedHobbySuggestionsRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getFeedHobbySuggestions(requestParameters: FeedApiGetFeedHobbySuggestionsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<GetFeedHobbySuggestions200Response> {
+            return localVarFp.getFeedHobbySuggestions(requestParameters.limit, requestParameters.period, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for getFeed operation in FeedApi.
+ */
+export interface FeedApiGetFeedRequest {
+    readonly limit?: number
+
+    readonly cursor?: string | null
+}
+
+/**
+ * Request parameters for getFeedFollowSuggestionsHobby operation in FeedApi.
+ */
+export interface FeedApiGetFeedFollowSuggestionsHobbyRequest {
+    readonly limit?: number
+}
+
+/**
+ * Request parameters for getFeedFollowSuggestionsSocial operation in FeedApi.
+ */
+export interface FeedApiGetFeedFollowSuggestionsSocialRequest {
+    readonly limit?: number
+}
+
+/**
+ * Request parameters for getFeedHobbySuggestions operation in FeedApi.
+ */
+export interface FeedApiGetFeedHobbySuggestionsRequest {
+    readonly limit?: number
+
+    readonly period?: GetFeedHobbySuggestionsPeriodEnum
+}
+
+/**
+ * FeedApi - object-oriented interface
+ */
+export class FeedApi extends BaseAPI {
+    /**
+     * 
+     * @param {FeedApiGetFeedRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getFeed(requestParameters: FeedApiGetFeedRequest = {}, options?: RawAxiosRequestConfig) {
+        return FeedApiFp(this.configuration).getFeed(requestParameters.limit, requestParameters.cursor, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {FeedApiGetFeedFollowSuggestionsHobbyRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getFeedFollowSuggestionsHobby(requestParameters: FeedApiGetFeedFollowSuggestionsHobbyRequest = {}, options?: RawAxiosRequestConfig) {
+        return FeedApiFp(this.configuration).getFeedFollowSuggestionsHobby(requestParameters.limit, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {FeedApiGetFeedFollowSuggestionsSocialRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getFeedFollowSuggestionsSocial(requestParameters: FeedApiGetFeedFollowSuggestionsSocialRequest = {}, options?: RawAxiosRequestConfig) {
+        return FeedApiFp(this.configuration).getFeedFollowSuggestionsSocial(requestParameters.limit, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {FeedApiGetFeedHobbySuggestionsRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getFeedHobbySuggestions(requestParameters: FeedApiGetFeedHobbySuggestionsRequest = {}, options?: RawAxiosRequestConfig) {
+        return FeedApiFp(this.configuration).getFeedHobbySuggestions(requestParameters.limit, requestParameters.period, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+export enum GetFeedHobbySuggestionsPeriodEnum {
+    Week = 'week',
+    Month = 'month'
+}
+
+
+/**
+ * FollowApi - axios parameter creator
+ */
+export const FollowApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {DeleteFollowRequest} deleteFollowRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteFollow: async (deleteFollowRequest: DeleteFollowRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'deleteFollowRequest' is not null or undefined
+            assertParamExists('deleteFollow', 'deleteFollowRequest', deleteFollowRequest)
+            const localVarPath = `/follow`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(deleteFollowRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {PostFollowRequest} postFollowRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postFollow: async (postFollowRequest: PostFollowRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'postFollowRequest' is not null or undefined
+            assertParamExists('postFollow', 'postFollowRequest', postFollowRequest)
+            const localVarPath = `/follow`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -548,7 +984,7 @@ export const CreateNewApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(postHobbyRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(postFollowRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -559,462 +995,101 @@ export const CreateNewApiAxiosParamCreator = function (configuration?: Configura
 };
 
 /**
- * CreateNewApi - functional programming interface
+ * FollowApi - functional programming interface
  */
-export const CreateNewApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = CreateNewApiAxiosParamCreator(configuration)
+export const FollowApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = FollowApiAxiosParamCreator(configuration)
     return {
         /**
          * 
-         * @param {PostHobbyRequest} postHobbyRequest 
+         * @param {DeleteFollowRequest} deleteFollowRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postHobby(postHobbyRequest: PostHobbyRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postHobby(postHobbyRequest, options);
+        async deleteFollow(deleteFollowRequest: DeleteFollowRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostFollow200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFollow(deleteFollowRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['CreateNewApi.postHobby']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['FollowApi.deleteFollow']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {PostFollowRequest} postFollowRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postFollow(postFollowRequest: PostFollowRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostFollow200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postFollow(postFollowRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['FollowApi.postFollow']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * CreateNewApi - factory interface
+ * FollowApi - factory interface
  */
-export const CreateNewApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = CreateNewApiFp(configuration)
+export const FollowApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = FollowApiFp(configuration)
     return {
         /**
          * 
-         * @param {CreateNewApiPostHobbyRequest} requestParameters Request parameters.
+         * @param {FollowApiDeleteFollowRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postHobby(requestParameters: CreateNewApiPostHobbyRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.postHobby(requestParameters.postHobbyRequest, options).then((request) => request(axios, basePath));
+        deleteFollow(requestParameters: FollowApiDeleteFollowRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostFollow200Response> {
+            return localVarFp.deleteFollow(requestParameters.deleteFollowRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {FollowApiPostFollowRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postFollow(requestParameters: FollowApiPostFollowRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostFollow200Response> {
+            return localVarFp.postFollow(requestParameters.postFollowRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for postHobby operation in CreateNewApi.
+ * Request parameters for deleteFollow operation in FollowApi.
  */
-export interface CreateNewApiPostHobbyRequest {
-    readonly postHobbyRequest: PostHobbyRequest
+export interface FollowApiDeleteFollowRequest {
+    readonly deleteFollowRequest: DeleteFollowRequest
 }
 
 /**
- * CreateNewApi - object-oriented interface
+ * Request parameters for postFollow operation in FollowApi.
  */
-export class CreateNewApi extends BaseAPI {
+export interface FollowApiPostFollowRequest {
+    readonly postFollowRequest: PostFollowRequest
+}
+
+/**
+ * FollowApi - object-oriented interface
+ */
+export class FollowApi extends BaseAPI {
     /**
      * 
-     * @param {CreateNewApiPostHobbyRequest} requestParameters Request parameters.
+     * @param {FollowApiDeleteFollowRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public postHobby(requestParameters: CreateNewApiPostHobbyRequest, options?: RawAxiosRequestConfig) {
-        return CreateNewApiFp(this.configuration).postHobby(requestParameters.postHobbyRequest, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * DeleteApi - axios parameter creator
- */
-export const DeleteApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteUserById', 'id', id)
-            const localVarPath = `/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication accessTokenCookie required
-
-            // authentication refreshTokenCookie required
-
-            localVarHeaderParameter['Accept'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * DeleteApi - functional programming interface
- */
-export const DeleteApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = DeleteApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async deleteUserById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DeleteApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * DeleteApi - factory interface
- */
-export const DeleteApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = DeleteApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {DeleteApiDeleteUserByIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteUserById(requestParameters: DeleteApiDeleteUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteUserById(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for deleteUserById operation in DeleteApi.
- */
-export interface DeleteApiDeleteUserByIdRequest {
-    readonly id: string
-}
-
-/**
- * DeleteApi - object-oriented interface
- */
-export class DeleteApi extends BaseAPI {
-    /**
-     * 
-     * @param {DeleteApiDeleteUserByIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public deleteUserById(requestParameters: DeleteApiDeleteUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return DeleteApiFp(this.configuration).deleteUserById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * GetByIdApi - axios parameter creator
- */
-export const GetByIdApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getHobbyById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getHobbyById', 'id', id)
-            const localVarPath = `/hobby/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication accessTokenCookie required
-
-            // authentication refreshTokenCookie required
-
-            localVarHeaderParameter['Accept'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {string | null} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById: async (id: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getUserById', 'id', id)
-            const localVarPath = `/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication accessTokenCookie required
-
-            // authentication refreshTokenCookie required
-
-            localVarHeaderParameter['Accept'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * GetByIdApi - functional programming interface
- */
-export const GetByIdApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = GetByIdApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {string} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getHobbyById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getHobbyById(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['GetByIdApi.getHobbyById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @param {string | null} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getUserById(id: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetUserById200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserById(id, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['GetByIdApi.getUserById']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * GetByIdApi - factory interface
- */
-export const GetByIdApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = GetByIdApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {GetByIdApiGetHobbyByIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getHobbyById(requestParameters: GetByIdApiGetHobbyByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
-            return localVarFp.getHobbyById(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {GetByIdApiGetUserByIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getUserById(requestParameters: GetByIdApiGetUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetUserById200Response> {
-            return localVarFp.getUserById(requestParameters.id, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for getHobbyById operation in GetByIdApi.
- */
-export interface GetByIdApiGetHobbyByIdRequest {
-    readonly id: string
-}
-
-/**
- * Request parameters for getUserById operation in GetByIdApi.
- */
-export interface GetByIdApiGetUserByIdRequest {
-    readonly id: string | null
-}
-
-/**
- * GetByIdApi - object-oriented interface
- */
-export class GetByIdApi extends BaseAPI {
-    /**
-     * 
-     * @param {GetByIdApiGetHobbyByIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getHobbyById(requestParameters: GetByIdApiGetHobbyByIdRequest, options?: RawAxiosRequestConfig) {
-        return GetByIdApiFp(this.configuration).getHobbyById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteFollow(requestParameters: FollowApiDeleteFollowRequest, options?: RawAxiosRequestConfig) {
+        return FollowApiFp(this.configuration).deleteFollow(requestParameters.deleteFollowRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {GetByIdApiGetUserByIdRequest} requestParameters Request parameters.
+     * @param {FollowApiPostFollowRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public getUserById(requestParameters: GetByIdApiGetUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return GetByIdApiFp(this.configuration).getUserById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * GetByUserApi - axios parameter creator
- */
-export const GetByUserApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {string | null} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getHobbyUserByUserId: async (userId: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'userId' is not null or undefined
-            assertParamExists('getHobbyUserByUserId', 'userId', userId)
-            const localVarPath = `/hobby/user/{userId}`
-                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication accessTokenCookie required
-
-            // authentication refreshTokenCookie required
-
-            localVarHeaderParameter['Accept'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * GetByUserApi - functional programming interface
- */
-export const GetByUserApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = GetByUserApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {string | null} userId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getHobbyUserByUserId(userId: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetHobbyUserByUserId200ResponseInner>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getHobbyUserByUserId(userId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['GetByUserApi.getHobbyUserByUserId']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * GetByUserApi - factory interface
- */
-export const GetByUserApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = GetByUserApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {GetByUserApiGetHobbyUserByUserIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getHobbyUserByUserId(requestParameters: GetByUserApiGetHobbyUserByUserIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<Array<GetHobbyUserByUserId200ResponseInner>> {
-            return localVarFp.getHobbyUserByUserId(requestParameters.userId, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for getHobbyUserByUserId operation in GetByUserApi.
- */
-export interface GetByUserApiGetHobbyUserByUserIdRequest {
-    readonly userId: string | null
-}
-
-/**
- * GetByUserApi - object-oriented interface
- */
-export class GetByUserApi extends BaseAPI {
-    /**
-     * 
-     * @param {GetByUserApiGetHobbyUserByUserIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getHobbyUserByUserId(requestParameters: GetByUserApiGetHobbyUserByUserIdRequest, options?: RawAxiosRequestConfig) {
-        return GetByUserApiFp(this.configuration).getHobbyUserByUserId(requestParameters.userId, options).then((request) => request(this.axios, this.basePath));
+    public postFollow(requestParameters: FollowApiPostFollowRequest, options?: RawAxiosRequestConfig) {
+        return FollowApiFp(this.configuration).postFollow(requestParameters.postFollowRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1616,21 +1691,21 @@ export class HobbyApi extends BaseAPI {
 
 
 /**
- * RemoveApi - axios parameter creator
+ * HobbySessionApi - axios parameter creator
  */
-export const RemoveApiAxiosParamCreator = function (configuration?: Configuration) {
+export const HobbySessionApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} hobbyId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteHobbyRemoveFromProfileByHobbyId: async (hobbyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'hobbyId' is not null or undefined
-            assertParamExists('deleteHobbyRemoveFromProfileByHobbyId', 'hobbyId', hobbyId)
-            const localVarPath = `/hobby/remove-from-profile/{hobbyId}`
-                .replace(`{${"hobbyId"}}`, encodeURIComponent(String(hobbyId)));
+        deleteHobbySessionById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteHobbySessionById', 'id', id)
+            const localVarPath = `/hobby-session/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1657,87 +1732,17 @@ export const RemoveApiAxiosParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
-    }
-};
-
-/**
- * RemoveApi - functional programming interface
- */
-export const RemoveApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = RemoveApiAxiosParamCreator(configuration)
-    return {
         /**
          * 
-         * @param {string} hobbyId 
+         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteHobbyRemoveFromProfileByHobbyId(hobbyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogout200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteHobbyRemoveFromProfileByHobbyId(hobbyId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['RemoveApi.deleteHobbyRemoveFromProfileByHobbyId']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * RemoveApi - factory interface
- */
-export const RemoveApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = RemoveApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {RemoveApiDeleteHobbyRemoveFromProfileByHobbyIdRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        deleteHobbyRemoveFromProfileByHobbyId(requestParameters: RemoveApiDeleteHobbyRemoveFromProfileByHobbyIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogout200Response> {
-            return localVarFp.deleteHobbyRemoveFromProfileByHobbyId(requestParameters.hobbyId, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for deleteHobbyRemoveFromProfileByHobbyId operation in RemoveApi.
- */
-export interface RemoveApiDeleteHobbyRemoveFromProfileByHobbyIdRequest {
-    readonly hobbyId: string
-}
-
-/**
- * RemoveApi - object-oriented interface
- */
-export class RemoveApi extends BaseAPI {
-    /**
-     * 
-     * @param {RemoveApiDeleteHobbyRemoveFromProfileByHobbyIdRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public deleteHobbyRemoveFromProfileByHobbyId(requestParameters: RemoveApiDeleteHobbyRemoveFromProfileByHobbyIdRequest, options?: RawAxiosRequestConfig) {
-        return RemoveApiFp(this.configuration).deleteHobbyRemoveFromProfileByHobbyId(requestParameters.hobbyId, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * SearchApi - axios parameter creator
- */
-export const SearchApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {string | null} [search] 
-         * @param {number} [offset] 
-         * @param {number} [limit] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getHobby: async (search?: string | null, offset?: number, limit?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/hobby`;
+        getHobbySessionById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getHobbySessionById', 'id', id)
+            const localVarPath = `/hobby-session/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1753,16 +1758,61 @@ export const SearchApiAxiosParamCreator = function (configuration?: Configuratio
 
             // authentication refreshTokenCookie required
 
-            if (search !== undefined) {
-                localVarQueryParameter['search'] = search;
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} hobbyId 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {string} [from] 
+         * @param {string} [to] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getHobbySessionHobbyByHobbyId: async (hobbyId: string, limit?: number, offset?: number, from?: string, to?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hobbyId' is not null or undefined
+            assertParamExists('getHobbySessionHobbyByHobbyId', 'hobbyId', hobbyId)
+            const localVarPath = `/hobby-session/hobby/{hobbyId}`
+                .replace(`{${"hobbyId"}}`, encodeURIComponent(String(hobbyId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
             }
 
             if (offset !== undefined) {
                 localVarQueryParameter['offset'] = offset;
             }
 
-            if (limit !== undefined) {
-                localVarQueryParameter['limit'] = limit;
+            if (from !== undefined) {
+                localVarQueryParameter['from'] = from;
+            }
+
+            if (to !== undefined) {
+                localVarQueryParameter['to'] = to;
             }
 
             localVarHeaderParameter['Accept'] = 'application/json';
@@ -1776,96 +1826,79 @@ export const SearchApiAxiosParamCreator = function (configuration?: Configuratio
                 options: localVarRequestOptions,
             };
         },
-    }
-};
-
-/**
- * SearchApi - functional programming interface
- */
-export const SearchApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = SearchApiAxiosParamCreator(configuration)
-    return {
         /**
          * 
-         * @param {string | null} [search] 
-         * @param {number} [offset] 
+         * @param {string} userId 
          * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {string | null} [from] 
+         * @param {string | null} [to] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHobby(search?: string | null, offset?: number, limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getHobby(search, offset, limit, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SearchApi.getHobby']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        getHobbySessionUserByUserId: async (userId: string, limit?: number, offset?: number, from?: string | null, to?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userId' is not null or undefined
+            assertParamExists('getHobbySessionUserByUserId', 'userId', userId)
+            const localVarPath = `/hobby-session/user/{userId}`
+                .replace(`{${"userId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+            if (limit !== undefined) {
+                localVarQueryParameter['limit'] = limit;
+            }
+
+            if (offset !== undefined) {
+                localVarQueryParameter['offset'] = offset;
+            }
+
+            if (from !== undefined) {
+                localVarQueryParameter['from'] = from;
+            }
+
+            if (to !== undefined) {
+                localVarQueryParameter['to'] = to;
+            }
+
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
         },
-    }
-};
-
-/**
- * SearchApi - factory interface
- */
-export const SearchApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = SearchApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {SearchApiGetHobbyRequest} requestParameters Request parameters.
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getHobby(requestParameters: SearchApiGetHobbyRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<Array<object>> {
-            return localVarFp.getHobby(requestParameters.search, requestParameters.offset, requestParameters.limit, options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * Request parameters for getHobby operation in SearchApi.
- */
-export interface SearchApiGetHobbyRequest {
-    readonly search?: string | null
-
-    readonly offset?: number
-
-    readonly limit?: number
-}
-
-/**
- * SearchApi - object-oriented interface
- */
-export class SearchApi extends BaseAPI {
-    /**
-     * 
-     * @param {SearchApiGetHobbyRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    public getHobby(requestParameters: SearchApiGetHobbyRequest = {}, options?: RawAxiosRequestConfig) {
-        return SearchApiFp(this.configuration).getHobby(requestParameters.search, requestParameters.offset, requestParameters.limit, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * UpdateApi - axios parameter creator
- */
-export const UpdateApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
         /**
          * 
          * @param {string} id 
-         * @param {PatchUserByIdRequest} patchUserByIdRequest 
+         * @param {string | null} [hobbyId] 
+         * @param {string | null} [startTime] 
+         * @param {string | null} [endTime] 
+         * @param {string | null} [notes] 
+         * @param {Array<any>} [images] 
+         * @param {Array<string>} [deletedImageKeys] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchUserById: async (id: string, patchUserByIdRequest: PatchUserByIdRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        patchHobbySessionById: async (id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, images?: Array<any>, deletedImageKeys?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
-            assertParamExists('patchUserById', 'id', id)
-            // verify required parameter 'patchUserByIdRequest' is not null or undefined
-            assertParamExists('patchUserById', 'patchUserByIdRequest', patchUserByIdRequest)
-            const localVarPath = `/user/{id}`
+            assertParamExists('patchHobbySessionById', 'id', id)
+            const localVarPath = `/hobby-session/{id}`
                 .replace(`{${"id"}}`, encodeURIComponent(String(id)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1877,18 +1910,110 @@ export const UpdateApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
 
             // authentication accessTokenCookie required
 
             // authentication refreshTokenCookie required
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            if (hobbyId !== undefined) { 
+                localVarFormParams.append('hobbyId', hobbyId as any);
+            }
+
+            if (startTime !== undefined) { 
+                localVarFormParams.append('startTime', startTime as any);
+            }
+
+            if (endTime !== undefined) { 
+                localVarFormParams.append('endTime', endTime as any);
+            }
+
+            if (notes !== undefined) { 
+                localVarFormParams.append('notes', notes as any);
+            }
+            if (images) {
+                localVarFormParams.append('images', images.join(COLLECTION_FORMATS.csv));
+            }
+
+            if (deletedImageKeys) {
+                localVarFormParams.append('deletedImageKeys', deletedImageKeys.join(COLLECTION_FORMATS.csv));
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
             localVarHeaderParameter['Accept'] = 'application/json';
 
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchUserByIdRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string | null} hobbyId 
+         * @param {string | null} startTime 
+         * @param {string | null} endTime 
+         * @param {string | null} [notes] 
+         * @param {Array<any>} [images] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postHobbySession: async (hobbyId: string | null, startTime: string | null, endTime: string | null, notes?: string | null, images?: Array<any>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hobbyId' is not null or undefined
+            assertParamExists('postHobbySession', 'hobbyId', hobbyId)
+            // verify required parameter 'startTime' is not null or undefined
+            assertParamExists('postHobbySession', 'startTime', startTime)
+            // verify required parameter 'endTime' is not null or undefined
+            assertParamExists('postHobbySession', 'endTime', endTime)
+            const localVarPath = `/hobby-session`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+
+            if (hobbyId !== undefined) { 
+                localVarFormParams.append('hobbyId', hobbyId as any);
+            }
+
+            if (startTime !== undefined) { 
+                localVarFormParams.append('startTime', startTime as any);
+            }
+
+            if (endTime !== undefined) { 
+                localVarFormParams.append('endTime', endTime as any);
+            }
+
+            if (notes !== undefined) { 
+                localVarFormParams.append('notes', notes as any);
+            }
+            if (images) {
+                localVarFormParams.append('images', images.join(COLLECTION_FORMATS.csv));
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1899,66 +2024,307 @@ export const UpdateApiAxiosParamCreator = function (configuration?: Configuratio
 };
 
 /**
- * UpdateApi - functional programming interface
+ * HobbySessionApi - functional programming interface
  */
-export const UpdateApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = UpdateApiAxiosParamCreator(configuration)
+export const HobbySessionApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = HobbySessionApiAxiosParamCreator(configuration)
     return {
         /**
          * 
          * @param {string} id 
-         * @param {PatchUserByIdRequest} patchUserByIdRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async patchUserById(id: string, patchUserByIdRequest: PatchUserByIdRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogin200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.patchUserById(id, patchUserByIdRequest, options);
+        async deleteHobbySessionById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteHobbySessionById(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UpdateApi.patchUserById']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.deleteHobbySessionById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getHobbySessionById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHobbySessionById(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.getHobbySessionById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} hobbyId 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {string} [from] 
+         * @param {string} [to] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getHobbySessionHobbyByHobbyId(hobbyId: string, limit?: number, offset?: number, from?: string, to?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionUserByUserId200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHobbySessionHobbyByHobbyId(hobbyId, limit, offset, from, to, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.getHobbySessionHobbyByHobbyId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} userId 
+         * @param {number} [limit] 
+         * @param {number} [offset] 
+         * @param {string | null} [from] 
+         * @param {string | null} [to] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getHobbySessionUserByUserId(userId: string, limit?: number, offset?: number, from?: string | null, to?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionUserByUserId200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHobbySessionUserByUserId(userId, limit, offset, from, to, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.getHobbySessionUserByUserId']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} id 
+         * @param {string | null} [hobbyId] 
+         * @param {string | null} [startTime] 
+         * @param {string | null} [endTime] 
+         * @param {string | null} [notes] 
+         * @param {Array<any>} [images] 
+         * @param {Array<string>} [deletedImageKeys] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async patchHobbySessionById(id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, images?: Array<any>, deletedImageKeys?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchHobbySessionById(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.patchHobbySessionById']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string | null} hobbyId 
+         * @param {string | null} startTime 
+         * @param {string | null} endTime 
+         * @param {string | null} [notes] 
+         * @param {Array<any>} [images] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postHobbySession(hobbyId: string | null, startTime: string | null, endTime: string | null, notes?: string | null, images?: Array<any>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postHobbySession(hobbyId, startTime, endTime, notes, images, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.postHobbySession']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * UpdateApi - factory interface
+ * HobbySessionApi - factory interface
  */
-export const UpdateApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = UpdateApiFp(configuration)
+export const HobbySessionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = HobbySessionApiFp(configuration)
     return {
         /**
          * 
-         * @param {UpdateApiPatchUserByIdRequest} requestParameters Request parameters.
+         * @param {HobbySessionApiDeleteHobbySessionByIdRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchUserById(requestParameters: UpdateApiPatchUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogin200Response> {
-            return localVarFp.patchUserById(requestParameters.id, requestParameters.patchUserByIdRequest, options).then((request) => request(axios, basePath));
+        deleteHobbySessionById(requestParameters: HobbySessionApiDeleteHobbySessionByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteHobbySessionById(requestParameters.id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HobbySessionApiGetHobbySessionByIdRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getHobbySessionById(requestParameters: HobbySessionApiGetHobbySessionByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionById200Response> {
+            return localVarFp.getHobbySessionById(requestParameters.id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HobbySessionApiGetHobbySessionHobbyByHobbyIdRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getHobbySessionHobbyByHobbyId(requestParameters: HobbySessionApiGetHobbySessionHobbyByHobbyIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionUserByUserId200Response> {
+            return localVarFp.getHobbySessionHobbyByHobbyId(requestParameters.hobbyId, requestParameters.limit, requestParameters.offset, requestParameters.from, requestParameters.to, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HobbySessionApiGetHobbySessionUserByUserIdRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getHobbySessionUserByUserId(requestParameters: HobbySessionApiGetHobbySessionUserByUserIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionUserByUserId200Response> {
+            return localVarFp.getHobbySessionUserByUserId(requestParameters.userId, requestParameters.limit, requestParameters.offset, requestParameters.from, requestParameters.to, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HobbySessionApiPatchHobbySessionByIdRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        patchHobbySessionById(requestParameters: HobbySessionApiPatchHobbySessionByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionById200Response> {
+            return localVarFp.patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, requestParameters.deletedImageKeys, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {HobbySessionApiPostHobbySessionRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postHobbySession(requestParameters: HobbySessionApiPostHobbySessionRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionById200Response> {
+            return localVarFp.postHobbySession(requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for patchUserById operation in UpdateApi.
+ * Request parameters for deleteHobbySessionById operation in HobbySessionApi.
  */
-export interface UpdateApiPatchUserByIdRequest {
+export interface HobbySessionApiDeleteHobbySessionByIdRequest {
     readonly id: string
-
-    readonly patchUserByIdRequest: PatchUserByIdRequest
 }
 
 /**
- * UpdateApi - object-oriented interface
+ * Request parameters for getHobbySessionById operation in HobbySessionApi.
  */
-export class UpdateApi extends BaseAPI {
+export interface HobbySessionApiGetHobbySessionByIdRequest {
+    readonly id: string
+}
+
+/**
+ * Request parameters for getHobbySessionHobbyByHobbyId operation in HobbySessionApi.
+ */
+export interface HobbySessionApiGetHobbySessionHobbyByHobbyIdRequest {
+    readonly hobbyId: string
+
+    readonly limit?: number
+
+    readonly offset?: number
+
+    readonly from?: string
+
+    readonly to?: string
+}
+
+/**
+ * Request parameters for getHobbySessionUserByUserId operation in HobbySessionApi.
+ */
+export interface HobbySessionApiGetHobbySessionUserByUserIdRequest {
+    readonly userId: string
+
+    readonly limit?: number
+
+    readonly offset?: number
+
+    readonly from?: string | null
+
+    readonly to?: string | null
+}
+
+/**
+ * Request parameters for patchHobbySessionById operation in HobbySessionApi.
+ */
+export interface HobbySessionApiPatchHobbySessionByIdRequest {
+    readonly id: string
+
+    readonly hobbyId?: string | null
+
+    readonly startTime?: string | null
+
+    readonly endTime?: string | null
+
+    readonly notes?: string | null
+
+    readonly images?: Array<any>
+
+    readonly deletedImageKeys?: Array<string>
+}
+
+/**
+ * Request parameters for postHobbySession operation in HobbySessionApi.
+ */
+export interface HobbySessionApiPostHobbySessionRequest {
+    readonly hobbyId: string | null
+
+    readonly startTime: string | null
+
+    readonly endTime: string | null
+
+    readonly notes?: string | null
+
+    readonly images?: Array<any>
+}
+
+/**
+ * HobbySessionApi - object-oriented interface
+ */
+export class HobbySessionApi extends BaseAPI {
     /**
      * 
-     * @param {UpdateApiPatchUserByIdRequest} requestParameters Request parameters.
+     * @param {HobbySessionApiDeleteHobbySessionByIdRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public patchUserById(requestParameters: UpdateApiPatchUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return UpdateApiFp(this.configuration).patchUserById(requestParameters.id, requestParameters.patchUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
+    public deleteHobbySessionById(requestParameters: HobbySessionApiDeleteHobbySessionByIdRequest, options?: RawAxiosRequestConfig) {
+        return HobbySessionApiFp(this.configuration).deleteHobbySessionById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HobbySessionApiGetHobbySessionByIdRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getHobbySessionById(requestParameters: HobbySessionApiGetHobbySessionByIdRequest, options?: RawAxiosRequestConfig) {
+        return HobbySessionApiFp(this.configuration).getHobbySessionById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HobbySessionApiGetHobbySessionHobbyByHobbyIdRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getHobbySessionHobbyByHobbyId(requestParameters: HobbySessionApiGetHobbySessionHobbyByHobbyIdRequest, options?: RawAxiosRequestConfig) {
+        return HobbySessionApiFp(this.configuration).getHobbySessionHobbyByHobbyId(requestParameters.hobbyId, requestParameters.limit, requestParameters.offset, requestParameters.from, requestParameters.to, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HobbySessionApiGetHobbySessionUserByUserIdRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public getHobbySessionUserByUserId(requestParameters: HobbySessionApiGetHobbySessionUserByUserIdRequest, options?: RawAxiosRequestConfig) {
+        return HobbySessionApiFp(this.configuration).getHobbySessionUserByUserId(requestParameters.userId, requestParameters.limit, requestParameters.offset, requestParameters.from, requestParameters.to, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HobbySessionApiPatchHobbySessionByIdRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public patchHobbySessionById(requestParameters: HobbySessionApiPatchHobbySessionByIdRequest, options?: RawAxiosRequestConfig) {
+        return HobbySessionApiFp(this.configuration).patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, requestParameters.deletedImageKeys, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {HobbySessionApiPostHobbySessionRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public postHobbySession(requestParameters: HobbySessionApiPostHobbySessionRequest, options?: RawAxiosRequestConfig) {
+        return HobbySessionApiFp(this.configuration).postHobbySession(requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1971,15 +2337,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
     return {
         /**
          * 
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserById: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('deleteUserById', 'id', id)
-            const localVarPath = `/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        deleteUserMe: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/user/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2045,18 +2407,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
-         * @param {string} id 
-         * @param {PatchUserByIdRequest} patchUserByIdRequest 
+         * @param {PatchUserMeRequest} patchUserMeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchUserById: async (id: string, patchUserByIdRequest: PatchUserByIdRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('patchUserById', 'id', id)
-            // verify required parameter 'patchUserByIdRequest' is not null or undefined
-            assertParamExists('patchUserById', 'patchUserByIdRequest', patchUserByIdRequest)
-            const localVarPath = `/user/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        patchUserMe: async (patchUserMeRequest: PatchUserMeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'patchUserMeRequest' is not null or undefined
+            assertParamExists('patchUserMe', 'patchUserMeRequest', patchUserMeRequest)
+            const localVarPath = `/user/me`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2078,7 +2436,50 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(patchUserByIdRequest, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(patchUserMeRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {any} file 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postUserAvatar: async (file: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'file' is not null or undefined
+            assertParamExists('postUserAvatar', 'file', file)
+            const localVarPath = `/user/avatar`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+            // authentication accessTokenCookie required
+
+            // authentication refreshTokenCookie required
+
+
+            if (file !== undefined) { 
+                localVarFormParams.append('file', new Blob([JSON.stringify(file, replaceWithSerializableTypeIfNeeded)], { type: "application/json", }));
+            }
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+            localVarHeaderParameter['Accept'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2096,14 +2497,13 @@ export const UserApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {string} id 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteUserById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserById(id, options);
+        async deleteUserMe(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteUserMe(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserApi.deleteUserById']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.deleteUserMe']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2120,15 +2520,26 @@ export const UserApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} id 
-         * @param {PatchUserByIdRequest} patchUserByIdRequest 
+         * @param {PatchUserMeRequest} patchUserMeRequest 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async patchUserById(id: string, patchUserByIdRequest: PatchUserByIdRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogin200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.patchUserById(id, patchUserByIdRequest, options);
+        async patchUserMe(patchUserMeRequest: PatchUserMeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostAuthLogin200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchUserMe(patchUserMeRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['UserApi.patchUserById']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.patchUserMe']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {any} file 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postUserAvatar(file: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postUserAvatar(file, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.postUserAvatar']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -2142,12 +2553,11 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
     return {
         /**
          * 
-         * @param {UserApiDeleteUserByIdRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteUserById(requestParameters: UserApiDeleteUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteUserById(requestParameters.id, options).then((request) => request(axios, basePath));
+        deleteUserMe(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteUserMe(options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2160,22 +2570,24 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
-         * @param {UserApiPatchUserByIdRequest} requestParameters Request parameters.
+         * @param {UserApiPatchUserMeRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchUserById(requestParameters: UserApiPatchUserByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogin200Response> {
-            return localVarFp.patchUserById(requestParameters.id, requestParameters.patchUserByIdRequest, options).then((request) => request(axios, basePath));
+        patchUserMe(requestParameters: UserApiPatchUserMeRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostAuthLogin200Response> {
+            return localVarFp.patchUserMe(requestParameters.patchUserMeRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UserApiPostUserAvatarRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postUserAvatar(requestParameters: UserApiPostUserAvatarRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.postUserAvatar(requestParameters.file, options).then((request) => request(axios, basePath));
         },
     };
 };
-
-/**
- * Request parameters for deleteUserById operation in UserApi.
- */
-export interface UserApiDeleteUserByIdRequest {
-    readonly id: string
-}
 
 /**
  * Request parameters for getUserById operation in UserApi.
@@ -2185,12 +2597,17 @@ export interface UserApiGetUserByIdRequest {
 }
 
 /**
- * Request parameters for patchUserById operation in UserApi.
+ * Request parameters for patchUserMe operation in UserApi.
  */
-export interface UserApiPatchUserByIdRequest {
-    readonly id: string
+export interface UserApiPatchUserMeRequest {
+    readonly patchUserMeRequest: PatchUserMeRequest
+}
 
-    readonly patchUserByIdRequest: PatchUserByIdRequest
+/**
+ * Request parameters for postUserAvatar operation in UserApi.
+ */
+export interface UserApiPostUserAvatarRequest {
+    readonly file: any
 }
 
 /**
@@ -2199,12 +2616,11 @@ export interface UserApiPatchUserByIdRequest {
 export class UserApi extends BaseAPI {
     /**
      * 
-     * @param {UserApiDeleteUserByIdRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public deleteUserById(requestParameters: UserApiDeleteUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).deleteUserById(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    public deleteUserMe(options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).deleteUserMe(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2219,12 +2635,22 @@ export class UserApi extends BaseAPI {
 
     /**
      * 
-     * @param {UserApiPatchUserByIdRequest} requestParameters Request parameters.
+     * @param {UserApiPatchUserMeRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    public patchUserById(requestParameters: UserApiPatchUserByIdRequest, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).patchUserById(requestParameters.id, requestParameters.patchUserByIdRequest, options).then((request) => request(this.axios, this.basePath));
+    public patchUserMe(requestParameters: UserApiPatchUserMeRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).patchUserMe(requestParameters.patchUserMeRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UserApiPostUserAvatarRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    public postUserAvatar(requestParameters: UserApiPostUserAvatarRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).postUserAvatar(requestParameters.file, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

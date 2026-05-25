@@ -1,21 +1,21 @@
-# PostAuthLogin401Response
+# DeleteFollowRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**message** | **string** |  | [default to undefined]
-**cause** | **string** |  | [optional] [default to undefined]
+**followerId** | **string** |  | [default to undefined]
+**followingId** | **string** |  | [default to undefined]
 
 ## Example
 
 ```typescript
-import { PostAuthLogin401Response } from './api';
+import { DeleteFollowRequest } from './api';
 
-const instance: PostAuthLogin401Response = {
-    message,
-    cause,
+const instance: DeleteFollowRequest = {
+    followerId,
+    followingId,
 };
 ```
 

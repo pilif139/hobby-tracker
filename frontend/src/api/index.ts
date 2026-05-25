@@ -1,5 +1,12 @@
 import axios from 'axios';
-import { AuthenticationApi, HobbyApi, UserApi } from './generated';
+import {
+  AuthenticationApi,
+  FeedApi,
+  FollowApi,
+  HobbyApi,
+  HobbySessionApi,
+  UserApi,
+} from './generated';
 import type { PostAuthLogin200Response } from './generated';
 
 export interface ApiClientError {
@@ -73,6 +80,21 @@ export const authApiClient = new AuthenticationApi(
   apiHttpClient,
 );
 export const hobbyApiClient = new HobbyApi(
+  undefined,
+  API_BASE_URL,
+  apiHttpClient,
+);
+export const hobbySessionApiClient = new HobbySessionApi(
+  undefined,
+  API_BASE_URL,
+  apiHttpClient,
+);
+export const feedApiClient = new FeedApi(
+  undefined,
+  API_BASE_URL,
+  apiHttpClient,
+);
+export const followApiClient = new FollowApi(
   undefined,
   API_BASE_URL,
   apiHttpClient,

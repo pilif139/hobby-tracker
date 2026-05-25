@@ -1,4 +1,4 @@
-# PostAuthLogin401Response
+# GetAuthMe404Response
 
 
 ## Properties
@@ -6,16 +6,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **message** | **string** |  | [default to undefined]
-**cause** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { PostAuthLogin401Response } from './api';
+import { GetAuthMe404Response } from './api';
 
-const instance: PostAuthLogin401Response = {
+const instance: GetAuthMe404Response = {
     message,
-    cause,
 };
 ```
 

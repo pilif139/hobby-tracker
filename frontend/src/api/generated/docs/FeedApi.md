@@ -1,39 +1,49 @@
-# UserApi
+# FeedApi
 
 All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
-|[**deleteUserMe**](#deleteuserme) | **DELETE** /user/me | |
-|[**getUserById**](#getuserbyid) | **GET** /user/{id} | |
-|[**patchUserMe**](#patchuserme) | **PATCH** /user/me | |
-|[**postUserAvatar**](#postuseravatar) | **POST** /user/avatar | |
+|[**getFeed**](#getfeed) | **GET** /feed | |
+|[**getFeedFollowSuggestionsHobby**](#getfeedfollowsuggestionshobby) | **GET** /feed/follow-suggestions/hobby | |
+|[**getFeedFollowSuggestionsSocial**](#getfeedfollowsuggestionssocial) | **GET** /feed/follow-suggestions/social | |
+|[**getFeedHobbySuggestions**](#getfeedhobbysuggestions) | **GET** /feed/hobby-suggestions | |
 
-# **deleteUserMe**
-> deleteUserMe()
+# **getFeed**
+> GetFeed200Response getFeed()
 
 
 ### Example
 
 ```typescript
 import {
-    UserApi,
+    FeedApi,
     Configuration
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new UserApi(configuration);
+const apiInstance = new FeedApi(configuration);
 
-const { status, data } = await apiInstance.deleteUserMe();
+let limit: number; // (optional) (default to undefined)
+let cursor: string; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getFeed(
+    limit,
+    cursor
+);
 ```
 
 ### Parameters
-This endpoint does not have any parameters.
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **limit** | [**number**] |  | (optional) defaults to undefined|
+| **cursor** | [**string**] |  | (optional) defaults to undefined|
 
 
 ### Return type
 
-void (empty response body)
+**GetFeed200Response**
 
 ### Authorization
 
@@ -48,30 +58,29 @@ void (empty response body)
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**204** | No Content |  -  |
-|**404** | Not Found |  -  |
+|**200** | Paginated feed of followed users sessions |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **getUserById**
-> GetUserById200Response getUserById()
+# **getFeedFollowSuggestionsHobby**
+> GetFeedFollowSuggestionsHobby200Response getFeedFollowSuggestionsHobby()
 
 
 ### Example
 
 ```typescript
 import {
-    UserApi,
+    FeedApi,
     Configuration
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new UserApi(configuration);
+const apiInstance = new FeedApi(configuration);
 
-let id: string; // (default to undefined)
+let limit: number; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.getUserById(
-    id
+const { status, data } = await apiInstance.getFeedFollowSuggestionsHobby(
+    limit
 );
 ```
 
@@ -79,12 +88,12 @@ const { status, data } = await apiInstance.getUserById(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **id** | [**string**] |  | defaults to undefined|
+| **limit** | [**number**] |  | (optional) defaults to undefined|
 
 
 ### Return type
 
-**GetUserById200Response**
+**GetFeedFollowSuggestionsHobby200Response**
 
 ### Authorization
 
@@ -99,81 +108,29 @@ const { status, data } = await apiInstance.getUserById(
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**200** | User Profile |  -  |
-|**404** | Not Found |  -  |
+|**200** | Users who share your hobbies |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **patchUserMe**
-> PostAuthLogin200Response patchUserMe(patchUserMeRequest)
+# **getFeedFollowSuggestionsSocial**
+> GetFeedFollowSuggestionsSocial200Response getFeedFollowSuggestionsSocial()
 
 
 ### Example
 
 ```typescript
 import {
-    UserApi,
-    Configuration,
-    PatchUserMeRequest
-} from './api';
-
-const configuration = new Configuration();
-const apiInstance = new UserApi(configuration);
-
-let patchUserMeRequest: PatchUserMeRequest; //
-
-const { status, data } = await apiInstance.patchUserMe(
-    patchUserMeRequest
-);
-```
-
-### Parameters
-
-|Name | Type | Description  | Notes|
-|------------- | ------------- | ------------- | -------------|
-| **patchUserMeRequest** | **PatchUserMeRequest**|  | |
-
-
-### Return type
-
-**PostAuthLogin200Response**
-
-### Authorization
-
-[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-|**200** | Updated User |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
-
-# **postUserAvatar**
-> postUserAvatar()
-
-
-### Example
-
-```typescript
-import {
-    UserApi,
+    FeedApi,
     Configuration
 } from './api';
 
 const configuration = new Configuration();
-const apiInstance = new UserApi(configuration);
+const apiInstance = new FeedApi(configuration);
 
-let file: any; // (default to undefined)
+let limit: number; // (optional) (default to undefined)
 
-const { status, data } = await apiInstance.postUserAvatar(
-    file
+const { status, data } = await apiInstance.getFeedFollowSuggestionsSocial(
+    limit
 );
 ```
 
@@ -181,12 +138,12 @@ const { status, data } = await apiInstance.postUserAvatar(
 
 |Name | Type | Description  | Notes|
 |------------- | ------------- | ------------- | -------------|
-| **file** | **any** |  | defaults to undefined|
+| **limit** | [**number**] |  | (optional) defaults to undefined|
 
 
 ### Return type
 
-void (empty response body)
+**GetFeedFollowSuggestionsSocial200Response**
 
 ### Authorization
 
@@ -194,17 +151,67 @@ void (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: multipart/form-data
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
 
 ### HTTP response details
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-|**200** | Avatar uploaded successfully |  -  |
-|**400** | Bad Request |  -  |
-|**413** | Content Too Large |  -  |
-|**500** | Internal Server Error |  -  |
+|**200** | Users followed by people you follow |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **getFeedHobbySuggestions**
+> GetFeedHobbySuggestions200Response getFeedHobbySuggestions()
+
+
+### Example
+
+```typescript
+import {
+    FeedApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new FeedApi(configuration);
+
+let limit: number; // (optional) (default to undefined)
+let period: 'week' | 'month'; // (optional) (default to undefined)
+
+const { status, data } = await apiInstance.getFeedHobbySuggestions(
+    limit,
+    period
+);
+```
+
+### Parameters
+
+|Name | Type | Description  | Notes|
+|------------- | ------------- | ------------- | -------------|
+| **limit** | [**number**] |  | (optional) defaults to undefined|
+| **period** | [**&#39;week&#39; | &#39;month&#39;**]**Array<&#39;week&#39; &#124; &#39;month&#39;>** |  | (optional) defaults to undefined|
+
+
+### Return type
+
+**GetFeedHobbySuggestions200Response**
+
+### Authorization
+
+[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Trending hobbies you have not joined |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

@@ -8,88 +8,106 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root';
-import { Route as IndexRouteImport } from './routes/index';
-import { Route as RegisterIndexRouteImport } from './routes/register/index';
-import { Route as LoginIndexRouteImport } from './routes/login/index';
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as RegisterIndexRouteImport } from './routes/register/index'
+import { Route as LoginIndexRouteImport } from './routes/login/index'
+import { Route as FeedIndexRouteImport } from './routes/feed/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
+const FeedIndexRoute = FeedIndexRouteImport.update({
+  id: '/feed/',
+  path: '/feed/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute;
-  '/login/': typeof LoginIndexRoute;
-  '/register/': typeof RegisterIndexRoute;
+  '/': typeof IndexRoute
+  '/feed/': typeof FeedIndexRoute
+  '/login/': typeof LoginIndexRoute
+  '/register/': typeof RegisterIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute;
-  '/login': typeof LoginIndexRoute;
-  '/register': typeof RegisterIndexRoute;
+  '/': typeof IndexRoute
+  '/feed': typeof FeedIndexRoute
+  '/login': typeof LoginIndexRoute
+  '/register': typeof RegisterIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  '/': typeof IndexRoute;
-  '/login/': typeof LoginIndexRoute;
-  '/register/': typeof RegisterIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/feed/': typeof FeedIndexRoute
+  '/login/': typeof LoginIndexRoute
+  '/register/': typeof RegisterIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/login/' | '/register/';
-  fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/login' | '/register';
-  id: '__root__' | '/' | '/login/' | '/register/';
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/' | '/feed/' | '/login/' | '/register/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/feed' | '/login' | '/register'
+  id: '__root__' | '/' | '/feed/' | '/login/' | '/register/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  LoginIndexRoute: typeof LoginIndexRoute;
-  RegisterIndexRoute: typeof RegisterIndexRoute;
+  IndexRoute: typeof IndexRoute
+  FeedIndexRoute: typeof FeedIndexRoute
+  LoginIndexRoute: typeof LoginIndexRoute
+  RegisterIndexRoute: typeof RegisterIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register/': {
-      id: '/register/';
-      path: '/register';
-      fullPath: '/register/';
-      preLoaderRoute: typeof RegisterIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/register/'
+      path: '/register'
+      fullPath: '/register/'
+      preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login/': {
-      id: '/login/';
-      path: '/login';
-      fullPath: '/login/';
-      preLoaderRoute: typeof LoginIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login/'
+      preLoaderRoute: typeof LoginIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feed/': {
+      id: '/feed/'
+      path: '/feed'
+      fullPath: '/feed/'
+      preLoaderRoute: typeof FeedIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FeedIndexRoute: FeedIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
   RegisterIndexRoute: RegisterIndexRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

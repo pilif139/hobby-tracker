@@ -1,21 +1,19 @@
-# PostAuthLogin401Response
+# PatchUserMeRequest
 
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**message** | **string** |  | [default to undefined]
-**cause** | **string** |  | [optional] [default to undefined]
+**name** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
 ```typescript
-import { PostAuthLogin401Response } from './api';
+import { PatchUserMeRequest } from './api';
 
-const instance: PostAuthLogin401Response = {
-    message,
-    cause,
+const instance: PatchUserMeRequest = {
+    name,
 };
 ```
 
