@@ -58,7 +58,7 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(
       user.id,
       tokenInKV
-        ? (JSON.parse(tokenInKV) as KVRefreshToken).refreshToken
+        ? refreshTokenSchema.safeParse(JSON.parse(tokenInKV)).data?.refreshToken
         : undefined,
     );
 
@@ -145,8 +145,8 @@ export class AuthService {
         return null;
       }
 
-      const parsed = refreshTokenSchema.parse(JSON.parse(storedToken));
-      if (parsed.refreshToken !== decodedPayload.token) {
+      const parsed = refreshTokenSchema.safeParse(JSON.parse(storedToken));
+      if (parsed.data?.refreshToken !== decodedPayload.token) {
         return null;
       }
 
