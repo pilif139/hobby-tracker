@@ -34,14 +34,14 @@
 
 ### Follow actions
 
-- `POST /follow` and `DELETE /follow` exist in backend module,
-  but **`/follow` is not mounted in `backend/src/index.ts` currently**.
-  - This blocks a direct Follow button until backend mounts the route.
+- `POST /follow` and `DELETE /follow`
+  - Used for follow/unfollow actions from suggestion cards.
 
-### Important integration gap
+### Important integration status
 
-- Current frontend generated client (`frontend/src/api/generated`) does **not** include `/feed`, `/hobby-session`, `/follow` endpoints yet.
-- Plan requires regenerating API client from current backend OpenAPI docs.
+- Backend follow route is mounted and frontend generated client includes
+  `/feed`, `/hobby-session`, and `/follow` endpoints.
+- Feed foundation and API regeneration are completed in Phase 1.
 
 ---
 
@@ -64,13 +64,11 @@ frontend/src/modules/feed/
   components/
     FeedList.tsx
     FeedSessionCard.tsx
-    MySessionsPanel.tsx
     SuggestionsSidebar.tsx
-    CreateHobbySessionDialog.tsx
+    CreateHobbySessionForm.tsx
     EmptyStates.tsx
   hooks/
     useFeedInfinite.ts
-    useMySessions.ts
     useSuggestions.ts
   model/
     feed.types.ts
@@ -81,25 +79,23 @@ frontend/src/modules/feed/
 
 - `useInfiniteQuery` for main feed (`/feed`, cursor pagination).
 - `useQuery` for:
-  - my sessions (`/hobby-session/user/:userId`)
   - hobby-follow suggestions
   - social-follow suggestions
   - hobby suggestions
-  - my hobbies (for create form)
+  - my hobbies (for sticky create form)
 - `useMutation` for:
   - create hobby session (multipart FormData)
   - add hobby to profile (suggested hobbies CTA)
-  - follow/unfollow (behind backend readiness flag)
+  - follow/unfollow
 - Query invalidation policy:
-  - On create session success: invalidate `feed` and `mySessions` keys.
+  - On create session success: invalidate `feed` keys.
   - On hobby add success: invalidate `hobbySuggestions`, `myHobbies`.
 
 ## UI architecture
 
-- Responsive 2-column/3-column feed shell:
-  - **Main column**: create-session trigger + feed list.
+- Responsive 2-column feed shell:
+  - **Main column**: sticky create-session form + feed list.
   - **Sidebar**: suggestions (users + hobbies).
-  - **Secondary panel**: my session summary/list (collapses on mobile).
 - Clear empty states:
   - feed empty (e.g., follow users prompt)
   - no hobbies yet (prompt to add hobby)
@@ -112,7 +108,6 @@ frontend/src/modules/feed/
 Current UI set is minimal. For feed UX, add:
 
 - `avatar` (user suggestions/feed cards)
-- `dialog` (create session modal)
 - `textarea` (session notes)
 - `tabs` (switch suggestion sections or my sessions filters)
 - `scroll-area` (sidebar lists)
@@ -126,19 +121,20 @@ Current UI set is minimal. For feed UX, add:
 
 ## 4) Delivery phases
 
-### Phase 1 — Foundation (main architecture, owned by me)
+### Phase 1 — Foundation (main architecture, owned by me) ✅
 
-1. Regenerate frontend API client to include feed/session/follow routes.
-2. Add missing shadcn components.
-3. Create `/feed` route and `FeedPage` shell layout.
-4. Add stub components in layout (`FeedList`, `SuggestionsSidebar`, `CreateHobbySessionDialog`, `MySessionsPanel`).
-5. Define shared query keys + feed types.
+1. Regenerated frontend API client to include feed/session/follow routes.
+2. Added missing shadcn components.
+3. Created `/feed` route and `FeedPage` shell layout.
+4. Added scaffold components in layout (`FeedList`, `SuggestionsSidebar`, `CreateHobbySessionForm`).
+5. Defined shared query keys + feed types.
 
 ### Phase 2 — Subagent A (Create Session)
 
-- Build `CreateHobbySessionDialog`:
+- Build `CreateHobbySessionForm` (sticky header form):
   - form validation
   - hobby selector from `/hobby/user/:userId`
+  - image upload (max 4)
   - submit multipart session creation
   - mutation success/error UX
 
@@ -150,10 +146,10 @@ Current UI set is minimal. For feed UX, add:
   - hobby suggestions with add-to-profile action
   - fallback behavior if follow endpoint is still unavailable
 
-### Phase 4 — Subagent C (Feed + My Sessions)
+### Phase 4 — Subagent C (Feed)
 
 - Build `FeedList` with infinite scroll + session cards.
-- Build `MySessionsPanel` with filters and summary.
+- `MySessionsPanel` is moved to user profile scope (separate profile workstream).
 
 ### Phase 5 — Testing + polish
 
@@ -168,8 +164,6 @@ Current UI set is minimal. For feed UX, add:
 
 ## 5) Risks / blockers
 
-- **Backend route mounting:** `/follow` currently not mounted; Follow buttons may need temporary disabled state.
-- **OpenAPI drift:** frontend generated client is behind backend; regeneration required before implementation.
 - **Multipart upload tests:** will need targeted mocking for `FormData` and file inputs.
 
 ---
@@ -178,7 +172,7 @@ Current UI set is minimal. For feed UX, add:
 
 - `/feed` route implemented and protected.
 - User can create a hobby session from feed.
-- User can view their own sessions and stats panel.
+- Sticky create-session form works from feed main column.
 - User can view follow + hobby suggestions.
 - User can act on hobby suggestions (add to profile).
 - Follow action enabled if backend `/follow` route is exposed.
