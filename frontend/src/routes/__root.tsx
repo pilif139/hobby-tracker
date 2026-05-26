@@ -1,5 +1,9 @@
 import { useLayoutEffect } from 'react';
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
+import {
+  Outlet,
+  createRootRouteWithContext,
+  useRouterState,
+} from '@tanstack/react-router';
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 
@@ -25,6 +29,10 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootComponent() {
   const { setCurrentUser } = useCurrentUser();
   const { user } = Route.useLoaderData();
+  const state = useRouterState();
+  const isAuthPage =
+    state.location.pathname.startsWith('/login') ||
+    state.location.pathname.startsWith('/register');
 
   useLayoutEffect(() => {
     if (user) {
@@ -34,7 +42,7 @@ function RootComponent() {
 
   return (
     <>
-      <Header />
+      {!isAuthPage && <Header />}
       <Outlet />
       <TanStackDevtools
         config={{
