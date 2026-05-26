@@ -100,7 +100,7 @@ export default function CreateHobbySessionForm() {
   const isSubmitting = createSessionMutation.isPending;
 
   return (
-    <Card className="border-border/70 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
+    <Card className="border-border/70 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 dark:bg-background/60">
       <CardHeader>
         <CardTitle>Create hobby session</CardTitle>
       </CardHeader>
@@ -278,7 +278,7 @@ export default function CreateHobbySessionForm() {
           </div>
 
           {!hasHobbies && !myHobbiesQuery.isLoading && (
-            <Item className="bg-muted/60 border border-border/60 px-4 py-3 text-sm text-muted-foreground rounded-md">
+            <Item className="bg-muted/60 border border-border/60 px-4 py-3 text-sm text-muted-foreground rounded-md dark:bg-muted/20">
               <ItemContent>
                 Add at least one hobby to your profile before creating a
                 session.
@@ -287,7 +287,7 @@ export default function CreateHobbySessionForm() {
           )}
 
           {createSessionMutation.error && (
-            <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive rounded-md">
+            <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive rounded-md dark:bg-destructive/5 dark:border-destructive/20">
               <ItemMedia variant="icon">
                 <TriangleAlert className="h-4 w-4" />
               </ItemMedia>

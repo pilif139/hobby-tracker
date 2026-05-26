@@ -7,6 +7,7 @@ import * as TanStackQueryProvider from './integrations/tanstack-query/root-provi
 // Import the generated route tree
 import { routeTree } from './routeTree.gen';
 import { CurrentUserProvider } from './modules/auth/current-user/CurrentUserContext';
+import { ThemeProvider } from './integrations/theme/theme-provider';
 
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
@@ -38,11 +39,13 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <CurrentUserProvider>
-        <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
-          <RouterProvider router={router} />
-        </TanStackQueryProvider.Provider>
-      </CurrentUserProvider>
+      <ThemeProvider defaultTheme="dark" storageKey="hobby-tracker-theme">
+        <CurrentUserProvider>
+          <TanStackQueryProvider.Provider {...TanStackQueryProviderContext}>
+            <RouterProvider router={router} />
+          </TanStackQueryProvider.Provider>
+        </CurrentUserProvider>
+      </ThemeProvider>
     </StrictMode>,
   );
 }

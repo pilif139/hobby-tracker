@@ -40,7 +40,7 @@ export default function LoginPage() {
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
-      await navigate({ to: '/' });
+      await navigate({ to: '/feed' });
     },
   });
 
@@ -150,7 +150,11 @@ export default function LoginPage() {
             <p className="text-muted-foreground text-center text-sm mt-6">
               Don&apos;t have an account?{' '}
               <Link
+<<<<<<< HEAD
                 to="/register"
+=======
+                to="/feed"
+>>>>>>> 9bd1ab5 ([frontend/feed] add backend communication to the feed; change some)
                 className="text-primary underline-offset-4 hover:underline font-medium"
               >
                 Sign up

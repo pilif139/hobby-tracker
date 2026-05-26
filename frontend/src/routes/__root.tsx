@@ -8,6 +8,7 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools';
 import type { QueryClient } from '@tanstack/react-query';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 import { resolveCurrentUser } from '@/modules/auth/route-guards';
+import Header from '@/components/header';
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -33,6 +34,7 @@ function RootComponent() {
 
   return (
     <>
+      <Header />
       <Outlet />
       <TanStackDevtools
         config={{
