@@ -1,17 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus, TrendingUp, UserPlus, Users } from 'lucide-react';
+import { TrendingUp, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { feedQueryKeys } from '../model/query-keys';
-import type {
-  GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner,
-  GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner,
-  GetFeedHobbySuggestions200ResponseSuggestionsInner,
-} from '@/api/generated/api';
+import { HobbySuggestionItem } from './HobbySuggestionItem';
+import { SuggestionListSkeleton } from './SuggestionListSkeleton';
+import { UserSuggestionItem } from './UserSuggestionItem';
 import type { ApiClientError } from '@/api';
 import { feedApiClient, followApiClient, hobbyApiClient } from '@/api';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -21,14 +16,12 @@ import {
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 
 export default function SuggestionsSidebar() {
   const { currentUser } = useCurrentUser();
   const queryClient = useQueryClient();
 
-  // Queries
   const hobbySuggestions = useQuery({
     queryKey: [...feedQueryKeys.suggestions(), 'hobby-follow'],
     queryFn: async () => {
@@ -59,7 +52,6 @@ export default function SuggestionsSidebar() {
     },
   });
 
-  // Mutations
   const followMutation = useMutation({
     mutationFn: async (followingId: string) => {
       if (!currentUser?.id) throw new Error('User not logged in');
@@ -96,95 +88,7 @@ export default function SuggestionsSidebar() {
     },
   });
 
-  const renderUserSuggestion = (
-    user:
-      | GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner
-      | GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner,
-    type: 'hobby' | 'social',
-  ) => (
-    <div
-      key={user.id ?? ''}
-      className="flex items-center justify-between gap-4 py-3"
-    >
-      <div className="flex items-center gap-3 overflow-hidden">
-        <Avatar className="h-9 w-9 border border-border/50">
-          <AvatarImage src={user.avatarUrl ?? undefined} />
-          <AvatarFallback className="text-xs">
-            {user.name?.slice(0, 2).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex flex-col overflow-hidden">
-          <span className="truncate text-sm font-medium leading-none">
-            {user.name}
-          </span>
-          <span className="truncate text-xs text-muted-foreground mt-1">
-            {type === 'hobby'
-              ? `${(user as GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner).sharedHobbyCount} shared hobbies`
-              : `${(user as GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner).mutualConnectionCount} mutual connections`}
-          </span>
-        </div>
-      </div>
-      <Button
-        size="sm"
-        variant="outline"
-        className="h-8 w-8 p-0 shrink-0"
-        onClick={() => user.id && followMutation.mutate(user.id)}
-        disabled={followMutation.isPending}
-      >
-        <UserPlus className="h-4 w-4" />
-        <span className="sr-only">Follow {user.name}</span>
-      </Button>
-    </div>
-  );
-
-  const renderHobbySuggestion = (
-    hobby: GetFeedHobbySuggestions200ResponseSuggestionsInner,
-  ) => (
-    <div
-      key={hobby.id ?? ''}
-      className="flex items-center justify-between gap-4 py-3"
-    >
-      <div className="flex flex-col overflow-hidden">
-        <div className="flex items-center gap-2">
-          <span className="truncate text-sm font-medium leading-none">
-            {hobby.name}
-          </span>
-          <Badge variant="secondary" className="px-1 text-[10px] h-4">
-            {hobby.userCount} users
-          </Badge>
-        </div>
-        <p className="line-clamp-1 text-xs text-muted-foreground mt-1">
-          {hobby.description || 'No description available'}
-        </p>
-      </div>
-      <Button
-        size="sm"
-        variant="ghost"
-        className="h-8 w-8 p-0 shrink-0 hover:bg-primary/10 hover:text-primary"
-        onClick={() => hobby.id && addHobbyMutation.mutate(hobby.id)}
-        disabled={addHobbyMutation.isPending}
-      >
-        <Plus className="h-4 w-4" />
-        <span className="sr-only">Add {hobby.name}</span>
-      </Button>
-    </div>
-  );
-
-  const renderSkeletons = () => (
-    <div className="space-y-4">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-center gap-3 py-2">
-          <Skeleton className="h-9 w-9 rounded-full shrink-0" />
-          <div className="space-y-2 flex-1">
-            <Skeleton className="h-3 w-[60%]" />
-            <Skeleton className="h-3 w-[40%]" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const isEmpty = (query: any) =>
+  const isEmpty = (query: { isLoading: boolean; data?: unknown[] }) =>
     !query.isLoading && (!query.data || query.data.length === 0);
 
   return (
@@ -214,16 +118,22 @@ export default function SuggestionsSidebar() {
             <TabsContent value="hobby" className="mt-0">
               <ScrollArea className="h-auto max-h-[350px]">
                 {hobbySuggestions.isLoading ? (
-                  renderSkeletons()
+                  <SuggestionListSkeleton />
                 ) : isEmpty(hobbySuggestions) ? (
                   <p className="py-6 text-center text-xs text-muted-foreground">
                     No hobby-based suggestions.
                   </p>
                 ) : (
                   <div className="divide-y divide-border/40">
-                    {hobbySuggestions.data?.map((u) =>
-                      renderUserSuggestion(u, 'hobby'),
-                    )}
+                    {hobbySuggestions.data?.map((user) => (
+                      <UserSuggestionItem
+                        key={user.id}
+                        type="hobby"
+                        user={user}
+                        onFollow={followMutation.mutate}
+                        isFollowPending={followMutation.isPending}
+                      />
+                    ))}
                   </div>
                 )}
               </ScrollArea>
@@ -231,16 +141,22 @@ export default function SuggestionsSidebar() {
             <TabsContent value="social" className="mt-0">
               <ScrollArea className="h-auto max-h-[350px]">
                 {socialSuggestions.isLoading ? (
-                  renderSkeletons()
+                  <SuggestionListSkeleton />
                 ) : isEmpty(socialSuggestions) ? (
                   <p className="py-6 text-center text-xs text-muted-foreground">
                     No social suggestions.
                   </p>
                 ) : (
                   <div className="divide-y divide-border/40">
-                    {socialSuggestions.data?.map((u) =>
-                      renderUserSuggestion(u, 'social'),
-                    )}
+                    {socialSuggestions.data?.map((user) => (
+                      <UserSuggestionItem
+                        key={user.id}
+                        type="social"
+                        user={user}
+                        onFollow={followMutation.mutate}
+                        isFollowPending={followMutation.isPending}
+                      />
+                    ))}
                   </div>
                 )}
               </ScrollArea>
@@ -264,14 +180,21 @@ export default function SuggestionsSidebar() {
         <CardContent>
           <ScrollArea className="h-auto max-h-[350px]">
             {trendingHobbies.isLoading ? (
-              renderSkeletons()
+              <SuggestionListSkeleton />
             ) : isEmpty(trendingHobbies) ? (
               <p className="py-6 text-center text-xs text-muted-foreground">
                 No new hobbies to suggest.
               </p>
             ) : (
               <div className="divide-y divide-border/40">
-                {trendingHobbies.data?.map((h) => renderHobbySuggestion(h))}
+                {trendingHobbies.data?.map((hobby) => (
+                  <HobbySuggestionItem
+                    key={hobby.id}
+                    hobby={hobby}
+                    onAdd={addHobbyMutation.mutate}
+                    isAddPending={addHobbyMutation.isPending}
+                  />
+                ))}
               </div>
             )}
           </ScrollArea>
