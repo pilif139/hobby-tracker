@@ -59,6 +59,23 @@ apiHttpClient.interceptors.response.use(
       }
 
       if (data && typeof data === 'object') {
+        // Zod-like validation shape: { data: {...}, error: [{ path, message, ... }], success: false }
+        if (Array.isArray((data).error)) {
+          const messages = (data).error.map((err: any) => {
+            const path = Array.isArray(err.path)
+              ? err.path.join('.')
+              : String(err.path ?? '');
+            const msg = err.message ?? JSON.stringify(err);
+            return path ? `${path}: ${msg}` : msg;
+          });
+
+          return Promise.reject({
+            message: messages.join('; '),
+            status,
+            cause: null,
+          } satisfies ApiClientError);
+        }
+
         return Promise.reject(data);
       }
 

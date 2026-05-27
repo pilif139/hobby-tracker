@@ -71,3 +71,20 @@ export const response = {
     example = { message: 'Internal server error' },
   ) => jsonResponse(BaseErrorResponse, description, example),
 };
+
+interface FileArrayOptions {
+  max: number;
+  min?: number;
+}
+
+export const fileArray = ({ max, min = 0 }: FileArrayOptions) =>
+  z.preprocess(
+    (val) => {
+      if (val === undefined || val === null || !(val instanceof File)) {
+        return undefined;
+      }
+
+      return Array.isArray(val) ? val : [val];
+    },
+    z.array(z.instanceof(File)).max(max).min(min),
+  );

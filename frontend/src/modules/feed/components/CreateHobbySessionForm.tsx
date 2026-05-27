@@ -57,11 +57,17 @@ export default function CreateHobbySessionForm() {
   const createSessionMutation = useMutation({
     mutationKey: ['create-hobby-session'],
     mutationFn: async (value: CreateHobbySessionFormValues) => {
-      const response =
-        await apiHttpClient.postForm<GetHobbySessionById200Response>(
-          '/hobby-session',
-          value,
-        );
+      const formData = new FormData();
+      formData.append('hobbyId', value.hobbyId);
+      formData.append('startTime', value.startTime);
+      formData.append('endTime', value.endTime);
+      if (value.notes.trim()) formData.append('notes', value.notes);
+      value.images.forEach((file) => formData.append('images', file));
+
+      const response = await apiHttpClient.post<GetHobbySessionById200Response>(
+        '/hobby-session',
+        formData,
+      );
 
       return response.data;
     },
@@ -283,7 +289,9 @@ export default function CreateHobbySessionForm() {
               <ItemMedia variant="icon">
                 <TriangleAlert className="h-4 w-4" />
               </ItemMedia>
-              <ItemContent>{createSessionMutation.error.stack}</ItemContent>
+              <ItemContent>
+                <strong>Error:</strong> {createSessionMutation.error.message}
+              </ItemContent>
             </Item>
           )}
 
