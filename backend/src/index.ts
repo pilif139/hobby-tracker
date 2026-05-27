@@ -29,7 +29,6 @@ app.use(
   '*',
   prettyJSON(),
   loggerMiddleware,
-  secureHeaders(),
   corsMiddleware,
   csrfMiddleware,
   dependencyMiddleware,
