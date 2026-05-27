@@ -18,7 +18,9 @@ export function CurrentUserProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setUnauthorizedHandler((requestUrl) => {
-      const isAuthPage = window.location.pathname.startsWith('/login');
+      const isAuthPage =
+        window.location.pathname.startsWith('/login') ||
+        window.location.pathname.startsWith('/register');
       const isAuthRequest =
         requestUrl.includes('/auth/login') ||
         requestUrl.includes('/auth/register');

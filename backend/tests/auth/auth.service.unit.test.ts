@@ -126,8 +126,7 @@ describe('AuthService (unit)', () => {
       service.validateRefreshToken(tokenB),
     ]);
 
-    const validCount = [validA, validB].filter(Boolean).length;
-
-    expect(validCount).toBe(1);
+    expect(validA).toBeNull();
+    expect(validB).not.toBeNull();
   });
 });
