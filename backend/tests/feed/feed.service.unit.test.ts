@@ -32,7 +32,7 @@ describe('FeedService (unit)', () => {
 
     expect(result).toEqual({ sessions: [], nextCursor: null });
     expect(feedRepository.getFeedSessions).toHaveBeenCalledWith(
-      [],
+      ['u1'],
       21,
       undefined,
     );
@@ -80,6 +80,11 @@ describe('FeedService (unit)', () => {
     const result = await service.getFeed('u1', 2, 'cursor-1');
 
     expect(feedRepository.getSessionById).toHaveBeenCalledWith('cursor-1');
+    expect(feedRepository.getFeedSessions).toHaveBeenCalledWith(
+      ['u2', 'u3', 'u1'],
+      3,
+      { id: 'cursor-1', createdAt: new Date('2026-01-04T00:00:00.000Z') },
+    );
     expect(result.nextCursor).toBe('s2');
     expect(result.sessions).toHaveLength(2);
     expect(result.sessions[1]?.user.avatarUrl).toBe(

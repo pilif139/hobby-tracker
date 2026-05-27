@@ -292,6 +292,9 @@ export class HobbySessionService {
     });
 
     if (images?.length) {
+      console.log('Uploading images of the hobby session:');
+      console.log('images.length:', images.length);
+      console.log('images:', images);
       await this.uploadImages(session.id, userId, images);
     }
 
