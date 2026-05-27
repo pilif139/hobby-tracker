@@ -21,13 +21,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
-
-const formatDateTimeLocal = (date: Date) => {
-  const timezoneOffsetInMs = date.getTimezoneOffset() * 60_000;
-  return new Date(date.getTime() - timezoneOffsetInMs)
-    .toISOString()
-    .slice(0, 16);
-};
+import { formatDateTimeLocal } from '@/lib/formatDateTimeLocal';
 
 const getDefaultValues = () => {
   const start = new Date();

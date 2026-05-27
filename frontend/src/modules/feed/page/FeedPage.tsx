@@ -58,7 +58,7 @@ export default function FeedPage() {
             mobileView === 'discover' && 'hidden lg:block',
           )}
         >
-          <div className="sticky top-28 z-20 lg:top-[4.5rem]">
+          <div className="sticky top-28 z-20 lg:top-18">
             <CreateHobbySessionForm />
           </div>
 
@@ -73,7 +73,7 @@ export default function FeedPage() {
         </section>
 
         <aside className="hidden lg:block">
-          <div className="sticky top-[4.5rem]">
+          <div className="sticky top-18">
             <SuggestionsSidebar />
           </div>
         </aside>
