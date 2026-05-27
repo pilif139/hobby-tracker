@@ -4,8 +4,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { TriangleAlert } from 'lucide-react';
 import { feedQueryKeys } from '../model/query-keys';
 import CreateHobbySessionFormSchema from './CreateHobbySessionFormSchema';
-import type { ApiClientError } from '@/api';
-import { hobbyApiClient, hobbySessionApiClient } from '@/api';
+import type { GetHobbySessionById200Response } from '@/api';
+import { apiHttpClient, hobbyApiClient } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
@@ -48,11 +48,9 @@ export default function CreateHobbySessionForm() {
   const queryClient = useQueryClient();
   const { currentUser } = useCurrentUser();
 
-  const defaultValues = useMemo(() => getDefaultValues(), []);
-
   const myHobbiesQuery = useQuery({
     queryKey: feedQueryKeys.myHobbies(currentUser?.id ?? 'unknown'),
-    enabled: Boolean(currentUser?.id),
+    enabled: !!currentUser?.id,
     queryFn: async () => {
       const response = await hobbyApiClient.getHobbyUserByUserId({
         userId: currentUser?.id ?? null,
@@ -65,23 +63,22 @@ export default function CreateHobbySessionForm() {
   const createSessionMutation = useMutation({
     mutationKey: ['create-hobby-session'],
     mutationFn: async (value: CreateHobbySessionFormValues) => {
-      const response = await hobbySessionApiClient.postHobbySession({
-        hobbyId: value.hobbyId,
-        startTime: new Date(value.startTime).toISOString(),
-        endTime: new Date(value.endTime).toISOString(),
-        notes: value.notes.trim() ? value.notes.trim() : undefined,
-        images: value.images.length > 0 ? value.images : undefined,
-      });
+      const response =
+        await apiHttpClient.postForm<GetHobbySessionById200Response>(
+          '/hobby-session',
+          value,
+        );
 
       return response.data;
     },
     onSuccess: async () => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: feedQueryKeys.timeline() }),
         queryClient.invalidateQueries({ queryKey: feedQueryKeys.all }),
       ]);
     },
   });
+
+  const defaultValues = useMemo(() => getDefaultValues(), []);
 
   const form = useForm({
     defaultValues,
@@ -230,6 +227,7 @@ export default function CreateHobbySessionForm() {
                       }
                       onBlur={field.handleBlur}
                       aria-invalid={isInvalid}
+                      className="max-h-60"
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -287,13 +285,11 @@ export default function CreateHobbySessionForm() {
           )}
 
           {createSessionMutation.error && (
-            <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive rounded-md dark:bg-destructive/5 dark:border-destructive/20">
+            <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-foreground rounded-md dark:bg-destructive/5 dark:border-destructive/20">
               <ItemMedia variant="icon">
                 <TriangleAlert className="h-4 w-4" />
               </ItemMedia>
-              <ItemContent>
-                {(createSessionMutation.error as ApiClientError).message}
-              </ItemContent>
+              <ItemContent>{createSessionMutation.error.stack}</ItemContent>
             </Item>
           )}
 

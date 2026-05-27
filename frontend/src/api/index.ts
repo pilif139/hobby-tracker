@@ -9,6 +9,8 @@ import {
 } from './generated';
 import type { PostAuthLogin200Response } from './generated';
 
+export * from './generated';
+
 export interface ApiClientError {
   message: string;
   cause?: string | null;
@@ -20,7 +22,7 @@ type UnauthorizedHandler = ((requestUrl: string) => void) | null;
 const API_BASE_URL: string =
   import.meta.env.VITE_API_URL ?? 'http://localhost:8787';
 
-const apiHttpClient = axios.create({
+export const apiHttpClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
 });

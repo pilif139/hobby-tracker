@@ -1890,12 +1890,11 @@ export const HobbySessionApiAxiosParamCreator = function (configuration?: Config
          * @param {string | null} [startTime] 
          * @param {string | null} [endTime] 
          * @param {string | null} [notes] 
-         * @param {Array<any>} [images] 
          * @param {Array<string>} [deletedImageKeys] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchHobbySessionById: async (id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, images?: Array<any>, deletedImageKeys?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        patchHobbySessionById: async (id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, deletedImageKeys?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('patchHobbySessionById', 'id', id)
             const localVarPath = `/hobby-session/{id}`
@@ -1932,10 +1931,6 @@ export const HobbySessionApiAxiosParamCreator = function (configuration?: Config
             if (notes !== undefined) { 
                 localVarFormParams.append('notes', notes as any);
             }
-            if (images) {
-                localVarFormParams.append('images', images.join(COLLECTION_FORMATS.csv));
-            }
-
             if (deletedImageKeys) {
                 localVarFormParams.append('deletedImageKeys', deletedImageKeys.join(COLLECTION_FORMATS.csv));
             }
@@ -2092,13 +2087,12 @@ export const HobbySessionApiFp = function(configuration?: Configuration) {
          * @param {string | null} [startTime] 
          * @param {string | null} [endTime] 
          * @param {string | null} [notes] 
-         * @param {Array<any>} [images] 
          * @param {Array<string>} [deletedImageKeys] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async patchHobbySessionById(id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, images?: Array<any>, deletedImageKeys?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.patchHobbySessionById(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys, options);
+        async patchHobbySessionById(id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, deletedImageKeys?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchHobbySessionById(id, hobbyId, startTime, endTime, notes, deletedImageKeys, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.patchHobbySessionById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2171,7 +2165,7 @@ export const HobbySessionApiFactory = function (configuration?: Configuration, b
          * @throws {RequiredError}
          */
         patchHobbySessionById(requestParameters: HobbySessionApiPatchHobbySessionByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionById200Response> {
-            return localVarFp.patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, requestParameters.deletedImageKeys, options).then((request) => request(axios, basePath));
+            return localVarFp.patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.deletedImageKeys, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2243,8 +2237,6 @@ export interface HobbySessionApiPatchHobbySessionByIdRequest {
 
     readonly notes?: string | null
 
-    readonly images?: Array<any>
-
     readonly deletedImageKeys?: Array<string>
 }
 
@@ -2314,7 +2306,7 @@ export class HobbySessionApi extends BaseAPI {
      * @throws {RequiredError}
      */
     public patchHobbySessionById(requestParameters: HobbySessionApiPatchHobbySessionByIdRequest, options?: RawAxiosRequestConfig) {
-        return HobbySessionApiFp(this.configuration).patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, requestParameters.deletedImageKeys, options).then((request) => request(this.axios, this.basePath));
+        return HobbySessionApiFp(this.configuration).patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.deletedImageKeys, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
