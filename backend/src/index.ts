@@ -3,7 +3,6 @@ import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
 import { prettyJSON } from 'hono/pretty-json';
 import { Hono } from 'hono/quick';
-import { secureHeaders } from 'hono/secure-headers';
 import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi';
 import z from 'zod';
 import { getPrismaClient } from './lib/prisma';
