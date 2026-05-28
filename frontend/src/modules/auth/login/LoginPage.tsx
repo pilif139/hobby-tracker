@@ -12,8 +12,6 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { MeshGradientBackground } from '@/components/ui/mesh-gradient';
 
-import { ModeToggle } from '@/components/mode-toggle';
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const { setCurrentUser } = useCurrentUser();
@@ -47,12 +45,13 @@ export default function LoginPage() {
   });
 
   return (
-    <MeshGradientBackground>
-      <div className="absolute right-4 top-4 z-50">
-        <ModeToggle />
-      </div>
+    <MeshGradientBackground className="dark">
       <div className="flex min-h-screen w-full lg:flex-row">
-        <div className="relative hidden flex-col text-white lg:flex lg:w-[60%] z-20"></div>
+        <div className="relative hidden flex-col text-white lg:flex lg:w-[60%] z-20">
+          <div className="relative z-20 flex">
+            <img src="/logo-2.png" alt="Logo" className="h-full w-auto" />
+          </div>
+        </div>
 
         <div className="flex w-full lg:w-[40%] items-center justify-center p-6 sm:p-10 text-foreground z-20 bg-background/60 backdrop-blur-xl lg:border-l border-white/10">
           <div className="mx-auto w-full max-w-sm space-y-6">
@@ -151,11 +150,7 @@ export default function LoginPage() {
             <p className="text-muted-foreground text-center text-sm mt-6">
               Don&apos;t have an account?{' '}
               <Link
-<<<<<<< HEAD
                 to="/register"
-=======
-                to="/feed"
->>>>>>> 9bd1ab5 ([frontend/feed] add backend communication to the feed; change some)
                 className="text-primary underline-offset-4 hover:underline font-medium"
               >
                 Sign up
