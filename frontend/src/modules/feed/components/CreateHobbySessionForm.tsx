@@ -1,10 +1,15 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TriangleAlert } from 'lucide-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Loader2, Plus, TriangleAlert } from 'lucide-react';
 import { feedQueryKeys } from '../model/query-keys';
 import CreateHobbySessionFormSchema from './CreateHobbySessionFormSchema';
-import type { GetHobbySessionById200Response } from '@/api';
+import type {
+  CreateHobbyRequest,
+  HobbyItem,
+  HobbySearchResult,
+  HobbySession,
+} from '../model/feed.types';
 import { apiHttpClient, hobbyApiClient } from '@/api';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,15 +17,7 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 import { formatDateTimeLocal } from '@/lib/formatDateTimeLocal';
 
 const getDefaultValues = () => {
@@ -40,17 +37,57 @@ type CreateHobbySessionFormValues = ReturnType<typeof getDefaultValues>;
 
 export default function CreateHobbySessionForm() {
   const queryClient = useQueryClient();
-  const { currentUser } = useCurrentUser();
 
-  const myHobbiesQuery = useQuery({
-    queryKey: feedQueryKeys.myHobbies(currentUser?.id ?? 'unknown'),
-    enabled: !!currentUser?.id,
-    queryFn: async () => {
-      const response = await hobbyApiClient.getHobbyUserByUserId({
-        userId: currentUser?.id ?? null,
+  const [hobbyInput, setHobbyInput] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [selectedHobbyName, setSelectedHobbyName] = useState('');
+  const hobbySearchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(hobbyInput), 400);
+    return () => clearTimeout(timer);
+  }, [hobbyInput]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        hobbySearchRef.current &&
+        !hobbySearchRef.current.contains(e.target as Node)
+      ) {
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const [searchResults, setSearchResults] = useState<HobbySearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    if (!debouncedSearch.trim()) {
+      setSearchResults([]);
+      return;
+    }
+    setIsSearching(true);
+    hobbyApiClient
+      .getHobby({ search: debouncedSearch })
+      .then((res) => {
+        setSearchResults(res.data);
+      })
+      .catch(() => setSearchResults([]))
+      .finally(() => setIsSearching(false));
+  }, [debouncedSearch]);
+
+  const createHobbyMutation = useMutation({
+    mutationKey: ['create-hobby'],
+    mutationFn: async (req: CreateHobbyRequest) => {
+      const res = await hobbyApiClient.postHobby({ postHobbyRequest: req });
+      await hobbyApiClient.postHobbyAddToProfileByHobbyId({
+        hobbyId: res.data.id,
       });
-
-      return response.data;
+      return res.data;
     },
   });
 
@@ -64,7 +101,7 @@ export default function CreateHobbySessionForm() {
       if (value.notes.trim()) formData.append('notes', value.notes);
       value.images.forEach((file) => formData.append('images', file));
 
-      const response = await apiHttpClient.post<GetHobbySessionById200Response>(
+      const response = await apiHttpClient.post<HobbySession>(
         '/hobby-session',
         formData,
       );
@@ -92,8 +129,6 @@ export default function CreateHobbySessionForm() {
     },
   });
 
-  const hobbies = myHobbiesQuery.data ?? [];
-  const hasHobbies = hobbies.length > 0;
   const isSubmitting = createSessionMutation.isPending;
 
   return (
@@ -117,37 +152,92 @@ export default function CreateHobbySessionForm() {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid;
 
+                const handleSelect = (hobby: HobbySearchResult | HobbyItem) => {
+                  field.handleChange(hobby.id ?? '');
+                  setSelectedHobbyName(hobby.name ?? '');
+                  setHobbyInput(hobby.name ?? '');
+                  setSearchOpen(false);
+                };
+
+                const handleCreate = async () => {
+                  const name = hobbyInput.trim();
+                  if (!name) return;
+                  const newHobby = await createHobbyMutation.mutateAsync({
+                    name,
+                  });
+                  handleSelect(newHobby);
+                };
+
+                const showDropdown = searchOpen && hobbyInput.trim().length > 0;
+                const normalizedInput = hobbyInput.trim().toLowerCase();
+                const hasExactMatch = searchResults.some(
+                  (h) =>
+                    (h.name ?? '').trim().toLowerCase() === normalizedInput,
+                );
+
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Hobby</FieldLabel>
-                    <Select
-                      value={field.state.value}
-                      onValueChange={(value) => field.handleChange(value ?? '')}
-                      disabled={myHobbiesQuery.isLoading || !hasHobbies}
-                    >
-                      <SelectTrigger id={field.name} className="w-full">
-                        <SelectValue
-                          placeholder={
-                            myHobbiesQuery.isLoading
-                              ? 'Loading hobbies...'
-                              : hasHobbies
-                                ? 'Select a hobby'
-                                : 'No hobbies in profile'
+                    <div ref={hobbySearchRef} className="relative">
+                      <Input
+                        id={field.name}
+                        autoComplete="off"
+                        placeholder="Search or create a hobby…"
+                        value={hobbyInput}
+                        onFocus={() => setSearchOpen(true)}
+                        onChange={(e) => {
+                          setHobbyInput(e.target.value);
+                          setSearchOpen(true);
+                          if (
+                            selectedHobbyName &&
+                            e.target.value !== selectedHobbyName
+                          ) {
+                            field.handleChange('');
+                            setSelectedHobbyName('');
                           }
-                        />
-                      </SelectTrigger>
-
-                      <SelectContent>
-                        {hobbies.map((hobby) => (
-                          <SelectItem
-                            key={hobby.id ?? ''}
-                            value={hobby.id ?? ''}
-                          >
-                            {hobby.name ?? 'Unnamed hobby'}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                        }}
+                        onBlur={field.handleBlur}
+                        aria-invalid={isInvalid}
+                      />
+                      {showDropdown && (
+                        <div className="absolute z-50 mt-1 w-full rounded-md border border-border bg-popover shadow-md">
+                          {isSearching && (
+                            <div className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground">
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                              Searching…
+                            </div>
+                          )}
+                          {!isSearching &&
+                            searchResults.map((hobby) => (
+                              <button
+                                key={hobby.id}
+                                type="button"
+                                className="w-full px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                                onMouseDown={(e) => e.preventDefault()}
+                                onClick={() => handleSelect(hobby)}
+                              >
+                                {hobby.name}
+                              </button>
+                            ))}
+                          {hobbyInput.trim() && !hasExactMatch && (
+                            <button
+                              type="button"
+                              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={handleCreate}
+                              disabled={createHobbyMutation.isPending}
+                            >
+                              {createHobbyMutation.isPending ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <Plus className="h-3 w-3" />
+                              )}
+                              Create &ldquo;{hobbyInput.trim()}&rdquo;
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -275,15 +365,6 @@ export default function CreateHobbySessionForm() {
             </form.Field>
           </div>
 
-          {!hasHobbies && !myHobbiesQuery.isLoading && (
-            <Item className="bg-muted/60 border border-border/60 px-4 py-3 text-sm text-muted-foreground rounded-md dark:bg-muted/20">
-              <ItemContent>
-                Add at least one hobby to your profile before creating a
-                session.
-              </ItemContent>
-            </Item>
-          )}
-
           {createSessionMutation.error && (
             <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-foreground rounded-md dark:bg-destructive/5 dark:border-destructive/20">
               <ItemMedia variant="icon">
@@ -296,10 +377,7 @@ export default function CreateHobbySessionForm() {
           )}
 
           <div className="flex justify-end">
-            <Button
-              type="submit"
-              disabled={isSubmitting || myHobbiesQuery.isLoading || !hasHobbies}
-            >
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Creating session…' : 'Create session'}
             </Button>
           </div>

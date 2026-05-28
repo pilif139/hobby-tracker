@@ -20,6 +20,8 @@ docs/GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner.md
 docs/GetFeedHobbySuggestions200Response.md
 docs/GetFeedHobbySuggestions200ResponseSuggestionsInner.md
 docs/GetHealth200Response.md
+docs/GetHobby200ResponseInner.md
+docs/GetHobby200ResponseInnerCount.md
 docs/GetHobbySessionById200Response.md
 docs/GetHobbySessionUserByUserId200Response.md
 docs/GetHobbySessionUserByUserId200ResponseSessionsInner.md
@@ -38,6 +40,7 @@ docs/PostAuthRegister403Response.md
 docs/PostAuthRegisterRequest.md
 docs/PostFollow200Response.md
 docs/PostFollowRequest.md
+docs/PostHobby201Response.md
 docs/PostHobbyRequest.md
 docs/UserApi.md
 git_push.sh

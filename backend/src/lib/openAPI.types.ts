@@ -80,11 +80,19 @@ interface FileArrayOptions {
 export const fileArray = ({ max, min = 0 }: FileArrayOptions) =>
   z.preprocess(
     (val) => {
-      if (val === undefined || val === null || !(val instanceof File)) {
+      if (val === null || val === undefined) {
         return undefined;
       }
 
-      return Array.isArray(val) ? val : [val];
+      if (Array.isArray(val)) {
+        return val.every((v) => v instanceof File) ? val : undefined;
+      }
+
+      if (val instanceof File) {
+        return [val];
+      }
+
+      return undefined;
     },
     z.array(z.instanceof(File)).max(max).min(min),
   );

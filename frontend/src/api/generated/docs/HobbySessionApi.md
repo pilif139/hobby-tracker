@@ -260,6 +260,7 @@ let hobbyId: string; // (optional) (default to undefined)
 let startTime: string; // (optional) (default to undefined)
 let endTime: string; // (optional) (default to undefined)
 let notes: string; // (optional) (default to undefined)
+let images: Array<any>; // (optional) (default to undefined)
 let deletedImageKeys: Array<string>; // (optional) (default to undefined)
 
 const { status, data } = await apiInstance.patchHobbySessionById(
@@ -268,6 +269,7 @@ const { status, data } = await apiInstance.patchHobbySessionById(
     startTime,
     endTime,
     notes,
+    images,
     deletedImageKeys
 );
 ```
@@ -281,6 +283,7 @@ const { status, data } = await apiInstance.patchHobbySessionById(
 | **startTime** | [**string**] |  | (optional) defaults to undefined|
 | **endTime** | [**string**] |  | (optional) defaults to undefined|
 | **notes** | [**string**] |  | (optional) defaults to undefined|
+| **images** | **Array&lt;any&gt;** |  | (optional) defaults to undefined|
 | **deletedImageKeys** | **Array&lt;string&gt;** |  | (optional) defaults to undefined|
 
 

@@ -90,6 +90,17 @@ export enum GetHealth200ResponseStatusEnum {
     Ok = 'ok'
 }
 
+export interface GetHobby200ResponseInner {
+    'id': string | null;
+    'name': string | null;
+    'description': string | null;
+    'createdAt': string;
+    'updatedAt': string;
+    '_count': GetHobby200ResponseInnerCount;
+}
+export interface GetHobby200ResponseInnerCount {
+    'users': number;
+}
 export interface GetHobbySessionById200Response {
     'id': string;
     'hobbyId': string;
@@ -179,6 +190,14 @@ export interface PostFollow200Response {
 export interface PostFollowRequest {
     'followerId': string;
     'followingId': string;
+}
+export interface PostHobby201Response {
+    'id': string;
+    'name': string;
+    'description': string | null;
+    'createdAt': string;
+    'updatedAt': string;
+    '_count': GetHobby200ResponseInnerCount;
 }
 export interface PostHobbyRequest {
     'name': string;
@@ -1457,7 +1476,7 @@ export const HobbyApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHobby(search?: string | null, offset?: number, limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
+        async getHobby(search?: string | null, offset?: number, limit?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<GetHobby200ResponseInner>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getHobby(search, offset, limit, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HobbyApi.getHobby']?.[localVarOperationServerIndex]?.url;
@@ -1469,7 +1488,7 @@ export const HobbyApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHobbyById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async getHobbyById(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostHobby201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getHobbyById(id, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HobbyApi.getHobbyById']?.[localVarOperationServerIndex]?.url;
@@ -1493,7 +1512,7 @@ export const HobbyApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postHobby(postHobbyRequest: PostHobbyRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+        async postHobby(postHobbyRequest: PostHobbyRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostHobby201Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postHobby(postHobbyRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HobbyApi.postHobby']?.[localVarOperationServerIndex]?.url;
@@ -1535,7 +1554,7 @@ export const HobbyApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHobby(requestParameters: HobbyApiGetHobbyRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<Array<object>> {
+        getHobby(requestParameters: HobbyApiGetHobbyRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<Array<GetHobby200ResponseInner>> {
             return localVarFp.getHobby(requestParameters.search, requestParameters.offset, requestParameters.limit, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1544,7 +1563,7 @@ export const HobbyApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHobbyById(requestParameters: HobbyApiGetHobbyByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+        getHobbyById(requestParameters: HobbyApiGetHobbyByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostHobby201Response> {
             return localVarFp.getHobbyById(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1562,7 +1581,7 @@ export const HobbyApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postHobby(requestParameters: HobbyApiPostHobbyRequest, options?: RawAxiosRequestConfig): AxiosPromise<object> {
+        postHobby(requestParameters: HobbyApiPostHobbyRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostHobby201Response> {
             return localVarFp.postHobby(requestParameters.postHobbyRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1890,11 +1909,12 @@ export const HobbySessionApiAxiosParamCreator = function (configuration?: Config
          * @param {string | null} [startTime] 
          * @param {string | null} [endTime] 
          * @param {string | null} [notes] 
+         * @param {Array<any>} [images] 
          * @param {Array<string>} [deletedImageKeys] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchHobbySessionById: async (id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, deletedImageKeys?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        patchHobbySessionById: async (id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, images?: Array<any>, deletedImageKeys?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'id' is not null or undefined
             assertParamExists('patchHobbySessionById', 'id', id)
             const localVarPath = `/hobby-session/{id}`
@@ -1931,6 +1951,10 @@ export const HobbySessionApiAxiosParamCreator = function (configuration?: Config
             if (notes !== undefined) { 
                 localVarFormParams.append('notes', notes as any);
             }
+            if (images) {
+                localVarFormParams.append('images', images.join(COLLECTION_FORMATS.csv));
+            }
+
             if (deletedImageKeys) {
                 localVarFormParams.append('deletedImageKeys', deletedImageKeys.join(COLLECTION_FORMATS.csv));
             }
@@ -2087,12 +2111,13 @@ export const HobbySessionApiFp = function(configuration?: Configuration) {
          * @param {string | null} [startTime] 
          * @param {string | null} [endTime] 
          * @param {string | null} [notes] 
+         * @param {Array<any>} [images] 
          * @param {Array<string>} [deletedImageKeys] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async patchHobbySessionById(id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, deletedImageKeys?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.patchHobbySessionById(id, hobbyId, startTime, endTime, notes, deletedImageKeys, options);
+        async patchHobbySessionById(id: string, hobbyId?: string | null, startTime?: string | null, endTime?: string | null, notes?: string | null, images?: Array<any>, deletedImageKeys?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetHobbySessionById200Response>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchHobbySessionById(id, hobbyId, startTime, endTime, notes, images, deletedImageKeys, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HobbySessionApi.patchHobbySessionById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2165,7 +2190,7 @@ export const HobbySessionApiFactory = function (configuration?: Configuration, b
          * @throws {RequiredError}
          */
         patchHobbySessionById(requestParameters: HobbySessionApiPatchHobbySessionByIdRequest, options?: RawAxiosRequestConfig): AxiosPromise<GetHobbySessionById200Response> {
-            return localVarFp.patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.deletedImageKeys, options).then((request) => request(axios, basePath));
+            return localVarFp.patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, requestParameters.deletedImageKeys, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2237,6 +2262,8 @@ export interface HobbySessionApiPatchHobbySessionByIdRequest {
 
     readonly notes?: string | null
 
+    readonly images?: Array<any>
+
     readonly deletedImageKeys?: Array<string>
 }
 
@@ -2306,7 +2333,7 @@ export class HobbySessionApi extends BaseAPI {
      * @throws {RequiredError}
      */
     public patchHobbySessionById(requestParameters: HobbySessionApiPatchHobbySessionByIdRequest, options?: RawAxiosRequestConfig) {
-        return HobbySessionApiFp(this.configuration).patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.deletedImageKeys, options).then((request) => request(this.axios, this.basePath));
+        return HobbySessionApiFp(this.configuration).patchHobbySessionById(requestParameters.id, requestParameters.hobbyId, requestParameters.startTime, requestParameters.endTime, requestParameters.notes, requestParameters.images, requestParameters.deletedImageKeys, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

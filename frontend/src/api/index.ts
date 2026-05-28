@@ -34,9 +34,14 @@ export const setUnauthorizedHandler = (handler: UnauthorizedHandler) => {
 };
 
 export const getCurrentUser = async (): Promise<PostAuthLogin200Response> => {
-  const response =
-    await apiHttpClient.get<PostAuthLogin200Response>('/auth/me');
-  return response.data;
+  try {
+    const response =
+      await apiHttpClient.get<PostAuthLogin200Response>('/auth/me');
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 apiHttpClient.interceptors.response.use(
@@ -60,8 +65,8 @@ apiHttpClient.interceptors.response.use(
 
       if (data && typeof data === 'object') {
         // Zod-like validation shape: { data: {...}, error: [{ path, message, ... }], success: false }
-        if (Array.isArray((data).error)) {
-          const messages = (data).error.map((err: any) => {
+        if (Array.isArray(data.error)) {
+          const messages = data.error.map((err: any) => {
             const path = Array.isArray(err.path)
               ? err.path.join('.')
               : String(err.path ?? '');
