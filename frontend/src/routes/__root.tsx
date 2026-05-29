@@ -13,6 +13,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 import { resolveCurrentUser } from '@/modules/auth/route-guards';
 import Header from '@/components/header';
+import { NotFound } from '@/components/not-found';
 
 interface MyRouterContext {
   queryClient: QueryClient;
@@ -24,6 +25,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     return { user };
   },
   component: RootComponent,
+  notFoundComponent: NotFound,
 });
 
 function RootComponent() {
