@@ -1,4 +1,5 @@
 import { differenceInMinutes, format, formatDistanceToNow } from 'date-fns';
+import { FeedImageDialog } from './FeedImageDialog';
 import type { GetFeed200ResponseSessionsInner } from '@/api/generated';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -28,9 +29,9 @@ export function FeedSessionCard({ session }: FeedSessionCardProps) {
     .join(' ');
 
   return (
-    <Card className="overflow-hidden border-border/60 shadow-sm dark:bg-card/40 dark:backdrop-blur-sm">
-      <CardHeader className="flex flex-row items-center space-y-0 gap-4 p-4">
-        <Avatar>
+    <Card className="overflow-hidden border-border/60 shadow-sm dark:bg-card/40 dark:backdrop-blur-sm transition-all duration-200 hover:shadow-md hover:border-border/80">
+      <CardHeader className="flex flex-row items-center space-y-0 gap-3 p-3">
+        <Avatar className="h-9 w-9">
           <AvatarImage
             src={user.avatarUrl ?? undefined}
             alt={user.name ?? ''}
@@ -39,15 +40,17 @@ export function FeedSessionCard({ session }: FeedSessionCardProps) {
         </Avatar>
         <div className="flex flex-col flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="font-semibold truncate">{user.name}</span>
+            <span className="font-semibold text-[15px] truncate">
+              {user.name}
+            </span>
             <Badge
-              variant="secondary"
-              className="shrink-0 dark:bg-muted/80 dark:text-muted-foreground"
+              variant="outline"
+              className="shrink-0 px-1.5 py-0 text-[10px] font-bold uppercase tracking-wider rounded-sm border-primary/20 bg-primary/5 text-primary/80"
             >
               {hobby.name}
             </Badge>
           </div>
-          <div className="text-xs text-muted-foreground">
+          <div className="text-[11px] text-muted-foreground">
             {created && (
               <span>{formatDistanceToNow(created, { addSuffix: true })}</span>
             )}
@@ -56,44 +59,17 @@ export function FeedSessionCard({ session }: FeedSessionCardProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 pt-0 space-y-4">
+      <CardContent className="p-3 pt-0 space-y-3">
         {notes && (
-          <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+          <p className="text-[15px] text-foreground whitespace-pre-wrap leading-relaxed">
             {notes}
           </p>
         )}
 
-        {imageUrls.length > 0 && (
-          <div
-            className={`grid gap-2 ${
-              imageUrls.length === 1
-                ? 'grid-cols-1'
-                : imageUrls.length === 2
-                  ? 'grid-cols-2'
-                  : 'grid-cols-2 sm:grid-cols-3'
-            }`}
-          >
-            {imageUrls.map((url, index) => (
-              <div
-                key={index}
-                className={`relative aspect-square rounded-md overflow-hidden border border-border/60 bg-muted/50 dark:bg-muted/20 ${
-                  imageUrls.length === 3 && index === 0
-                    ? 'sm:col-span-2 sm:row-span-2'
-                    : ''
-                }`}
-              >
-                <img
-                  src={url}
-                  alt={`Session image ${index + 1}`}
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        {imageUrls.length > 0 && <FeedImageDialog imageUrls={imageUrls} />}
 
         {start && end && (
-          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">
+          <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium opacity-80">
             {format(start, 'MMM d, h:mm a')} - {format(end, 'h:mm a')}
           </div>
         )}
