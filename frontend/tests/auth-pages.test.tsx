@@ -98,7 +98,7 @@ describe('Auth pages', () => {
 
     await waitFor(() => {
       expect(mockSetCurrentUser).toHaveBeenCalledWith(loggedInUser);
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/' });
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/feed' });
     });
   });
 
@@ -146,7 +146,7 @@ describe('Auth pages', () => {
 
     await waitFor(() => {
       expect(mockSetCurrentUser).toHaveBeenCalledWith(registeredUser);
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/' });
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/feed' });
     });
   });
 });

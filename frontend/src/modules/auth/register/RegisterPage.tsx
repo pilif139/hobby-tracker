@@ -41,7 +41,7 @@ export default function RegisterPage() {
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
-      await navigate({ to: '/' });
+      await navigate({ to: '/feed' });
     },
   });
 

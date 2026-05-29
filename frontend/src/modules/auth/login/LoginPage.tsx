@@ -40,7 +40,7 @@ export default function LoginPage() {
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
-      await navigate({ to: '/' });
+      await navigate({ to: '/feed' });
     },
   });
 

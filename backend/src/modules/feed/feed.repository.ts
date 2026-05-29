@@ -53,17 +53,17 @@ export class FeedRepository {
   }
 
   async getFeedSessions(
-    followedUserIds: string[],
+    userIds: string[],
     limit: number,
     cursor?: { createdAt: Date; id: string },
   ): Promise<FeedSessionRow[]> {
-    if (followedUserIds.length === 0) {
+    if (userIds.length === 0) {
       return [];
     }
 
     return this.prisma.hobbySession.findMany({
       where: {
-        userId: { in: followedUserIds },
+        userId: { in: userIds },
         ...(cursor
           ? {
               OR: [
