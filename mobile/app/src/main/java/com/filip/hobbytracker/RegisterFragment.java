@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.filip.hobbytracker.repository.AuthRepository;
-import com.filip.hobbytracker.repository.BaseRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -25,6 +24,7 @@ public class RegisterFragment extends Fragment {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private AuthRepository authRepository;
 
+    private TextInputEditText nameInput;
     private TextInputEditText emailInput;
     private TextInputEditText passwordInput;
     private TextView errorText;
@@ -41,6 +41,7 @@ public class RegisterFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        nameInput = view.findViewById(R.id.nameInput);
         emailInput = view.findViewById(R.id.emailInput);
         passwordInput = view.findViewById(R.id.passwordInput);
         errorText = view.findViewById(R.id.errorText);
@@ -59,10 +60,11 @@ public class RegisterFragment extends Fragment {
     }
 
     private void register() {
+        String name = String.valueOf(nameInput.getText()).trim();
         String email = String.valueOf(emailInput.getText()).trim();
         String password = String.valueOf(passwordInput.getText());
 
-        if (email.isEmpty() || password.isEmpty()) {
+        if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
             showError(getString(R.string.error_missing_credentials));
             return;
         }
@@ -70,7 +72,7 @@ public class RegisterFragment extends Fragment {
         setLoading(true);
         errorText.setText("");
 
-        authRepository.register(email, password, result -> {
+        authRepository.register(name, email, password, result -> {
             if (getActivity() == null) return;
             
             getActivity().runOnUiThread(() -> {
@@ -79,7 +81,7 @@ public class RegisterFragment extends Fragment {
                 } else if (result.status == Resource.Status.SUCCESS) {
                     setLoading(false);
                     requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new HomeFragment())
+                            .replace(R.id.fragment_container, new FeedFragment())
                             .commit();
                 } else if (result.status == Resource.Status.ERROR) {
                     setLoading(false);

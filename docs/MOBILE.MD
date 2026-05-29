@@ -1,12 +1,11 @@
-# Hobby Tracker Mobile
+# Aplikacja Mobilna Hobby Tracker
 
-Natywna aplikacja na Androida napisana w języku Java, tworzona z myślą o praktyce zawodowej i celach edukacyjnych.
+Aplikacja Hobby Tracker na Androida napisana w języku Java - zamysł aplikacji taki sam jak wersji webowej.
 
 ## Środowisko i Wymagania
 
 - **Język:** Java 26 (Oracle JDK)
 - **Minimum Android SDK:** 29
-- **Target Android SDK:** 36
 - **Zalecany Emulator:** Medium Phone API 36
 
 ## Architektura
@@ -15,11 +14,11 @@ Projekt wykorzystuje **Repository Pattern**, aby oddzielić warstwę interfejsu 
 
 - **Modułowość:**
     - `com.filip.hobbytracker`: Komponenty interfejsu (Fragmenty, Adaptery, Aktywności).
-    - `com.filip.hobbytracker.repository`: Warstwa danych, abstrahująca wywołania API i zarządzająca wątkami w tle przy użyciu `ExecutorService`.
+    - `com.filip.hobbytracker.repository`: Warstwa danych, abstrakcjonująca wywołania API i zarządzająca wątkami w tle przy użyciu `ExecutorService`.
     - `com.filip.hobbytracker.api`: Moduły pomocnicze, m.in. dostawcy API i obsługa sesji.
     - `com.filip.hobbytracker.api.generated`: Kod wygenerowany na podstawie specyfikacji OpenAPI backendu.
 - **UI:** XML Layouts, ConstraintLayout, Material Components.
-- **Listy:** Implementacja `RecyclerView` dla wydajnego wyświetlania danych.
+- **Listy:** Implementacja `RecyclerView` dla wydajnego wyświetlania danych chcociażby na głównym feedzie.
 
 ## Przepływ aplikacji
 

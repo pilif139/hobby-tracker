@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.filip.hobbytracker.repository.AuthRepository;
-import com.filip.hobbytracker.repository.BaseRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -80,7 +79,7 @@ public class LoginFragment extends Fragment {
                     setLoading(false);
                     // Navigate to HomeFragment
                     requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new HomeFragment())
+                            .replace(R.id.fragment_container, new FeedFragment())
                             .commit();
                 } else if (result.status == Resource.Status.ERROR) {
                     setLoading(false);

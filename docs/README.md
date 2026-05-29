@@ -17,6 +17,7 @@ Projekt z programowania aplikacji webowych i mobilnych
 - tanstack router
 - tanstack query
 - tailwindcss
+- [Szczegóły techniczne i architektura](./FRONTEND.md)
 
 ## Backend
 
@@ -25,10 +26,12 @@ Projekt z programowania aplikacji webowych i mobilnych
 - baza danych: cloudflare D1 z prismaORM
 - deployment i runtime: cloudflare workers
 - nauka integracji z serwisami cloudflare'a: D1, KV, Workers itp. co bedzie potrzebne do dalszego rozwoju projektu i zdobycia doświadczenia w pracy z tymi technologiami
+- [Szczegóły techniczne i architektura](./BACKEND.MD)
 
 ## Mobilki
 
 - java (zamiast kotlina, żeby poćwiczyć na egzamin zawodowy)
+- [Szczegóły techniczne i architektura](./MOBILE.MD)
 
 ## Pomysł
 

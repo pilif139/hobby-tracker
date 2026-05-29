@@ -28,8 +28,10 @@ import java.io.IOException;
 
 
 import java.math.BigDecimal;
+import com.filip.hobbytracker.api.generated.model.GetHobby200ResponseInner;
 import com.filip.hobbytracker.api.generated.model.GetHobbyUserByUserId200ResponseInner;
 import com.filip.hobbytracker.api.generated.model.PostAuthLogout200Response;
+import com.filip.hobbytracker.api.generated.model.PostHobby201Response;
 import com.filip.hobbytracker.api.generated.model.PostHobbyRequest;
 
 import java.lang.reflect.Type;
@@ -293,7 +295,7 @@ public class HobbyApi {
      * @param search  (optional)
      * @param offset  (optional)
      * @param limit  (optional)
-     * @return List&lt;Object&gt;
+     * @return List&lt;GetHobby200ResponseInner&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -302,8 +304,8 @@ public class HobbyApi {
         <tr><td> 200 </td><td> Search Results </td><td>  -  </td></tr>
      </table>
      */
-    public List<Object> getHobby(@javax.annotation.Nullable String search, @javax.annotation.Nullable BigDecimal offset, @javax.annotation.Nullable BigDecimal limit) throws ApiException {
-        ApiResponse<List<Object>> localVarResp = getHobbyWithHttpInfo(search, offset, limit);
+    public List<GetHobby200ResponseInner> getHobby(@javax.annotation.Nullable String search, @javax.annotation.Nullable BigDecimal offset, @javax.annotation.Nullable BigDecimal limit) throws ApiException {
+        ApiResponse<List<GetHobby200ResponseInner>> localVarResp = getHobbyWithHttpInfo(search, offset, limit);
         return localVarResp.getData();
     }
 
@@ -313,7 +315,7 @@ public class HobbyApi {
      * @param search  (optional)
      * @param offset  (optional)
      * @param limit  (optional)
-     * @return ApiResponse&lt;List&lt;Object&gt;&gt;
+     * @return ApiResponse&lt;List&lt;GetHobby200ResponseInner&gt;&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -322,9 +324,9 @@ public class HobbyApi {
         <tr><td> 200 </td><td> Search Results </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<List<Object>> getHobbyWithHttpInfo(@javax.annotation.Nullable String search, @javax.annotation.Nullable BigDecimal offset, @javax.annotation.Nullable BigDecimal limit) throws ApiException {
+    public ApiResponse<List<GetHobby200ResponseInner>> getHobbyWithHttpInfo(@javax.annotation.Nullable String search, @javax.annotation.Nullable BigDecimal offset, @javax.annotation.Nullable BigDecimal limit) throws ApiException {
         okhttp3.Call localVarCall = getHobbyValidateBeforeCall(search, offset, limit, null);
-        Type localVarReturnType = new TypeToken<List<Object>>(){}.getType();
+        Type localVarReturnType = new TypeToken<List<GetHobby200ResponseInner>>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
@@ -344,10 +346,10 @@ public class HobbyApi {
         <tr><td> 200 </td><td> Search Results </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call getHobbyAsync(@javax.annotation.Nullable String search, @javax.annotation.Nullable BigDecimal offset, @javax.annotation.Nullable BigDecimal limit, final ApiCallback<List<Object>> _callback) throws ApiException {
+    public okhttp3.Call getHobbyAsync(@javax.annotation.Nullable String search, @javax.annotation.Nullable BigDecimal offset, @javax.annotation.Nullable BigDecimal limit, final ApiCallback<List<GetHobby200ResponseInner>> _callback) throws ApiException {
 
         okhttp3.Call localVarCall = getHobbyValidateBeforeCall(search, offset, limit, _callback);
-        Type localVarReturnType = new TypeToken<List<Object>>(){}.getType();
+        Type localVarReturnType = new TypeToken<List<GetHobby200ResponseInner>>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
@@ -425,7 +427,7 @@ public class HobbyApi {
      * 
      * 
      * @param id  (required)
-     * @return Object
+     * @return PostHobby201Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -435,8 +437,8 @@ public class HobbyApi {
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public Object getHobbyById(@javax.annotation.Nonnull String id) throws ApiException {
-        ApiResponse<Object> localVarResp = getHobbyByIdWithHttpInfo(id);
+    public PostHobby201Response getHobbyById(@javax.annotation.Nonnull String id) throws ApiException {
+        ApiResponse<PostHobby201Response> localVarResp = getHobbyByIdWithHttpInfo(id);
         return localVarResp.getData();
     }
 
@@ -444,7 +446,7 @@ public class HobbyApi {
      * 
      * 
      * @param id  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;PostHobby201Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -454,9 +456,9 @@ public class HobbyApi {
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<Object> getHobbyByIdWithHttpInfo(@javax.annotation.Nonnull String id) throws ApiException {
+    public ApiResponse<PostHobby201Response> getHobbyByIdWithHttpInfo(@javax.annotation.Nonnull String id) throws ApiException {
         okhttp3.Call localVarCall = getHobbyByIdValidateBeforeCall(id, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<PostHobby201Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
@@ -475,10 +477,10 @@ public class HobbyApi {
         <tr><td> 404 </td><td> Not Found </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call getHobbyByIdAsync(@javax.annotation.Nonnull String id, final ApiCallback<Object> _callback) throws ApiException {
+    public okhttp3.Call getHobbyByIdAsync(@javax.annotation.Nonnull String id, final ApiCallback<PostHobby201Response> _callback) throws ApiException {
 
         okhttp3.Call localVarCall = getHobbyByIdValidateBeforeCall(id, _callback);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<PostHobby201Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
@@ -682,7 +684,7 @@ public class HobbyApi {
      * 
      * 
      * @param postHobbyRequest  (required)
-     * @return Object
+     * @return PostHobby201Response
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -691,8 +693,8 @@ public class HobbyApi {
         <tr><td> 201 </td><td> Created Hobby </td><td>  -  </td></tr>
      </table>
      */
-    public Object postHobby(@javax.annotation.Nonnull PostHobbyRequest postHobbyRequest) throws ApiException {
-        ApiResponse<Object> localVarResp = postHobbyWithHttpInfo(postHobbyRequest);
+    public PostHobby201Response postHobby(@javax.annotation.Nonnull PostHobbyRequest postHobbyRequest) throws ApiException {
+        ApiResponse<PostHobby201Response> localVarResp = postHobbyWithHttpInfo(postHobbyRequest);
         return localVarResp.getData();
     }
 
@@ -700,7 +702,7 @@ public class HobbyApi {
      * 
      * 
      * @param postHobbyRequest  (required)
-     * @return ApiResponse&lt;Object&gt;
+     * @return ApiResponse&lt;PostHobby201Response&gt;
      * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
      * @http.response.details
      <table border="1">
@@ -709,9 +711,9 @@ public class HobbyApi {
         <tr><td> 201 </td><td> Created Hobby </td><td>  -  </td></tr>
      </table>
      */
-    public ApiResponse<Object> postHobbyWithHttpInfo(@javax.annotation.Nonnull PostHobbyRequest postHobbyRequest) throws ApiException {
+    public ApiResponse<PostHobby201Response> postHobbyWithHttpInfo(@javax.annotation.Nonnull PostHobbyRequest postHobbyRequest) throws ApiException {
         okhttp3.Call localVarCall = postHobbyValidateBeforeCall(postHobbyRequest, null);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<PostHobby201Response>(){}.getType();
         return localVarApiClient.execute(localVarCall, localVarReturnType);
     }
 
@@ -729,10 +731,10 @@ public class HobbyApi {
         <tr><td> 201 </td><td> Created Hobby </td><td>  -  </td></tr>
      </table>
      */
-    public okhttp3.Call postHobbyAsync(@javax.annotation.Nonnull PostHobbyRequest postHobbyRequest, final ApiCallback<Object> _callback) throws ApiException {
+    public okhttp3.Call postHobbyAsync(@javax.annotation.Nonnull PostHobbyRequest postHobbyRequest, final ApiCallback<PostHobby201Response> _callback) throws ApiException {
 
         okhttp3.Call localVarCall = postHobbyValidateBeforeCall(postHobbyRequest, _callback);
-        Type localVarReturnType = new TypeToken<Object>(){}.getType();
+        Type localVarReturnType = new TypeToken<PostHobby201Response>(){}.getType();
         localVarApiClient.executeAsync(localVarCall, localVarReturnType, _callback);
         return localVarCall;
     }
