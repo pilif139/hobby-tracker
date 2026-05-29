@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { PostAuthLogin200Response } from '@/api/generated/api';
-import { setUnauthorizedHandler } from '@/api';
+import { getCurrentUser, setUnauthorizedHandler } from '@/api';
 
 type CurrentUser = PostAuthLogin200Response;
 
@@ -17,6 +17,20 @@ export function CurrentUserProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    void getCurrentUser()
+      .then((user) => {
+        if (!cancelled) {
+          setCurrentUser(user);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCurrentUser(null);
+        }
+      });
+
     setUnauthorizedHandler((requestUrl) => {
       const isAuthPage = window.location.pathname.startsWith('/login');
       const isAuthRequest =
@@ -35,7 +49,10 @@ export function CurrentUserProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    return () => setUnauthorizedHandler(null);
+    return () => {
+      cancelled = true;
+      setUnauthorizedHandler(null);
+    };
   }, []);
 
   const value = useMemo<CurrentUserContextValue>(
