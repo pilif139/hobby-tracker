@@ -1,43 +1,70 @@
-"use client"
-
+import { ChevronDown, LogOut } from 'lucide-react';
+import { authApiClient } from '@/api';
+import { Button, buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { useRouter } from "next/navigation"
-import { authApiClient } from "@/lib/api"
-
-export function UserNav() {
-  const user = useCurrentUser()
-  const router = useRouter()
+export default function UserNav() {
+  const { currentUser, setCurrentUser } = useCurrentUser();
 
   const handleLogout = async () => {
-    await authApiClient.postAuthLogout()
-    router.push("/login")
-  }
+    try {
+      await authApiClient.postAuthLogout();
+    } catch {
+      // If the session is already invalid, clear local state and continue.
+    } finally {
+      setCurrentUser(null);
+      window.location.assign('/login');
+    }
+  };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        <span className="cursor-pointer font-medium">
-          {user?.name ?? "User"}
-        </span>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className="h-10 max-w-full gap-2 px-3 sm:max-w-[280px]"
+        >
+          <span className="min-w-0 truncate text-sm font-medium">
+            {currentUser?.name ?? currentUser?.email ?? 'Account'}
+          </span>
+          <ChevronDown className="size-4 text-muted-foreground" />
+        </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        <DropdownMenuItem>Mój profil</DropdownMenuItem>
-        <DropdownMenuItem>Ustawienia</DropdownMenuItem>
+      <DropdownMenuContent align="end" className="w-64">
+        <div className="border-b px-3 py-2">
+          <div className="truncate text-sm font-medium">
+            {currentUser?.name ?? 'Account'}
+          </div>
+          <div className="truncate text-xs text-muted-foreground">
+            {currentUser?.email ?? 'Signed in'}
+          </div>
+        </div>
+
+        <div className="px-3 py-2 text-xs text-muted-foreground">
+          Profile and settings pages are coming soon.
+        </div>
+
         <DropdownMenuItem
-          onClick={handleLogout}
-          className="text-red-500"
+          className={cn(
+            buttonVariants({ variant: 'ghost' }),
+            'h-auto w-full justify-start rounded-sm px-2 py-1.5 font-normal text-destructive hover:bg-destructive/10 hover:text-destructive',
+          )}
+          onSelect={() => {
+            void handleLogout();
+          }}
         >
-          Wyloguj
+          <LogOut className="mr-2 size-4" />
+          Logout
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

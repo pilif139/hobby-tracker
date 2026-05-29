@@ -1,18 +1,14 @@
-bunx lint-staged
+pnpm lint-staged
 
-FRONTEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^frontend/.*(\.ts|\.tsx|\.js|\.jsx|\.json|package-lock\.json|bun\.lockb)$" || true)
-BACKEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^backend/.*(\.ts|\.js|\.json|package-lock\.json|bun\.lockb)$" || true)
+FRONTEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^frontend/.*(\.ts|\.tsx|\.js|\.jsx|\.json)$" || true)
+BACKEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^backend/.*(\.ts|\.js|\.json)$" || true)
 
 if [ -n "$FRONTEND_CHANGED" ]; then
   echo "Type checking frontend:"
-  cd frontend
-  bun check-types
-  cd ..
+  pnpm -F frontend check-types
 fi
 
 if [ -n "$BACKEND_CHANGED" ]; then
   echo "Type checking backend:"
-  cd backend
-  bun check-types
-  cd ..
+  pnpm -F backend check-types
 fi

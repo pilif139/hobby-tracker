@@ -6,7 +6,12 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'src/api/generated/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'src/api/generated/**',
+      'src/routeTree.gen.ts',
+    ],
   },
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
@@ -38,7 +43,7 @@ export default [
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: process.cwd(),
       },
     },
   },
