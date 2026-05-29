@@ -29,7 +29,7 @@ export default function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className="h-10 max-w-full gap-2 px-3 sm:max-w-[280px]"
+          className="h-10 max-w-full gap-2 px-3 sm:max-w-70"
         >
           <span className="min-w-0 truncate text-sm font-medium">
             {currentUser?.name ?? currentUser?.email ?? 'Account'}

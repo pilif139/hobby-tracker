@@ -5,13 +5,7 @@ import tseslint from 'typescript-eslint';
 export default defineConfig([
   ...baseConfig,
   {
-    ignores: [
-      '*.config.js',
-      'dist/**',
-      'node_modules/**',
-      '.wrangler/**',
-      'prisma/**',
-    ],
+    ignores: ['dist/**', 'node_modules/**', '.wrangler/**', 'prisma/**'],
   },
   {
     files: [
@@ -24,7 +18,7 @@ export default defineConfig([
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: process.cwd(),
       },
     },
     rules: {
