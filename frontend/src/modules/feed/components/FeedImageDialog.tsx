@@ -1,6 +1,6 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import * as dialog from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
@@ -13,18 +13,14 @@ export function FeedImageDialog({ imageUrls }: FeedImageDialogProps) {
 
   if (imageUrls.length === 0) return null;
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (currentIndex !== null && currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
   };
 
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (currentIndex !== null && currentIndex < imageUrls.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
+  const handleNext = () => {
+    setCurrentIndex((prev) =>
+      prev !== null && prev < imageUrls.length - 1 ? prev + 1 : prev,
+    );
   };
 
   return (
@@ -60,26 +56,37 @@ export function FeedImageDialog({ imageUrls }: FeedImageDialogProps) {
         ))}
       </div>
 
-      <Dialog
+      <dialog.Dialog
         open={currentIndex !== null}
         onOpenChange={(open) => {
           if (!open) setCurrentIndex(null);
         }}
       >
-        <DialogContent
+        <dialog.DialogContent
           className="max-w-[95vw] overflow-hidden border-none bg-transparent p-0 shadow-none ring-0 sm:max-w-[90vw] lg:max-w-5xl"
-          showCloseButton={true}
+          showCloseButton={false}
         >
-          <DialogTitle className="sr-only">
+          <dialog.DialogTitle className="sr-only">
             Session Image {(currentIndex ?? 0) + 1}
-          </DialogTitle>
+          </dialog.DialogTitle>
+          <dialog.DialogClose
+            render={
+              <Button
+                variant="secondary"
+                size="icon"
+                className="z-50 absolute top-2 right-2 rounded-lg bg-black/50 text-white hover:bg-black/70 border-none"
+              />
+            }
+          >
+            <X className="size-6" />
+          </dialog.DialogClose>
           <div className="relative flex min-h-[50vh] items-center justify-center p-2 sm:p-4">
             {currentIndex !== null && (
               <>
                 <img
                   src={imageUrls[currentIndex]}
                   alt={`Session image ${currentIndex + 1}`}
-                  className="h-auto max-h-[85vh] w-auto rounded-lg object-contain shadow-2xl"
+                  className="h-auto max-h-[85vh] w-auto object-contain shadow-lg"
                 />
 
                 {imageUrls.length > 1 && (
@@ -87,7 +94,8 @@ export function FeedImageDialog({ imageUrls }: FeedImageDialogProps) {
                     <Button
                       variant="secondary"
                       size="icon"
-                      className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full opacity-70 hover:opacity-100 disabled:opacity-30"
+                      className="absolute left-4 top-1/2 opacity-70 hover:opacity-100 disabled:opacity-60"
+                      onPointerDown={(e) => e.stopPropagation()}
                       onClick={handlePrev}
                       disabled={currentIndex === 0}
                     >
@@ -96,7 +104,8 @@ export function FeedImageDialog({ imageUrls }: FeedImageDialogProps) {
                     <Button
                       variant="secondary"
                       size="icon"
-                      className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full opacity-70 hover:opacity-100 disabled:opacity-30"
+                      className="absolute right-4 top-1/2 opacity-70 hover:opacity-100 disabled:opacity-60"
+                      onPointerDown={(e) => e.stopPropagation()}
                       onClick={handleNext}
                       disabled={currentIndex === imageUrls.length - 1}
                     >
@@ -110,8 +119,8 @@ export function FeedImageDialog({ imageUrls }: FeedImageDialogProps) {
               </>
             )}
           </div>
-        </DialogContent>
-      </Dialog>
+        </dialog.DialogContent>
+      </dialog.Dialog>
     </>
   );
 }
