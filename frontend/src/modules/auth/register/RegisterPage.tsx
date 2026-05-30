@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCurrentUser } from '../current-user/CurrentUserContext';
 import RegisterSchema from './RegisterSchema';
 import type { PostAuthRegisterRequest } from '@/api/generated/api';
@@ -18,8 +19,13 @@ export default function RegisterPage() {
 
   const form = useForm({
     defaultValues: {
+<<<<<<< HEAD
       name: '',
       email: '',
+=======
+      email: '',
+      name: '',
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
       password: '',
     },
     onSubmit: async ({ value }) => {
@@ -34,14 +40,30 @@ export default function RegisterPage() {
   const registerMutation = useMutation({
     mutationKey: ['register'],
     mutationFn: async (input: PostAuthRegisterRequest) => {
+<<<<<<< HEAD
       const res = await authApiClient.postAuthRegister({
         postAuthRegisterRequest: input,
       });
+=======
+      const res = await authApiClient.postAuthRegister(
+        { postAuthRegisterRequest: input },
+        { headers: { 'x-toast-suppressed': '1' } },
+      );
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
       return res.data;
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
+<<<<<<< HEAD
       await navigate({ to: '/feed' });
+=======
+      toast.success('Account created');
+      await navigate({ to: '/' });
+    },
+    onError: (err: any) => {
+      const message = err?.message ?? 'Registration failed';
+      toast.error(String(message));
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
     },
   });
 
@@ -61,7 +83,11 @@ export default function RegisterPage() {
                 Create your account
               </h1>
               <p className="text-sm text-muted-foreground">
+<<<<<<< HEAD
                 Enter your details below to start tracking your hobbies
+=======
+                Fill in your details below to create a new account
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
               </p>
             </div>
 
@@ -74,17 +100,29 @@ export default function RegisterPage() {
               }}
             >
               <div className="grid gap-4">
+<<<<<<< HEAD
                 <form.Field name="name">
+=======
+                <form.Field name="email">
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
                   {(field) => {
                     const isInvalid =
                       field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
+<<<<<<< HEAD
                         <FieldLabel htmlFor={field.name}>Name</FieldLabel>
                         <Input
                           id={field.name}
                           type="text"
                           placeholder="John Doe"
+=======
+                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                        <Input
+                          id={field.name}
+                          type="email"
+                          placeholder="you@example.com"
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
                           onBlur={field.handleBlur}
@@ -98,17 +136,30 @@ export default function RegisterPage() {
                   }}
                 </form.Field>
 
+<<<<<<< HEAD
                 <form.Field name="email">
+=======
+                <form.Field name="name">
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
                   {(field) => {
                     const isInvalid =
                       field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
+<<<<<<< HEAD
                         <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                         <Input
                           id={field.name}
                           type="email"
                           placeholder="you@example.com"
+=======
+                        <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                        <Input
+                          id={field.name}
+                          name={field.name}
+                          type="text"
+                          placeholder="Filip Demo"
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
                           onBlur={field.handleBlur}
@@ -178,7 +229,11 @@ export default function RegisterPage() {
                 to="/login"
                 className="text-primary underline-offset-4 hover:underline font-medium"
               >
+<<<<<<< HEAD
                 Log in
+=======
+                Sign in
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
               </Link>
             </p>
           </div>
