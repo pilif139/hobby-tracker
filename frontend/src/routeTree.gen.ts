@@ -8,6 +8,7 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+<<<<<<< HEAD
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 <<<<<<< HEAD
@@ -18,11 +19,18 @@ import { Route as FeedIndexRouteImport } from './routes/feed/index'
 =======
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
+=======
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as IndexRouteImport } from './routes/index';
+import { Route as LoginIndexRouteImport } from './routes/login/index';
+import { Route as RegisterIndexRouteImport } from './routes/register/index';
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+<<<<<<< HEAD
 } as any)
 <<<<<<< HEAD
 const SettingsIndexRoute = SettingsIndexRouteImport.update({
@@ -37,10 +45,14 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
 } as any)
 =======
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
+=======
+} as any);
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
   path: '/login/',
   getParentRoute: () => rootRouteImport,
+<<<<<<< HEAD
 } as any)
 <<<<<<< HEAD
 const FeedIndexRoute = FeedIndexRouteImport.update({
@@ -63,12 +75,22 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterIndexRoute
   '/settings': typeof SettingsIndexRoute
 =======
+=======
+} as any);
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => rootRouteImport,
+} as any);
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/login/': typeof LoginIndexRoute
+  '/': typeof IndexRoute;
+  '/login/': typeof LoginIndexRoute;
+  '/register/': typeof RegisterIndexRoute;
 }
 export interface FileRoutesByTo {
+<<<<<<< HEAD
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
@@ -109,11 +131,36 @@ export interface RootRouteChildren {
 =======
   LoginIndexRoute: typeof LoginIndexRoute
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
+=======
+  '/': typeof IndexRoute;
+  '/login': typeof LoginIndexRoute;
+  '/register': typeof RegisterIndexRoute;
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/login/': typeof LoginIndexRoute;
+  '/register/': typeof RegisterIndexRoute;
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: '/' | '/login/' | '/register/';
+  fileRoutesByTo: FileRoutesByTo;
+  to: '/' | '/login' | '/register';
+  id: '__root__' | '/' | '/login/' | '/register/';
+  fileRoutesById: FileRoutesById;
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute;
+  LoginIndexRoute: typeof LoginIndexRoute;
+  RegisterIndexRoute: typeof RegisterIndexRoute;
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
+<<<<<<< HEAD
       id: '/'
       path: '/'
       fullPath: '/'
@@ -154,6 +201,28 @@ declare module '@tanstack/react-router' {
     }
 =======
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
+=======
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/login/': {
+      id: '/login/';
+      path: '/login';
+      fullPath: '/login/';
+      preLoaderRoute: typeof LoginIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/register/': {
+      id: '/register/';
+      path: '/register';
+      fullPath: '/register/';
+      preLoaderRoute: typeof RegisterIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
   }
 }
 
@@ -162,10 +231,15 @@ const rootRouteChildren: RootRouteChildren = {
   FeedIndexRoute: FeedIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
 <<<<<<< HEAD
+<<<<<<< HEAD
   RegisterIndexRoute: RegisterIndexRoute,
 =======
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
 }
+=======
+  RegisterIndexRoute: RegisterIndexRoute,
+};
+>>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
