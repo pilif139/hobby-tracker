@@ -46,7 +46,7 @@ function App() {
     enabled: Boolean(userId),
   });
 
-  const hobbiesQuery = useQuery<GetHobbyUserByUserId200ResponseInner[]>({
+  const hobbiesQuery = useQuery<Array<GetHobbyUserByUserId200ResponseInner>>({
     queryKey: ['dashboard-hobbies', userId],
     queryFn: async () => {
       const res = await hobbyApiClient.getHobbyUserByUserId({
@@ -78,7 +78,7 @@ function App() {
           </p>
         </section>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2">
           {/* Session feed */}
           {profileQuery.isLoading ? (
             <FeedListSkeleton

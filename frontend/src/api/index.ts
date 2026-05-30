@@ -57,7 +57,7 @@ apiHttpClient.interceptors.response.use(
         if (!suppressed) {
           toast.error(String(message ?? 'Request failed'), { id: toastId });
         }
-      } catch (e) {
+      } catch {
         // swallow toast errors
       }
 
