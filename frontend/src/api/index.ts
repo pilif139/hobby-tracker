@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { toast } from 'sonner';
+<<<<<<< HEAD
 import {
   AuthenticationApi,
   FeedApi,
@@ -8,6 +9,9 @@ import {
   HobbySessionApi,
   UserApi,
 } from './generated';
+=======
+import { AuthenticationApi, HobbyApi, UserApi } from './generated';
+>>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
 import type { PostAuthLogin200Response } from './generated';
 
 export * from './generated';

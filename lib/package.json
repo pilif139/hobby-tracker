@@ -20,7 +20,11 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
+<<<<<<< HEAD
     "build": "tsc -p tsconfig.build.json",
+=======
+    "build": "bun build ./index.ts --outdir dist",
+>>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
