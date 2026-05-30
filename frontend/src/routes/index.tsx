@@ -122,9 +122,15 @@ function App() {
           </Link>
         </section>
 
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+<<<<<<< HEAD
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2">
           {/* Stats section */}
           {statsQuery.isLoading ? (
+=======
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2">
+          {/* Session feed */}
+          {profileQuery.isLoading ? (
+>>>>>>> ca466b3 ([Mobile-Responsiveness] style(responsive): improve mobile layout and spacing)
             <FeedListSkeleton
               title="Your performance"
               description="A quick overview of your activity and momentum."

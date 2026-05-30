@@ -22,9 +22,12 @@ import { Route as LoginIndexRouteImport } from './routes/login/index'
 =======
 import { Route as rootRouteImport } from './routes/__root';
 import { Route as IndexRouteImport } from './routes/index';
-import { Route as LoginIndexRouteImport } from './routes/login/index';
 import { Route as RegisterIndexRouteImport } from './routes/register/index';
+<<<<<<< HEAD
 >>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
+=======
+import { Route as LoginIndexRouteImport } from './routes/login/index';
+>>>>>>> ca466b3 ([Mobile-Responsiveness] style(responsive): improve mobile layout and spacing)
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -47,6 +50,7 @@ const RegisterIndexRoute = RegisterIndexRouteImport.update({
 >>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
 =======
 } as any);
+<<<<<<< HEAD
 >>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
 const LoginIndexRoute = LoginIndexRouteImport.update({
   id: '/login/',
@@ -77,12 +81,22 @@ export interface FileRoutesByTo {
 =======
 =======
 } as any);
+=======
+>>>>>>> ca466b3 ([Mobile-Responsiveness] style(responsive): improve mobile layout and spacing)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any);
+<<<<<<< HEAD
 >>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
+=======
+const LoginIndexRoute = LoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRouteImport,
+} as any);
+>>>>>>> ca466b3 ([Mobile-Responsiveness] style(responsive): improve mobile layout and spacing)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute;
@@ -208,13 +222,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    '/login/': {
-      id: '/login/';
-      path: '/login';
-      fullPath: '/login/';
-      preLoaderRoute: typeof LoginIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     '/register/': {
       id: '/register/';
       path: '/register';
@@ -222,7 +229,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+<<<<<<< HEAD
 >>>>>>> caeb8d5 ([feature/user-dropdown] feat(frontend): add registration flow with guest route and auth handoff)
+=======
+    '/login/': {
+      id: '/login/';
+      path: '/login';
+      fullPath: '/login/';
+      preLoaderRoute: typeof LoginIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+>>>>>>> ca466b3 ([Mobile-Responsiveness] style(responsive): improve mobile layout and spacing)
   }
 }
 
