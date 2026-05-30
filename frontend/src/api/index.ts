@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 import { AuthenticationApi, HobbyApi, UserApi } from './generated';
 import type { PostAuthLogin200Response } from './generated';
 
@@ -39,6 +40,25 @@ apiHttpClient.interceptors.response.use(
 
       if (status === 401) {
         unauthorizedHandler?.(requestUrl);
+      }
+
+      // Show a toast for failed requests unless the caller suppressed it
+      try {
+        const suppressed =
+          (error.config as any)?.headers?.['x-toast-suppressed'] === '1';
+        const toastId = `${error.config?.method ?? 'req'}:${String(error.config?.url ?? '')}`;
+        const message =
+          typeof data === 'string'
+            ? data
+            : data && typeof data === 'object' && 'message' in data
+              ? (data as any).message
+              : error.message || 'Request failed';
+
+        if (!suppressed) {
+          toast.error(String(message ?? 'Request failed'), { id: toastId });
+        }
+      } catch (e) {
+        // swallow toast errors
       }
 
       if (typeof data === 'string') {

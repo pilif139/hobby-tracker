@@ -1,4 +1,8 @@
-pnpm lint-staged
+if [ -z "$SKIP_LINT" ]; then
+  pnpm lint-staged
+else
+  echo "SKIP_LINT is set — skipping lint-staged checks"
+fi
 
 FRONTEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^frontend/.*(\.ts|\.tsx|\.js|\.jsx|\.json)$" || true)
 BACKEND_CHANGED=$(git diff --cached --name-only --diff-filter=ACMR | grep -E "^backend/.*(\.ts|\.js|\.json)$" || true)

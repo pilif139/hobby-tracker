@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCurrentUser } from '../current-user/CurrentUserContext';
 import LoginSchema from './LoginSchema';
 import type { PostAuthLoginRequest } from '@/api/generated/api';
@@ -33,14 +34,21 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationKey: ['login'],
     mutationFn: async (input: PostAuthLoginRequest) => {
-      const res = await authApiClient.postAuthLogin({
-        postAuthLoginRequest: input,
-      });
+      // suppress global API error toast here — this action will show its own toast
+      const res = await authApiClient.postAuthLogin(
+        { postAuthLoginRequest: input },
+        { headers: { 'x-toast-suppressed': '1' } },
+      );
       return res.data;
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
+      toast.success('Signed in');
       await navigate({ to: '/' });
+    },
+    onError: (err: any) => {
+      const message = err?.message ?? 'Sign in failed';
+      toast.error(String(message));
     },
   });
 
