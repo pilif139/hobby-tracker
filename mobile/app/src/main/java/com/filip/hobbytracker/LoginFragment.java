@@ -71,16 +71,14 @@ public class LoginFragment extends Fragment {
 
         authRepository.login(email, password, result -> {
             if (getActivity() == null) return;
-            
+
             getActivity().runOnUiThread(() -> {
                 if (result.status == Resource.Status.LOADING) {
                     setLoading(true);
                 } else if (result.status == Resource.Status.SUCCESS) {
                     setLoading(false);
-                    // Navigate to HomeFragment
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new FeedFragment())
-                            .commit();
+                    // Navigate to FeedFragment
+                    ((MainActivity) requireActivity()).navigateHome(new FeedFragment());
                 } else if (result.status == Resource.Status.ERROR) {
                     setLoading(false);
                     showError(result.message != null ? result.message : getString(R.string.error_login_failed));

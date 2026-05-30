@@ -22,17 +22,11 @@ public class OnboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         view.findViewById(R.id.btnExistingUser).setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new LoginFragment())
-                    .addToBackStack(null)
-                    .commit();
+            ((MainActivity) requireActivity()).switchFragment(new LoginFragment(), true);
         });
 
         view.findViewById(R.id.btnNewUser).setOnClickListener(v -> {
-            requireActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new RegisterFragment())
-                    .addToBackStack(null)
-                    .commit();
+            ((MainActivity) requireActivity()).switchFragment(new RegisterFragment(), true);
         });
     }
 }

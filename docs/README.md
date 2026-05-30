@@ -40,5 +40,4 @@ Projekt z programowania aplikacji webowych i mobilnych
 - Każdy użytkownik może tworzyć hobby i dodawać hobby stworzone przez innych do swojego profilu
 - Każdy może naliczać sobie tzw. sesje hobby, po prostu mierzenie czasu ile się spędziło na danym hobby
 - Do każdej sesji hobby, użytkownik dodaje czas, jakieś opcjonalne notatki, myśli lub zdjęcia jeśli chce
-- Można dodawać się do znajomych, przez co później widzi się co zrobili twoi znajomi na głównymi feedzie aplikacji (jak na twitterze lub facebooku)
-
+- Można dodawać się do znajomych, przez co później widzi się co zrobili twoi znajomi na głównymi feedzie aplikacji (jak na twitterze lub facebooku)

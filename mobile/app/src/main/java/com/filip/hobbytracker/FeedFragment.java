@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ public class FeedFragment extends Fragment {
     private FeedAdapter adapter;
     private FeedRepository repository;
     private ProgressBar progressBar;
+    private TextView tvEmptyFeed;
     private String nextCursor = null;
     private boolean isLoading = false;
 
@@ -33,6 +35,7 @@ public class FeedFragment extends Fragment {
 
         RecyclerView rvFeed = view.findViewById(R.id.rvFeed);
         progressBar = view.findViewById(R.id.progressBar);
+        tvEmptyFeed = view.findViewById(R.id.tvEmptyFeed);
 
         adapter = new FeedAdapter();
         rvFeed.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -64,8 +67,16 @@ public class FeedFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
 
                 if (resource.status == Resource.Status.SUCCESS) {
-                    adapter.addSessions(resource.data.getSessions());
-                    nextCursor = resource.data.getNextCursor();
+                    if (resource.data.getSessions() != null) {
+                        adapter.addSessions(resource.data.getSessions());
+                        nextCursor = resource.data.getNextCursor();
+                    }
+
+                    if (adapter.getItemCount() == 0) {
+                        tvEmptyFeed.setVisibility(View.VISIBLE);
+                    } else {
+                        tvEmptyFeed.setVisibility(View.GONE);
+                    }
                 } else if (resource.status == Resource.Status.ERROR) {
                     Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
                 }
