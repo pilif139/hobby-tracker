@@ -17,4 +17,21 @@
     <string name="register_title">Create Account</string>
     <string name="register_button">Register</string>
     <string name="error_registration_failed">Registration failed.</string>
+
+    <string name="create_session_title">Create hobby session</string>
+    <string name="label_hobby">Hobby</string>
+    <string name="hint_hobby">Search or create a hobby…</string>
+    <string name="label_start_time">Start time</string>
+    <string name="label_end_time">End time</string>
+    <string name="hint_datetime">Select date &amp; time</string>
+    <string name="label_notes">Notes</string>
+    <string name="hint_notes">How did your session go?</string>
+    <string name="label_images">Images</string>
+    <string name="btn_pick_images">Choose images (up to 4)</string>
+    <string name="btn_create_session">Create session</string>
+    <string name="empty_feed">No hobby sessions yet. Follow someone to see their activity!</string>
+    <string name="error_select_hobby">Please select or create a hobby.</string>
+    <string name="error_select_start">Please select a start time.</string>
+    <string name="error_select_end">Please select an end time.</string>
+    <string name="session_created">Session created!</string>
 </resources>

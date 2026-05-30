@@ -57,7 +57,6 @@ public class DiscoverFragment extends Fragment {
         container.addView(tv);
     }
 
-    @SuppressLint("SetTextI18n")
     private void loadSuggestions() {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -72,7 +71,7 @@ public class DiscoverFragment extends Fragment {
                 if (resource.status == Resource.Status.SUCCESS) {
                     layoutHobbyFollow.removeAllViews();
                     if (resource.data.getSuggestions().isEmpty()) {
-                        addEmptyMessage(layoutHobbyFollow, "No hobby-based suggestions.");
+                        addEmptyMessage(layoutHobbyFollow, "No suggestions based on your hobby.");
                         return;
                     }
 

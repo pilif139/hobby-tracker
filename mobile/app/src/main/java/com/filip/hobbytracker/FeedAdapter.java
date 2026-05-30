@@ -17,6 +17,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder> {
 
     private final List<GetFeed200ResponseSessionsInner> sessions = new ArrayList<>();
 
+    public void clearSessions() {
+        sessions.clear();
+        notifyDataSetChanged();
+    }
+
     public void addSessions(List<GetFeed200ResponseSessionsInner> newSessions) {
         int startPosition = sessions.size();
         sessions.addAll(newSessions);
