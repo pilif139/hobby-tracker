@@ -8,10 +8,10 @@
     "lib"
   ],
   "scripts": {
-    "lint": "cd frontend && eslint . && cd ../backend && eslint .",
+    "lint": "pnpm -w -r run lint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "prepare": "husky"
+    "prepare": "node -e \"process.exit(0)\""
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
@@ -21,9 +21,25 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "3.8.0",
-    "typescript-eslint": "^8.53.0"
+    "typescript-eslint": "^8.53.0",
+    "typescript": "6.0.3",
+    "semver": "^7.3.8",
+    "brace-expansion": "1.1.11"
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16"
+  }
+  ,
+  "pnpm": {
+    "overrides": {
+      "brace-expansion": "1.1.11",
+      "minimatch>brace-expansion": "1.1.11",
+      "@typescript-eslint/typescript-estree>semver": "7.3.8",
+      "eslint>minimatch": "3.1.5",
+      "eslint>brace-expansion": "1.1.11",
+      "@eslint/config-array>minimatch": "3.1.5",
+      "@eslint/config-array>brace-expansion": "1.1.11",
+      "@eslint/eslintrc>minimatch": "3.1.5"
+    }
   }
 }

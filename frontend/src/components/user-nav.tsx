@@ -1,4 +1,5 @@
 import { ChevronDown, LogOut } from 'lucide-react';
+import { toast } from 'sonner';
 import { authApiClient } from '@/api';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -15,9 +16,13 @@ export default function UserNav() {
 
   const handleLogout = async () => {
     try {
-      await authApiClient.postAuthLogout();
-    } catch {
-      // If the session is already invalid, clear local state and continue.
+      // suppress global API error toast; show explicit toast on failure
+      await authApiClient.postAuthLogout({
+        headers: { 'x-toast-suppressed': '1' },
+      });
+      toast.success('Signed out');
+    } catch (e: any) {
+      toast.error(e?.message ?? 'Sign out failed');
     } finally {
       setCurrentUser(null);
       window.location.assign('/login');

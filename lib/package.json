@@ -21,7 +21,8 @@
   "scripts": {
     "check-types": "tsc --noEmit",
     "build": "bun build ./index.ts --outdir dist",
-    "lint": "eslint --fix"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "type": "module"
 }

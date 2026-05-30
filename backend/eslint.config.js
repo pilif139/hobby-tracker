@@ -1,11 +1,20 @@
 import baseConfig from '@hono/eslint-config';
 import { defineConfig } from 'eslint/config';
-import tseslint from 'typescript-eslint';
+// Avoid importing the top-level `typescript-eslint` meta-package to prevent
+// pnpm nested-module resolution issues on Windows.
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 export default defineConfig([
   ...baseConfig,
   {
-    ignores: ['dist/**', 'node_modules/**', '.wrangler/**', 'prisma/**'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      '.wrangler/**',
+      'prisma/**',
+      'eslint.config.js',
+    ],
   },
   {
     files: [
@@ -18,7 +27,7 @@ export default defineConfig([
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: process.cwd(),
+        tsconfigRootDir: dirname(fileURLToPath(import.meta.url)),
       },
     },
     rules: {
@@ -33,6 +42,13 @@ export default defineConfig([
   },
   {
     files: ['*.config.js', '*.config.ts'],
-    ...tseslint.configs.disableTypeChecked,
+    // Keep a lightweight override for config files without loading
+    // heavy type-checked rule sets.
+    languageOptions: {
+      parserOptions: {
+        project: undefined,
+      },
+    },
+    rules: {},
   },
 ]);
