@@ -7,9 +7,9 @@ import { useCurrentUser } from '../current-user/CurrentUserContext';
 import LoginSchema from './LoginSchema';
 import type { PostAuthLoginRequest } from '@/api/generated/api';
 import { authApiClient } from '@/api';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { MeshGradientBackground } from '@/components/ui/mesh-gradient';
 
@@ -17,13 +17,20 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setCurrentUser } = useCurrentUser();
 
+  const isFieldInvalid = (isTouched: boolean, isValid: boolean) =>
+    isTouched && !isValid;
+
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value);
+      try {
+        await loginMutation.mutateAsync(value);
+      } catch {
+        // Error is handled in useMutation onError callback
+      }
     },
     validators: {
       onChangeAsync: LoginSchema,
@@ -51,6 +58,9 @@ export default function LoginPage() {
       toast.error(String(message));
     },
   });
+
+  const loginErrorMessage =
+    loginMutation.error instanceof Error ? loginMutation.error.message : null;
 
   return (
     <MeshGradientBackground className="dark">
@@ -96,13 +106,16 @@ export default function LoginPage() {
               <div className="grid gap-4">
                 <form.Field name="email">
                   {(field) => {
-                    const isInvalid =
-                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid = isFieldInvalid(
+                      field.state.meta.isTouched,
+                      field.state.meta.isValid,
+                    );
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
                         <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                         <Input
                           id={field.name}
+                          name={field.name}
                           type="email"
                           placeholder="you@example.com"
                           value={field.state.value}
@@ -120,8 +133,10 @@ export default function LoginPage() {
 
                 <form.Field name="password">
                   {(field) => {
-                    const isInvalid =
-                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid = isFieldInvalid(
+                      field.state.meta.isTouched,
+                      field.state.meta.isValid,
+                    );
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
                         <FieldLabel htmlFor={field.name}>Password</FieldLabel>
@@ -143,27 +158,29 @@ export default function LoginPage() {
                   }}
                 </form.Field>
 
-                {loginMutation.error && (
+                {loginErrorMessage && (
                   <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive rounded-md">
                     <ItemMedia variant="icon">
                       <TriangleAlert className="h-4 w-4" />
                     </ItemMedia>
-                    <ItemContent>{loginMutation.error.message}</ItemContent>
+                    <ItemContent>{loginErrorMessage}</ItemContent>
                   </Item>
                 )}
 
                 <form.Subscribe selector={(state) => state.isSubmitting}>
-                  {(isSubmitting) => (
-                    <Button
-                      type="submit"
-                      className="w-full mt-2"
-                      disabled={isSubmitting || loginMutation.isPending}
-                    >
-                      {isSubmitting || loginMutation.isPending
-                        ? 'Signing in…'
-                        : 'Sign in'}
-                    </Button>
-                  )}
+                  {(isFormSubmitting) => {
+                    const isBusy = isFormSubmitting || loginMutation.isPending;
+
+                    return (
+                      <Button
+                        type="submit"
+                        className="w-full mt-2"
+                        disabled={isBusy}
+                      >
+                        {isBusy ? 'Signing in…' : 'Sign in'}
+                      </Button>
+                    );
+                  }}
                 </form.Subscribe>
               </div>
             </form>
