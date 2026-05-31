@@ -46,6 +46,34 @@ describe('LoginPage (unit)', () => {
     vi.clearAllMocks();
   });
 
+  it('Renders email, password and submit button (basic accessibility)', async () => {
+    renderWithQuery(<LoginPage />);
+
+    const email = screen.getByLabelText(/email/i);
+    const password = screen.getByLabelText(/password/i);
+    const btn = screen.getByRole('button', { name: /sign in/i });
+
+    expect(email).toBeInTheDocument();
+    expect(password).toBeInTheDocument();
+    expect(btn).toBeInTheDocument();
+    expect(btn).toBeEnabled();
+  });
+
+  it('Shows Sign up link', async () => {
+    renderWithQuery(<LoginPage />);
+
+    const link = screen.getByRole('link', { name: /sign up/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveTextContent(/sign up/i);
+  });
+
+  it('Renders logo image with alt text', async () => {
+    renderWithQuery(<LoginPage />);
+
+    const logo = screen.getByAltText(/logo/i);
+    expect(logo).toBeInTheDocument();
+  });
+
   it('Given valid credentials, submits and navigates (success path)', async () => {
     const { authApiClient } = await import('@/api');
     (authApiClient.postAuthLogin as any).mockResolvedValue({
