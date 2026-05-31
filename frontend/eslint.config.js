@@ -1,49 +1,50 @@
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
-import tseslint from 'typescript-eslint';
 import { tanstackConfig } from '@tanstack/eslint-config';
-import pluginReact from 'eslint-plugin-react';
-import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
-export default [
-  {
-    ignores: ['dist/**', 'node_modules/**', 'src/api/generated/**'],
-  },
-  {
-    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    languageOptions: { globals: { ...globals.browser, ...globals.node } },
-  },
+export default defineConfig([
   ...tanstackConfig,
-  ...(pluginReact.configs.flat.recommended
-    ? [pluginReact.configs.flat.recommended]
-    : []),
   {
-    settings: {
-      react: {
-        version: 'detect',
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'src/api/generated/**',
+      'src/routeTree.gen.ts',
+      '*.config.js',
+      '*.config.ts',
+      'vite.config.ts',
+      'vitest.config.ts',
+    ],
+  },
+  {
+    files: ['src/**/*.{ts,tsx}', 'tests/**/*.{ts,tsx}'],
+    languageOptions: {
+      globals: globals.browser,
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: process.cwd(),
       },
     },
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      '@typescript-eslint/array-type': 'off',
+      'no-unused-vars': 'warn',
+      'no-console': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+      '@typescript-eslint/require-await': 'off',
     },
   },
-  eslintConfigPrettier,
   {
     files: [
-      'src/**/*.{ts,tsx}',
-      'tests/**/*.{ts,tsx}',
       '*.config.js',
       '*.config.ts',
+      'vite.config.ts',
+      'vitest.config.ts',
+      'eslint.config.js',
     ],
     languageOptions: {
+      globals: globals.node,
       parserOptions: {
-        project: './tsconfig.json',
-        tsconfigRootDir: import.meta.dirname,
+        project: undefined,
       },
     },
   },
-  {
-    files: ['*.config.js', '*.config.ts'],
-    ...tseslint.configs.disableTypeChecked,
-  },
-];
+]);

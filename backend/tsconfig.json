@@ -1,17 +1,23 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "strict": true,
-    "types": ["bun-types"],
+    "types": ["node"],
+    "downlevelIteration": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/src/*": ["src/*"],
+      "@/prisma/*": ["prisma/*"]
     }
   },
   "include": [
     "src/**/*",
     "tests/**/*",
     "eslint.config.js",
-    "worker-configuration.d.ts"
+    "worker-configuration.d.ts",
+    "prisma.config.ts",
+    "vitest.config.ts"
   ],
   "exclude": ["node_modules", "dist", ".wrangler", "prisma/generated"]
 }

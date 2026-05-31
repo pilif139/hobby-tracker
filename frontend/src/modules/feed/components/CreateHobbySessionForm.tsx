@@ -29,7 +29,7 @@ const getDefaultValues = () => {
     startTime: formatDateTimeLocal(start),
     endTime: formatDateTimeLocal(end),
     notes: '',
-    images: [] as File[],
+    images: [] as Array<File>,
   };
 };
 
@@ -62,7 +62,9 @@ export default function CreateHobbySessionForm() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const [searchResults, setSearchResults] = useState<HobbySearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<Array<HobbySearchResult>>(
+    [],
+  );
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {

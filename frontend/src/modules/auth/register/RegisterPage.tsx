@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCurrentUser } from '../current-user/CurrentUserContext';
 import RegisterSchema from './RegisterSchema';
 import type { PostAuthRegisterRequest } from '@/api/generated/api';
@@ -41,7 +42,12 @@ export default function RegisterPage() {
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
-      await navigate({ to: '/feed' });
+      toast.success('Account created');
+      await navigate({ to: '/' });
+    },
+    onError: (err: any) => {
+      const message = err?.message ?? 'Registration failed';
+      toast.error(String(message));
     },
   });
 

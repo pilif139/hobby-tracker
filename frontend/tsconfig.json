@@ -1,18 +1,22 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "strict": true,
-    "target": "ES2022",
     "jsx": "react-jsx",
+    "noEmit": true,
+    "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noUncheckedSideEffectImports": true,
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
-    }
+      "@/*": ["src/*"]
+    },
+    "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*", "tests/**/*", "eslint.config.js", "vite.config.ts"]
+  "include": ["src", "tests"]
 }

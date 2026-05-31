@@ -88,17 +88,20 @@ describe('Auth pages', () => {
     await user.click(screen.getByRole('button', { name: 'Sign in' }));
 
     await waitFor(() => {
-      expect(loginSpy).toHaveBeenCalledWith({
-        postAuthLoginRequest: {
-          email: 'jane@example.com',
-          password: 'password123',
+      expect(loginSpy).toHaveBeenCalledWith(
+        {
+          postAuthLoginRequest: {
+            email: 'jane@example.com',
+            password: 'password123',
+          },
         },
-      });
+        expect.objectContaining({ headers: expect.any(Object) }),
+      );
     });
 
     await waitFor(() => {
       expect(mockSetCurrentUser).toHaveBeenCalledWith(loggedInUser);
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/feed' });
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/' });
     });
   });
 
@@ -146,7 +149,7 @@ describe('Auth pages', () => {
 
     await waitFor(() => {
       expect(mockSetCurrentUser).toHaveBeenCalledWith(registeredUser);
-      expect(mockNavigate).toHaveBeenCalledWith({ to: '/feed' });
+      expect(mockNavigate).toHaveBeenCalledWith({ to: '/' });
     });
   });
 });
