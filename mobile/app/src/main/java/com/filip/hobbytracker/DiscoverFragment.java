@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -13,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner;
@@ -21,6 +21,7 @@ import com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200Resp
 import com.filip.hobbytracker.repository.FeedRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.filip.hobbytracker.repository.UserRepository;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.concurrent.Executors;
 
@@ -69,6 +70,25 @@ public class DiscoverFragment extends Fragment {
         container.addView(tv);
     }
 
+    private MaterialButton createSuggestionButton(String text) {
+        MaterialButton button = new MaterialButton(requireContext());
+        button.setText(text);
+        button.setAllCaps(false);
+        button.setCornerRadius((int) (18 * getResources().getDisplayMetrics().density));
+        button.setInsetTop(0);
+        button.setInsetBottom(0);
+        button.setBackgroundTintList(
+                ContextCompat.getColorStateList(requireContext(), R.color.hobby_secondary));
+        button.setTextColor(ContextCompat.getColor(requireContext(), R.color.hobby_foreground));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.topMargin = (int) (8 * getResources().getDisplayMetrics().density);
+        button.setLayoutParams(params);
+        return button;
+    }
+
     private void loadSuggestions() {
         repository.getHobbyFollowSuggestions(5, resource -> {
             if (getActivity() == null) return;
@@ -86,8 +106,7 @@ public class DiscoverFragment extends Fragment {
                 }
 
                 for (GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner user : resource.data.getSuggestions()) {
-                    Button btn = new Button(getContext());
-                    btn.setText(user.getName());
+                    MaterialButton btn = createSuggestionButton(user.getName());
                     String userId = user.getId();
                     if (currentUserId == null) btn.setEnabled(false);
                     btn.setOnClickListener(v -> {
@@ -127,8 +146,7 @@ public class DiscoverFragment extends Fragment {
                 }
 
                 for (GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner user : resource.data.getSuggestions()) {
-                    Button btn = new Button(getContext());
-                    btn.setText(user.getName());
+                    MaterialButton btn = createSuggestionButton(user.getName());
                     String userId = user.getId();
                     if (currentUserId == null) btn.setEnabled(false);
                     btn.setOnClickListener(v -> {
@@ -170,8 +188,8 @@ public class DiscoverFragment extends Fragment {
                 }
 
                 for (GetFeedHobbySuggestions200ResponseSuggestionsInner hobby : resource.data.getSuggestions()) {
-                    Button btn = new Button(getContext());
-                    btn.setText(hobby.getName() + " - " + hobby.getDescription());
+                    MaterialButton btn = createSuggestionButton(
+                            hobby.getName() + " - " + hobby.getDescription());
                     String name = hobby.getName();
                     btn.setOnClickListener(v -> Toast.makeText(getContext(), "Hobby: " + name, Toast.LENGTH_SHORT).show());
                     layoutHobbySuggestions.addView(btn);
