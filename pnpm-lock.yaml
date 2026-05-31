@@ -19,6 +19,9 @@ importers:
       '@eslint/js':
         specifier: ^9.39.2
         version: 9.39.4
+      brace-expansion:
+        specifier: 1.1.11
+        version: 1.1.11
       eslint:
         specifier: ^9.39.2
         version: 9.39.4(jiti@2.7.0)
@@ -37,6 +40,12 @@ importers:
       prettier:
         specifier: 3.8.0
         version: 3.8.0
+<<<<<<< HEAD
+=======
+      semver:
+        specifier: ^7.3.8
+        version: 7.8.1
+>>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -2653,6 +2662,12 @@ packages:
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
+<<<<<<< HEAD
+=======
+
+  brace-expansion@1.1.15:
+    resolution: {integrity: sha512-EwOCDEex4quD37XhqM3omwtMoJjr//isUZz1JopUNWms+4Z2ViyM/k1YIRePpoVNnQhENnxtFjLaxNHrT7xIUg==}
+>>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
 
   brace-expansion@5.0.6:
     resolution: {integrity: sha512-kLpxurY4Z4r9sgMsyG0Z9uzsBlgiU/EFKhj/h91/8yHu0edo7XuixOIH3VcJ8kkxs6/jPzoI6U9Vj3WqbMQ94g==}
@@ -7894,6 +7909,14 @@ snapshots:
       - supports-color
 
   brace-expansion@1.1.11:
+<<<<<<< HEAD
+=======
+    dependencies:
+      balanced-match: 1.0.2
+      concat-map: 0.0.1
+
+  brace-expansion@1.1.15:
+>>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
     dependencies:
       balanced-match: 1.0.2
       concat-map: 0.0.1
