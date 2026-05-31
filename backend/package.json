@@ -6,8 +6,9 @@
     "deploy": "wrangler deploy --minify",
     "build": "wrangler deploy --dry-run --outdir dist",
     "check-types": "tsc --noEmit",
-    "lint": "eslint --fix",
-    "test": "vitest run",
+    "lint": "eslint .",
+    "test": "vitest run --environment node",
+    "lint:fix": "eslint --fix",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage"
   },
@@ -36,8 +37,11 @@
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.13.5",
     "@hono/eslint-config": "^2.0.5",
-    "@types/bun": "latest",
+    "@types/node": "^22.19.19",
+    "eslint": "^9.39.4",
     "prisma": "^7.2.0",
-    "vitest": "^4.1.0"
+    "typescript-eslint": "^8.60.0",
+    "vitest": "^4.1.0",
+    "typescript": "6.0.3"
   }
 }

@@ -1,6 +1,16 @@
 import axios from 'axios';
-import { AuthenticationApi, HobbyApi, UserApi } from './generated';
+import { toast } from 'sonner';
+import {
+  AuthenticationApi,
+  FeedApi,
+  FollowApi,
+  HobbyApi,
+  HobbySessionApi,
+  UserApi,
+} from './generated';
 import type { PostAuthLogin200Response } from './generated';
+
+export * from './generated';
 
 export interface ApiClientError {
   message: string;
@@ -13,7 +23,7 @@ type UnauthorizedHandler = ((requestUrl: string) => void) | null;
 const API_BASE_URL: string =
   import.meta.env.VITE_API_URL ?? 'http://localhost:8787';
 
-const apiHttpClient = axios.create({
+export const apiHttpClient = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
 });
@@ -25,9 +35,14 @@ export const setUnauthorizedHandler = (handler: UnauthorizedHandler) => {
 };
 
 export const getCurrentUser = async (): Promise<PostAuthLogin200Response> => {
-  const response =
-    await apiHttpClient.get<PostAuthLogin200Response>('/auth/me');
-  return response.data;
+  try {
+    const response =
+      await apiHttpClient.get<PostAuthLogin200Response>('/auth/me');
+    return response.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 apiHttpClient.interceptors.response.use(
@@ -41,6 +56,25 @@ apiHttpClient.interceptors.response.use(
         unauthorizedHandler?.(requestUrl);
       }
 
+      // Show a toast for failed requests unless the caller suppressed it
+      try {
+        const suppressed =
+          (error.config as any)?.headers?.['x-toast-suppressed'] === '1';
+        const toastId = `${error.config?.method ?? 'req'}:${String(error.config?.url ?? '')}`;
+        const message =
+          typeof data === 'string'
+            ? data
+            : data && typeof data === 'object' && 'message' in data
+              ? (data as any).message
+              : error.message || 'Request failed';
+
+        if (!suppressed) {
+          toast.error(String(message ?? 'Request failed'), { id: toastId });
+        }
+      } catch (e) {
+        // swallow toast errors
+      }
+
       if (typeof data === 'string') {
         return Promise.reject({
           message: data,
@@ -50,6 +84,23 @@ apiHttpClient.interceptors.response.use(
       }
 
       if (data && typeof data === 'object') {
+        // Zod-like validation shape: { data: {...}, error: [{ path, message, ... }], success: false }
+        if (Array.isArray(data.error)) {
+          const messages = data.error.map((err: any) => {
+            const path = Array.isArray(err.path)
+              ? err.path.join('.')
+              : String(err.path ?? '');
+            const msg = err.message ?? JSON.stringify(err);
+            return path ? `${path}: ${msg}` : msg;
+          });
+
+          return Promise.reject({
+            message: messages.join('; '),
+            status,
+            cause: null,
+          } satisfies ApiClientError);
+        }
+
         return Promise.reject(data);
       }
 
@@ -73,6 +124,21 @@ export const authApiClient = new AuthenticationApi(
   apiHttpClient,
 );
 export const hobbyApiClient = new HobbyApi(
+  undefined,
+  API_BASE_URL,
+  apiHttpClient,
+);
+export const hobbySessionApiClient = new HobbySessionApi(
+  undefined,
+  API_BASE_URL,
+  apiHttpClient,
+);
+export const feedApiClient = new FeedApi(
+  undefined,
+  API_BASE_URL,
+  apiHttpClient,
+);
+export const followApiClient = new FollowApi(
   undefined,
   API_BASE_URL,
   apiHttpClient,

@@ -10,11 +10,24 @@
 
 import { Route as rootRouteImport } from './routes/__root';
 import { Route as IndexRouteImport } from './routes/index';
+import { Route as SettingsIndexRouteImport } from './routes/settings/index';
+import { Route as RegisterIndexRouteImport } from './routes/register/index';
 import { Route as LoginIndexRouteImport } from './routes/login/index';
+import { Route as FeedIndexRouteImport } from './routes/feed/index';
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any);
+const SettingsIndexRoute = SettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SettingsRoute,
+} as any);
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
   getParentRoute: () => rootRouteImport,
 } as any);
 const LoginIndexRoute = LoginIndexRouteImport.update({
@@ -22,31 +35,47 @@ const LoginIndexRoute = LoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => rootRouteImport,
 } as any);
+const FeedIndexRoute = FeedIndexRouteImport.update({
+  id: '/feed/',
+  path: '/feed/',
+  getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute;
+  '/feed/': typeof FeedIndexRoute;
   '/login/': typeof LoginIndexRoute;
+  '/register/': typeof RegisterIndexRoute;
+  '/settings/': typeof SettingsIndexRoute;
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute;
+  '/feed': typeof FeedIndexRoute;
   '/login': typeof LoginIndexRoute;
+  '/register': typeof RegisterIndexRoute;
+  '/settings': typeof SettingsIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   '/': typeof IndexRoute;
+  '/feed/': typeof FeedIndexRoute;
   '/login/': typeof LoginIndexRoute;
+  '/register/': typeof RegisterIndexRoute;
+  '/settings/': typeof SettingsIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: '/' | '/login/';
+  fullPaths: '/' | '/feed/' | '/login/' | '/register/' | '/settings/';
   fileRoutesByTo: FileRoutesByTo;
-  to: '/' | '/login';
-  id: '__root__' | '/' | '/login/';
+  to: '/' | '/feed' | '/login' | '/register' | '/settings';
+  id: '__root__' | '/' | '/feed/' | '/login/' | '/register/' | '/settings/';
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
+  FeedIndexRoute: typeof FeedIndexRoute;
   LoginIndexRoute: typeof LoginIndexRoute;
+  RegisterIndexRoute: typeof RegisterIndexRoute;
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +87,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    '/settings/': {
+      id: '/settings/';
+      path: '/';
+      fullPath: '/settings/';
+      preLoaderRoute: typeof SettingsIndexRouteImport;
+      parentRoute: typeof SettingsRoute;
+    };
+    '/register/': {
+      id: '/register/';
+      path: '/register';
+      fullPath: '/register/';
+      preLoaderRoute: typeof RegisterIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/login/': {
       id: '/login/';
       path: '/login';
@@ -65,13 +108,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    '/feed/': {
+      id: '/feed/';
+      path: '/feed';
+      fullPath: '/feed/';
+      preLoaderRoute: typeof FeedIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FeedIndexRoute: FeedIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
+  RegisterIndexRoute: RegisterIndexRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

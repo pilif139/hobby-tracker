@@ -2,13 +2,14 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCurrentUser } from '../current-user/CurrentUserContext';
 import LoginSchema from './LoginSchema';
 import type { PostAuthLoginRequest } from '@/api/generated/api';
 import { authApiClient } from '@/api';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
 import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { MeshGradientBackground } from '@/components/ui/mesh-gradient';
 
@@ -16,13 +17,20 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { setCurrentUser } = useCurrentUser();
 
+  const isFieldInvalid = (isTouched: boolean, isValid: boolean) =>
+    isTouched && !isValid;
+
   const form = useForm({
     defaultValues: {
       email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value);
+      try {
+        await loginMutation.mutateAsync(value);
+      } catch {
+        // Error is handled in useMutation onError callback
+      }
     },
     validators: {
       onChangeAsync: LoginSchema,
@@ -33,27 +41,37 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationKey: ['login'],
     mutationFn: async (input: PostAuthLoginRequest) => {
-      const res = await authApiClient.postAuthLogin({
-        postAuthLoginRequest: input,
-      });
+      // suppress global API error toast here — this action will show its own toast
+      const res = await authApiClient.postAuthLogin(
+        { postAuthLoginRequest: input },
+        { headers: { 'x-toast-suppressed': '1' } },
+      );
       return res.data;
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
+      toast.success('Signed in');
       await navigate({ to: '/' });
+    },
+    onError: (err: any) => {
+      const message = err?.message ?? 'Sign in failed';
+      toast.error(String(message));
     },
   });
 
+  const loginErrorMessage =
+    loginMutation.error instanceof Error ? loginMutation.error.message : null;
+
   return (
     <MeshGradientBackground className="dark">
-      <div className="flex min-h-screen w-full lg:flex-row">
-        <div className="relative hidden flex-col text-white lg:flex lg:w-[60%] z-20">
+      <div className="grid min-h-screen w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-[60%_40%]">
+        <div className="relative hidden flex-col text-white sm:flex z-20">
           <div className="relative z-20 flex">
             <img src="/logo-2.png" alt="Logo" className="h-full w-auto" />
           </div>
         </div>
 
-        <div className="flex w-full lg:w-[40%] items-center justify-center p-6 sm:p-10 text-foreground z-20 bg-background/60 backdrop-blur-xl lg:border-l border-white/10">
+        <div className="flex w-full items-center justify-center px-4 py-6 text-foreground z-20 bg-background/60 backdrop-blur-xl sm:px-6 sm:py-10 lg:border-l border-white/10">
           <div className="mx-auto w-full max-w-sm space-y-6">
             <div className="flex flex-col gap-y-2 text-center">
               <h1 className="text-3xl font-bold tracking-tight">
@@ -75,13 +93,16 @@ export default function LoginPage() {
               <div className="grid gap-4">
                 <form.Field name="email">
                   {(field) => {
-                    const isInvalid =
-                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid = isFieldInvalid(
+                      field.state.meta.isTouched,
+                      field.state.meta.isValid,
+                    );
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
                         <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                         <Input
                           id={field.name}
+                          name={field.name}
                           type="email"
                           placeholder="you@example.com"
                           value={field.state.value}
@@ -99,8 +120,10 @@ export default function LoginPage() {
 
                 <form.Field name="password">
                   {(field) => {
-                    const isInvalid =
-                      field.state.meta.isTouched && !field.state.meta.isValid;
+                    const isInvalid = isFieldInvalid(
+                      field.state.meta.isTouched,
+                      field.state.meta.isValid,
+                    );
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
                         <FieldLabel htmlFor={field.name}>Password</FieldLabel>
@@ -122,27 +145,29 @@ export default function LoginPage() {
                   }}
                 </form.Field>
 
-                {loginMutation.error && (
+                {loginErrorMessage && (
                   <Item className="bg-destructive/10 border border-destructive/30 px-4 py-3 text-sm text-destructive rounded-md">
                     <ItemMedia variant="icon">
                       <TriangleAlert className="h-4 w-4" />
                     </ItemMedia>
-                    <ItemContent>{loginMutation.error.message}</ItemContent>
+                    <ItemContent>{loginErrorMessage}</ItemContent>
                   </Item>
                 )}
 
                 <form.Subscribe selector={(state) => state.isSubmitting}>
-                  {(isSubmitting) => (
-                    <Button
-                      type="submit"
-                      className="w-full mt-2"
-                      disabled={isSubmitting || loginMutation.isPending}
-                    >
-                      {isSubmitting || loginMutation.isPending
-                        ? 'Signing in…'
-                        : 'Sign in'}
-                    </Button>
-                  )}
+                  {(isFormSubmitting) => {
+                    const isBusy = isFormSubmitting || loginMutation.isPending;
+
+                    return (
+                      <Button
+                        type="submit"
+                        className="w-full mt-2"
+                        disabled={isBusy}
+                      >
+                        {isBusy ? 'Signing in…' : 'Sign in'}
+                      </Button>
+                    );
+                  }}
                 </form.Subscribe>
               </div>
             </form>
@@ -150,7 +175,7 @@ export default function LoginPage() {
             <p className="text-muted-foreground text-center text-sm mt-6">
               Don&apos;t have an account?{' '}
               <Link
-                to="/"
+                to="/register"
                 className="text-primary underline-offset-4 hover:underline font-medium"
               >
                 Sign up

@@ -1,41 +1,23 @@
-import { useMemo, useState } from 'react';
-import { ChevronDown, LogOut, Settings, User } from 'lucide-react';
+import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
+import { ChevronDown, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import { toast } from 'sonner';
 import { authApiClient } from '@/api';
+import { ModeToggle } from '@/components/mode-toggle';
+import { buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 
-function getInitials(name?: string, email?: string) {
-  const source = name?.trim() || email?.trim() || 'Account';
-  const parts = source.split(/\s+/).filter(Boolean);
-  const first = parts[0]?.[0] ?? '';
-  const second = parts[1]?.[0] ?? '';
-
-  if (parts.length >= 2) {
-    return `${first}${second}`.toUpperCase();
-  }
-
-  return source.slice(0, 2).toUpperCase();
-}
-
-export function UserNav() {
+export default function UserNav() {
   const { currentUser, setCurrentUser } = useCurrentUser();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-
-  const displayName = currentUser?.name ?? 'Account';
-  const displayEmail = currentUser?.email ?? 'Signed in';
-  const initials = useMemo(
-    () => getInitials(currentUser?.name, currentUser?.email),
-    [currentUser?.email, currentUser?.name],
-  );
 
   const handleLogout = async () => {
     if (isLoggingOut) {
@@ -45,70 +27,76 @@ export function UserNav() {
     setIsLoggingOut(true);
 
     try {
-      await authApiClient.postAuthLogout();
-    } catch {
-      // If the session is already invalid, we still want to clear local auth state.
+      await authApiClient.postAuthLogout({
+        headers: { 'x-toast-suppressed': '1' },
+      });
+      toast.success('Signed out');
+    } catch (error: any) {
+      toast.error(error?.message ?? 'Sign out failed');
     } finally {
+      setIsLoggingOut(false);
       setCurrentUser(null);
       window.location.assign('/login');
     }
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className={cn(
-          buttonVariants({ variant: 'outline', size: 'lg' }),
-          'h-10 max-w-full gap-3 px-3 sm:max-w-[280px]',
-        )}
-      >
-        <span className="flex size-8 items-center justify-center rounded-full bg-primary/12 text-xs font-semibold text-primary">
-          {initials}
-        </span>
-        <span className="min-w-0 text-left">
-          <span className="block truncate text-sm font-medium">
-            {displayName}
-          </span>
-          <span className="hidden truncate text-xs text-muted-foreground sm:block">
-            {displayEmail}
-          </span>
-        </span>
-        <ChevronDown className="ml-auto size-4 text-muted-foreground" />
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end" className="w-64">
-        <DropdownMenuLabel className="space-y-1 px-2 py-2">
-          <div className="text-sm font-medium">{displayName}</div>
-          <div className="text-xs text-muted-foreground">{displayEmail}</div>
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem disabled>
-          <User className="size-4" />
-          My Profile
-        </DropdownMenuItem>
-
-        <DropdownMenuItem disabled>
-          <Settings className="size-4" />
-          Settings
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          variant="destructive"
-          onClick={() => {
-            void handleLogout();
-          }}
-          disabled={isLoggingOut}
+    <div className="flex items-center gap-2">
+      <ModeToggle />
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className={buttonVariants({
+            variant: 'outline',
+            className: 'h-10 max-w-full gap-2 px-3 sm:max-w-[18rem]',
+          })}
         >
-          <LogOut className="size-4" />
-          {isLoggingOut ? 'Logging out…' : 'Logout'}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <span className="min-w-0 truncate text-sm font-medium">
+            {currentUser?.name ?? currentUser?.email ?? 'Account'}
+          </span>
+          <ChevronDown className="size-4 text-muted-foreground" />
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end" className="w-64">
+          <div className="border-b px-3 py-2">
+            <div className="truncate text-sm font-medium">
+              {currentUser?.name ?? 'Account'}
+            </div>
+            <div className="truncate text-xs text-muted-foreground">
+              {currentUser?.email ?? 'Signed in'}
+            </div>
+          </div>
+
+          <div className="p-1">
+            <Link to="/">
+              <DropdownMenuItem className="cursor-pointer gap-2 rounded-sm">
+                <LayoutDashboard className="size-4 text-muted-foreground" />
+                <span>Dashboard</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link to="/settings">
+              <DropdownMenuItem className="cursor-pointer gap-2 rounded-sm">
+                <Settings className="size-4 text-muted-foreground" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+            </Link>
+          </div>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem
+            className={cn(
+              buttonVariants({ variant: 'ghost' }),
+              'h-auto w-full justify-start rounded-sm px-2 py-1.5 font-normal text-destructive hover:bg-destructive/10 hover:text-destructive',
+            )}
+            onSelect={() => {
+              void handleLogout();
+            }}
+          >
+            <LogOut className="mr-2 size-4" />
+            {isLoggingOut ? 'Logging out…' : 'Logout'}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
-
-export default UserNav;
