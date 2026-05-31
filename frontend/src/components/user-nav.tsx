@@ -1,7 +1,7 @@
 import { ChevronDown, LogOut } from 'lucide-react';
 import { toast } from 'sonner';
 import { authApiClient } from '@/api';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,16 +31,16 @@ export default function UserNav() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          className="h-10 max-w-full gap-2 px-3 sm:max-w-70"
-        >
-          <span className="min-w-0 truncate text-sm font-medium">
-            {currentUser?.name ?? currentUser?.email ?? 'Account'}
-          </span>
-          <ChevronDown className="size-4 text-muted-foreground" />
-        </Button>
+      <DropdownMenuTrigger
+        className={buttonVariants({
+          variant: 'outline',
+          className: 'h-10 max-w-full gap-2 px-3 sm:max-w-70',
+        })}
+      >
+        <span className="min-w-0 truncate text-sm font-medium">
+          {currentUser?.name ?? currentUser?.email ?? 'Account'}
+        </span>
+        <ChevronDown className="size-4 text-muted-foreground" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-64">

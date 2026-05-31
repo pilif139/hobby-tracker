@@ -46,7 +46,7 @@ function App() {
     enabled: Boolean(userId),
   });
 
-  const hobbiesQuery = useQuery<GetHobbyUserByUserId200ResponseInner[]>({
+  const hobbiesQuery = useQuery<Array<GetHobbyUserByUserId200ResponseInner>>({
     queryKey: ['dashboard-hobbies', userId],
     queryFn: async () => {
       const res = await hobbyApiClient.getHobbyUserByUserId({

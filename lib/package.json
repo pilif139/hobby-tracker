@@ -20,7 +20,7 @@
   },
   "scripts": {
     "check-types": "tsc --noEmit",
-    "build": "bun build ./index.ts --outdir dist",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

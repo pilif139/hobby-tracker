@@ -88,7 +88,7 @@ export default function SuggestionsSidebar() {
     },
   });
 
-  const isEmpty = (query: { isLoading: boolean; data?: unknown[] }) =>
+  const isEmpty = (query: { isLoading: boolean; data?: Array<unknown> }) =>
     !query.isLoading && (!query.data || query.data.length === 0);
 
   return (
