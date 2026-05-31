@@ -12,6 +12,7 @@ const createFollowRepositoryMock = () => ({
   findByFollowerId: vi.fn(),
   findByFollowingId: vi.fn(),
   getFollowCounts: vi.fn(),
+  getFollowingIds: vi.fn(),
 });
 
 const createUserRepositoryMock = () => ({
@@ -92,5 +93,42 @@ describe('FollowService (unit)', () => {
       service.getFollowCounts('missing-user'),
     ).rejects.toBeInstanceOf(FollowUserNotFoundError);
     expect(followRepositoryMock.getFollowCounts).not.toHaveBeenCalled();
+  });
+
+  it('unfollows user when both users exist', async () => {
+    const followRepositoryMock = createFollowRepositoryMock();
+    const userRepositoryMock = createUserRepositoryMock();
+
+    userRepositoryMock.exists.mockResolvedValue(true);
+    followRepositoryMock.delete.mockResolvedValue({ success: true });
+
+    const service = new FollowService(
+      followRepositoryMock as unknown as FollowRepository,
+      userRepositoryMock as unknown as UserRepository,
+    );
+
+    const result = await service.unfollowUser('u1', 'u2');
+
+    expect(result).toEqual({ success: true });
+    expect(userRepositoryMock.exists).toHaveBeenCalledTimes(2);
+    expect(followRepositoryMock.delete).toHaveBeenCalledWith('u1', 'u2');
+  });
+
+  it('returns following IDs directly from repository', async () => {
+    const followRepositoryMock = createFollowRepositoryMock();
+    const userRepositoryMock = createUserRepositoryMock();
+
+    followRepositoryMock.getFollowingIds.mockResolvedValue(['u2', 'u3']);
+
+    const service = new FollowService(
+      followRepositoryMock as unknown as FollowRepository,
+      userRepositoryMock as unknown as UserRepository,
+    );
+
+    const result = await service.getFollowingIds('u1');
+
+    expect(result).toEqual(['u2', 'u3']);
+    expect(followRepositoryMock.getFollowingIds).toHaveBeenCalledWith('u1');
+    expect(userRepositoryMock.exists).not.toHaveBeenCalled();
   });
 });

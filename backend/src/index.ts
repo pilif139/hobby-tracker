@@ -3,7 +3,6 @@ import { showRoutes } from 'hono/dev';
 import { HTTPException } from 'hono/http-exception';
 import { prettyJSON } from 'hono/pretty-json';
 import { Hono } from 'hono/quick';
-import { secureHeaders } from 'hono/secure-headers';
 import { describeRoute, openAPIRouteHandler, resolver } from 'hono-openapi';
 import z from 'zod';
 import { getPrismaClient } from './lib/prisma';
@@ -15,6 +14,7 @@ import devOnly from './middleware/dev-only';
 import { loggerMiddleware } from './middleware/logger';
 import { authController } from './modules/auth/auth.controller';
 import feedController from './modules/feed/feed.controller';
+import followController from './modules/follow/follow.controller';
 import hobbyController from './modules/hobby/hobby.controller';
 import hobbySessionController from './modules/hobby-session/hobby-session.controller';
 import userController from './modules/user/user.controller';
@@ -28,7 +28,6 @@ app.use(
   '*',
   prettyJSON(),
   loggerMiddleware,
-  secureHeaders(),
   corsMiddleware,
   csrfMiddleware,
   dependencyMiddleware,
@@ -41,6 +40,7 @@ app.route('/auth', authController);
 app.route('/user', userController);
 app.route('/hobby', hobbyController);
 app.route('/hobby-session', hobbySessionController);
+app.route('/follow', followController);
 app.route('/feed', feedController);
 
 app.get(

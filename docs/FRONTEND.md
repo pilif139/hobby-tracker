@@ -27,15 +27,18 @@ bun dev
 - Tailwind CSS
 - Vitest
 - Shadcn UI
-- Cloudflare jako hosting
+- Cloudflare Pages - hosting
 
 ## Architektura
 
+- api - folder z wygenerowanym przez openapi-generator klientem axios, który jest używany do komunikacji z backendem
 - routes - folder z plikami odpowiadającymi poszczególnym stronom aplikacji
 - components - folder z komponentami wielokrotnego użytku, zawiera także folder z komponentami UI z biblioteki shadcn
+- integrations - folder z integracjami pomiędzy różnymi częściami aplikacji, np. motywy, contexty itp.
 - hooks - folder z customowymi hookami, np. do obsługi zapytań
-- utils - folder z funkcjami pomocniczymi, używanymi w różnych miejscach aplikacji
+- lib - folder z funkcjami pomocniczymi, używanymi w różnych miejscach aplikacji
 - modules - folder, który zawiera wszystkie rzeczy związane z danym 1 routem, np. jeśli mamy route feed to w modules/feed będzie folder components z komponentami specyficznymi dla tego route, folder hooks z hookami specyficznymi dla tego route i ewentualnie inne rzeczy, które są związane tylko z tym route, jeśli strona ma np. więcej podstron, to dzielimy wtedy ten moduł na podmoduły, np. modules/feed/posts i modules/feed/comments, w zależności od tego jak duża jest ta strona
+- tests - folder z testami jednostkowymi
 
 ## Komunikacja z backendem
 
@@ -47,3 +50,4 @@ bun run generate:api
 
 Zimportowany klient API powinien mieć wszystkie potrzebne metody, które są w danym kontrolerze na backendzie.
 
+>**Uwaga**: Requesty typu 'multipart/form-data', które wysyłają pliki, się źle generują i nie są obsługiwane poprawnie przez klienta. Trzeba używać apiHttpClient i wysyłać requesty ręcznie.

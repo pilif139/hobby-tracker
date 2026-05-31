@@ -50,8 +50,9 @@ export class FeedService {
     }
 
     const fetchLimit = limit + 1;
+    const userIds = [...followedUserIds, userId];
     const sessions = await this.feedRepository.getFeedSessions(
-      followedUserIds,
+      userIds,
       fetchLimit,
       cursorData,
     );

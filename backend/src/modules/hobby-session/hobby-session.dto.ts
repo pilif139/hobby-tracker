@@ -1,6 +1,5 @@
 import z from 'zod';
-
-const imagesField = z.array(z.instanceof(File)).max(4);
+import { fileArray } from '@/src/lib/openAPI.types';
 
 const deletedImageKeysField = z.array(z.string());
 
@@ -9,7 +8,7 @@ export const createHobbySessionDto = z.object({
   startTime: z.string(),
   endTime: z.string(),
   notes: z.string().optional(),
-  images: imagesField.optional(),
+  images: fileArray({ max: 4 }).optional(),
 });
 
 export const updateHobbySessionDto = z.object({
@@ -17,7 +16,7 @@ export const updateHobbySessionDto = z.object({
   startTime: z.string().optional(),
   endTime: z.string().optional(),
   notes: z.string().nullable().optional(),
-  images: imagesField.optional(),
+  images: fileArray({ max: 4 }).optional(),
   deletedImageKeys: deletedImageKeysField.optional(),
 });
 

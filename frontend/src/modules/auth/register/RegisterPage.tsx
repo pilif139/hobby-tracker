@@ -19,8 +19,8 @@ export default function RegisterPage() {
 
   const form = useForm({
     defaultValues: {
-      email: '',
       name: '',
+      email: '',
       password: '',
     },
     onSubmit: async ({ value }) => {
@@ -35,10 +35,9 @@ export default function RegisterPage() {
   const registerMutation = useMutation({
     mutationKey: ['register'],
     mutationFn: async (input: PostAuthRegisterRequest) => {
-      const res = await authApiClient.postAuthRegister(
-        { postAuthRegisterRequest: input },
-        { headers: { 'x-toast-suppressed': '1' } },
-      );
+      const res = await authApiClient.postAuthRegister({
+        postAuthRegisterRequest: input,
+      });
       return res.data;
     },
     onSuccess: async (user) => {
@@ -54,21 +53,21 @@ export default function RegisterPage() {
 
   return (
     <MeshGradientBackground className="dark">
-      <div className="grid min-h-screen w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-[60%_40%]">
-        <div className="relative hidden flex-col text-white sm:flex z-20">
+      <div className="flex min-h-screen w-full lg:flex-row">
+        <div className="relative hidden flex-col text-white lg:flex lg:w-[60%] z-20">
           <div className="relative z-20 flex">
             <img src="/logo-2.png" alt="Logo" className="h-full w-auto" />
           </div>
         </div>
 
-        <div className="flex w-full items-center justify-center px-4 py-6 text-foreground z-20 bg-background/60 backdrop-blur-xl sm:px-6 sm:py-10 lg:border-l border-white/10">
+        <div className="flex w-full lg:w-[40%] items-center justify-center p-6 sm:p-10 text-foreground z-20 bg-background/60 backdrop-blur-xl lg:border-l border-white/10">
           <div className="mx-auto w-full max-w-sm space-y-6">
             <div className="flex flex-col gap-y-2 text-center">
               <h1 className="text-3xl font-bold tracking-tight">
                 Create your account
               </h1>
               <p className="text-sm text-muted-foreground">
-                Fill in your details below to create a new account
+                Enter your details below to start tracking your hobbies
               </p>
             </div>
 
@@ -81,17 +80,17 @@ export default function RegisterPage() {
               }}
             >
               <div className="grid gap-4">
-                <form.Field name="email">
+                <form.Field name="name">
                   {(field) => {
                     const isInvalid =
                       field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
-                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>Name</FieldLabel>
                         <Input
                           id={field.name}
-                          type="email"
-                          placeholder="you@example.com"
+                          type="text"
+                          placeholder="John Doe"
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
                           onBlur={field.handleBlur}
@@ -105,18 +104,17 @@ export default function RegisterPage() {
                   }}
                 </form.Field>
 
-                <form.Field name="name">
+                <form.Field name="email">
                   {(field) => {
                     const isInvalid =
                       field.state.meta.isTouched && !field.state.meta.isValid;
                     return (
                       <Field data-invalid={isInvalid} className="grid gap-2">
-                        <FieldLabel htmlFor={field.name}>Name</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>Email</FieldLabel>
                         <Input
                           id={field.name}
-                          name={field.name}
-                          type="text"
-                          placeholder="Filip Demo"
+                          type="email"
+                          placeholder="you@example.com"
                           value={field.state.value}
                           onChange={(e) => field.handleChange(e.target.value)}
                           onBlur={field.handleBlur}
@@ -186,7 +184,7 @@ export default function RegisterPage() {
                 to="/login"
                 className="text-primary underline-offset-4 hover:underline font-medium"
               >
-                Sign in
+                Log in
               </Link>
             </p>
           </div>
