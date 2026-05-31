@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import UserNav from './user-nav';
+import UserNav from '@/components/user-nav';
 
 export default function Header() {
   return (

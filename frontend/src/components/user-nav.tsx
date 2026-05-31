@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
 import { ChevronDown, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { authApiClient } from '@/api';
 import { ModeToggle } from '@/components/mode-toggle';
@@ -17,24 +16,17 @@ import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
 
 export default function UserNav() {
   const { currentUser, setCurrentUser } = useCurrentUser();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    if (isLoggingOut) {
-      return;
-    }
-
-    setIsLoggingOut(true);
-
     try {
+      // suppress global API error toast; show explicit toast on failure
       await authApiClient.postAuthLogout({
         headers: { 'x-toast-suppressed': '1' },
       });
       toast.success('Signed out');
-    } catch (error: any) {
-      toast.error(error?.message ?? 'Sign out failed');
+    } catch (e: any) {
+      toast.error(e?.message ?? 'Sign out failed');
     } finally {
-      setIsLoggingOut(false);
       setCurrentUser(null);
       window.location.assign('/login');
     }
@@ -47,7 +39,7 @@ export default function UserNav() {
         <DropdownMenuTrigger
           className={buttonVariants({
             variant: 'outline',
-            className: 'h-10 max-w-full gap-2 px-3 sm:max-w-[18rem]',
+            className: 'h-10 max-w-full gap-2 px-3 sm:max-w-70',
           })}
         >
           <span className="min-w-0 truncate text-sm font-medium">
@@ -93,7 +85,7 @@ export default function UserNav() {
             }}
           >
             <LogOut className="mr-2 size-4" />
-            {isLoggingOut ? 'Logging out…' : 'Logout'}
+            Logout
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
