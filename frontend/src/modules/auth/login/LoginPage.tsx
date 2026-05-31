@@ -26,7 +26,11 @@ export default function LoginPage() {
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value);
+      try {
+        await loginMutation.mutateAsync(value);
+      } catch {
+        // Error is handled in useMutation onError callback
+      }
     },
     validators: {
       onChangeAsync: LoginSchema,
@@ -49,9 +53,9 @@ export default function LoginPage() {
       toast.success('Signed in');
       await navigate({ to: '/' });
     },
-    onError: (err: unknown) => {
-      const message = err instanceof Error ? err.message : 'Sign in failed';
-      toast.error(message);
+    onError: (err: any) => {
+      const message = err?.message ?? 'Sign in failed';
+      toast.error(String(message));
     },
   });
 

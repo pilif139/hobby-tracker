@@ -64,7 +64,7 @@ const { status, data } = await apiInstance.deleteHobbyRemoveFromProfileByHobbyId
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getHobby**
-> Array<object> getHobby()
+> Array<GetHobby200ResponseInner> getHobby()
 
 
 ### Example
@@ -100,7 +100,7 @@ const { status, data } = await apiInstance.getHobby(
 
 ### Return type
 
-**Array<object>**
+**Array<GetHobby200ResponseInner>**
 
 ### Authorization
 
@@ -120,7 +120,7 @@ const { status, data } = await apiInstance.getHobby(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **getHobbyById**
-> object getHobbyById()
+> PostHobby201Response getHobbyById()
 
 
 ### Example
@@ -150,7 +150,7 @@ const { status, data } = await apiInstance.getHobbyById(
 
 ### Return type
 
-**object**
+**PostHobby201Response**
 
 ### Authorization
 
@@ -221,7 +221,7 @@ const { status, data } = await apiInstance.getHobbyUserByUserId(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **postHobby**
-> object postHobby(postHobbyRequest)
+> PostHobby201Response postHobby(postHobbyRequest)
 
 
 ### Example
@@ -252,7 +252,7 @@ const { status, data } = await apiInstance.postHobby(
 
 ### Return type
 
-**object**
+**PostHobby201Response**
 
 ### Authorization
 

@@ -7,9 +7,9 @@ import type { AppContext } from '../types';
 export const loggerMiddleware = createMiddleware<AppContext>(
   async (c, next) => {
     const transports: Transport[] = [];
-    if (c.env.ENVIRONMENT === 'development') {
-      transports.push(new ConsoleTransport());
-    }
+    transports.push(
+      new ConsoleTransport({ colorize: c.env.ENVIRONMENT === 'development' }),
+    );
 
     const customLogger = new Logger({
       environment: c.env.ENVIRONMENT,

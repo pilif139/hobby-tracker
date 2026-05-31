@@ -19,7 +19,7 @@ export const requireGuest = async () => {
   const user = await resolveCurrentUser();
 
   if (user) {
-    throw redirect({ to: '/' });
+    throw redirect({ to: '/feed' });
   }
 
   return { user: null };
