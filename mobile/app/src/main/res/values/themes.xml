@@ -9,6 +9,7 @@
         <item name="android:windowBackground">@drawable/bg_gradient_day</item>
         <item name="android:statusBarColor">@color/hobby_day_background</item>
         <item name="android:navigationBarColor">@color/hobby_day_nav_background</item>
+        <item name="colorSecondaryContainer">@color/hobby_secondary</item>
     </style>
 
     <style name="Theme.HobbyTracker" parent="Base.Theme.HobbyTracker" />

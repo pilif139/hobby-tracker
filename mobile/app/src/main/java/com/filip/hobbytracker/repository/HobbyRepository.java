@@ -24,6 +24,13 @@ public class HobbyRepository extends BaseRepository {
         executeRequest(() -> ApiProvider.hobbyApi().getHobby(query, null, null), callback, R.string.error_network);
     }
 
+    public void addHobbyToProfile(String hobbyId, Callback<Void> callback) {
+        executeRequest(() -> {
+            ApiProvider.hobbyApi().postHobbyAddToProfileByHobbyId(hobbyId);
+            return null;
+        }, callback, R.string.error_network);
+    }
+
     public void createHobby(String name, Callback<PostHobby201Response> callback) {
         executeRequest(() -> {
             PostHobbyRequest req = new PostHobbyRequest();

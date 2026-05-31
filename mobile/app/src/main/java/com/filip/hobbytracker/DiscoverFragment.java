@@ -19,6 +19,7 @@ import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsHobby2
 import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner;
 import com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200ResponseSuggestionsInner;
 import com.filip.hobbytracker.repository.FeedRepository;
+import com.filip.hobbytracker.repository.HobbyRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.filip.hobbytracker.repository.UserRepository;
 import com.google.android.material.button.MaterialButton;
@@ -28,6 +29,7 @@ import java.util.concurrent.Executors;
 public class DiscoverFragment extends Fragment {
 
     private FeedRepository repository;
+    private HobbyRepository hobbyRepository;
     private UserRepository userRepository;
     private LinearLayout layoutHobbyFollow;
     private LinearLayout layoutSocialFollow;
@@ -46,6 +48,7 @@ public class DiscoverFragment extends Fragment {
         progressBar = view.findViewById(R.id.discoverProgress);
 
         repository = new FeedRepository(requireContext(), Executors.newSingleThreadExecutor());
+        hobbyRepository = new HobbyRepository(requireContext(), Executors.newSingleThreadExecutor());
         userRepository = new UserRepository(requireContext(), Executors.newSingleThreadExecutor());
 
         progressBar.setVisibility(View.VISIBLE);
@@ -112,12 +115,19 @@ public class DiscoverFragment extends Fragment {
                     btn.setOnClickListener(v -> {
                         btn.setEnabled(false);
                         repository.followUser(currentUserId, userId, res -> {
-                            if (getActivity() == null) return;
+                            if (getActivity() == null) {
+                                return;
+                            }
                             if (res.status == Resource.Status.LOADING) return;
                             getActivity().runOnUiThread(() -> {
                                 if (res.status == Resource.Status.SUCCESS) {
                                     ViewGroup parent = (ViewGroup) btn.getParent();
-                                    if (parent != null) parent.removeView(btn);
+                                    if (parent != null) {
+                                        parent.removeView(btn);
+                                        if (parent.getChildCount() == 0) {
+                                            addEmptyMessage(layoutHobbyFollow, "No suggestions based on your hobby.");
+                                        }
+                                    }
                                 } else {
                                     btn.setEnabled(true);
                                     Toast.makeText(getContext(), res.message, Toast.LENGTH_SHORT).show();
@@ -152,12 +162,19 @@ public class DiscoverFragment extends Fragment {
                     btn.setOnClickListener(v -> {
                         btn.setEnabled(false);
                         repository.followUser(currentUserId, userId, res -> {
-                            if (getActivity() == null) return;
+                            if (getActivity() == null) {
+                                return;
+                            }
                             if (res.status == Resource.Status.LOADING) return;
                             getActivity().runOnUiThread(() -> {
                                 if (res.status == Resource.Status.SUCCESS) {
                                     ViewGroup parent = (ViewGroup) btn.getParent();
-                                    if (parent != null) parent.removeView(btn);
+                                    if (parent != null) {
+                                        parent.removeView(btn);
+                                        if (parent.getChildCount() == 0) {
+                                            addEmptyMessage(layoutSocialFollow, "No social suggestions");
+                                        }
+                                    }
                                 } else {
                                     btn.setEnabled(true);
                                     Toast.makeText(getContext(), res.message, Toast.LENGTH_SHORT).show();
@@ -190,8 +207,28 @@ public class DiscoverFragment extends Fragment {
                 for (GetFeedHobbySuggestions200ResponseSuggestionsInner hobby : resource.data.getSuggestions()) {
                     MaterialButton btn = createSuggestionButton(
                             hobby.getName() + " - " + hobby.getDescription());
-                    String name = hobby.getName();
-                    btn.setOnClickListener(v -> Toast.makeText(getContext(), "Hobby: " + name, Toast.LENGTH_SHORT).show());
+                    String hobbyId = hobby.getId();
+                    btn.setOnClickListener(v -> {
+                        btn.setEnabled(false);
+                        hobbyRepository.addHobbyToProfile(hobbyId, res -> {
+                            if (getActivity() == null) return;
+                            if (res.status == Resource.Status.LOADING) return;
+                            getActivity().runOnUiThread(() -> {
+                                if (res.status == Resource.Status.SUCCESS) {
+                                    ViewGroup parent = (ViewGroup) btn.getParent();
+                                    if (parent != null) {
+                                        parent.removeView(btn);
+                                        if (parent.getChildCount() == 0) {
+                                            addEmptyMessage(layoutHobbySuggestions, "No new hobbies to suggest.");
+                                        }
+                                    }
+                                } else {
+                                    btn.setEnabled(true);
+                                    Toast.makeText(getContext(), res.message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        });
+                    });
                     layoutHobbySuggestions.addView(btn);
                 }
             });
