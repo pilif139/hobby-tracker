@@ -64,7 +64,9 @@ public class FeedListFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         feedRepository.getFeed(20, nextCursor, resource -> {
+            if (!isAdded()) return;
             requireActivity().runOnUiThread(() -> {
+                if (!isAdded()) return;
                 progressBar.setVisibility(View.GONE);
 
                 if (resource.status == Resource.Status.SUCCESS) {

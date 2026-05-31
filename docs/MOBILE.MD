@@ -4,7 +4,7 @@ Aplikacja Hobby Tracker na Androida napisana w języku Java - zamysł aplikacji 
 
 ## Środowisko i Wymagania
 
-- **Język:** Java 26 (Oracle JDK)
+- **Język:** Java 17 (Oracle JDK)
 - **Minimum Android SDK:** 29
 - **Zalecany Emulator:** Medium Phone API 36
 

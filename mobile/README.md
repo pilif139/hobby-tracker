@@ -4,7 +4,7 @@ Natywna aplikacja na Androida napisana w języku Java, tworzona z myślą o prak
 
 ## Środowisko i Wymagania
 
-- **Język:** Java 26 (Oracle JDK)
+- **Język:** Java 17 (Oracle JDK)
 - **Minimum Android SDK:** 29
 - **Target Android SDK:** 36
 - **Zalecany Emulator:** Medium Phone API 36
