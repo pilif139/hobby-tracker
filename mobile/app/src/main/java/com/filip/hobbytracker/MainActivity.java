@@ -52,27 +52,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkAuth() {
-        userRepository.getCurrentUser(resource -> {
-            runOnUiThread(() -> {
-                if (resource.status == Resource.Status.SUCCESS) {
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        db.userDao().insertUser(new UserEntity(resource.data.getId(), resource.data.getName(), resource.data.getEmail()));
+        userRepository.getCurrentUser(resource -> runOnUiThread(() -> {
+            if (resource.status == Resource.Status.SUCCESS) {
+                Executors.newSingleThreadExecutor().execute(() -> db.userDao().insertUser(new UserEntity(resource.data.getId(), resource.data.getName(), resource.data.getEmail())));
+                switchFragment(new FeedFragment(), false);
+            } else {
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    UserEntity cachedUser = db.userDao().getUser();
+                    runOnUiThread(() -> {
+                        if (cachedUser != null) {
+                            switchFragment(new FeedFragment(), false);
+                        } else {
+                            switchFragment(new OnboardFragment(), false);
+                        }
                     });
-                    switchFragment(new FeedFragment(), false);
-                } else {
-                    Executors.newSingleThreadExecutor().execute(() -> {
-                        UserEntity cachedUser = db.userDao().getUser();
-                        runOnUiThread(() -> {
-                            if (cachedUser != null) {
-                                switchFragment(new FeedFragment(), false);
-                            } else {
-                                switchFragment(new OnboardFragment(), false);
-                            }
-                        });
-                    });
-                }
-            });
-        });
+                });
+            }
+        }));
     }
 
     public void switchFragment(Fragment fragment, boolean addToBackStack) {

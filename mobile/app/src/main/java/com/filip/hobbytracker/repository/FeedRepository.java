@@ -4,6 +4,7 @@ import android.content.Context;
 import com.filip.hobbytracker.R;
 import com.filip.hobbytracker.api.ApiProvider;
 import com.filip.hobbytracker.api.generated.model.GetFeed200Response;
+import com.filip.hobbytracker.api.generated.model.GetFeed200ResponseSessionsInner;
 import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsHobby200Response;
 import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsSocial200Response;
 import com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200Response;
