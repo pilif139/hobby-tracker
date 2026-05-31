@@ -1,38 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.HobbyTracker" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/hobby_primary</item>
-        <item name="colorOnPrimary">@color/hobby_primary_on</item>
-        <item name="colorPrimaryContainer">@color/hobby_secondary</item>
-        <item name="colorOnPrimaryContainer">@color/hobby_foreground</item>
-        <item name="colorSecondary">@color/hobby_secondary</item>
-        <item name="colorOnSecondary">@color/hobby_secondary_on</item>
-        <item name="colorSecondaryContainer">@color/hobby_surface_variant</item>
-        <item name="colorOnSecondaryContainer">@color/hobby_foreground</item>
-        <item name="colorTertiary">@color/hobby_primary</item>
-        <item name="colorOnTertiary">@color/hobby_primary_on</item>
-        <item name="colorSurface">@color/hobby_card</item>
-        <item name="colorOnSurface">@color/hobby_foreground</item>
-        <item name="colorSurfaceVariant">@color/hobby_surface_variant</item>
-        <item name="colorOnSurfaceVariant">@color/white</item>
-        <item name="colorSurfaceContainerLowest">@color/hobby_background</item>
-        <item name="colorSurfaceContainerLow">@color/hobby_card</item>
-        <item name="colorSurfaceContainer">@color/hobby_card</item>
-        <item name="colorSurfaceContainerHigh">@color/hobby_surface</item>
-        <item name="colorSurfaceContainerHighest">@color/hobby_surface_variant</item>
-        <item name="colorOutline">@color/hobby_border</item>
-        <item name="colorOutlineVariant">@color/hobby_border</item>
-        <item name="colorError">@color/hobby_error</item>
-        <item name="colorOnError">@color/hobby_primary_on</item>
-        <item name="colorErrorContainer">@color/hobby_error</item>
-        <item name="colorOnErrorContainer">@color/hobby_primary_on</item>
+    <style name="Base.Theme.HobbyTracker" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:textColorPrimary">@color/hobby_foreground</item>
-        <item name="android:textColorSecondary">@color/white</item>
-        <item name="android:textColorTertiary">@color/white</item>
-        <item name="android:textColorHint">@color/white</item>
-        <item name="android:colorBackground">@color/hobby_background</item>
-        <item name="android:windowBackground">@drawable/bg_gradient</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/hobby_background</item>
+        <item name="android:textColorSecondary">@color/hobby_day_muted</item>
+        <item name="android:textColorTertiary">@color/hobby_day_muted</item>
+        <item name="android:textColorHint">@color/hobby_day_muted</item>
+        <item name="android:colorBackground">@color/hobby_day_background</item>
+        <item name="android:windowBackground">@drawable/bg_gradient_day</item>
+        <item name="android:statusBarColor">@color/hobby_day_background</item>
+        <item name="android:navigationBarColor">@color/hobby_day_nav_background</item>
     </style>
 
     <style name="Theme.HobbyTracker" parent="Base.Theme.HobbyTracker" />

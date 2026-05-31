@@ -3,18 +3,23 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="hobby_background">#07110D</color>
-    <color name="hobby_foreground">#F4F7F5</color>
-    <color name="hobby_card">#111D18</color>
-    <color name="hobby_card_glass">#CC111D18</color>
-    <color name="hobby_surface">#15261F</color>
-    <color name="hobby_surface_variant">#1B2D25</color>
-    <color name="hobby_primary">#35C58F</color>
-    <color name="hobby_primary_on">#081812</color>
-    <color name="hobby_secondary">#23362E</color>
-    <color name="hobby_secondary_on">#EAF4EE</color>
-    <color name="hobby_muted">#8FA19A</color>
-    <color name="hobby_border">#2A3C35</color>
-    <color name="hobby_error">#F87171</color>
-    <color name="hobby_nav_background">#E6101713</color>
+    <color name="hobby_background">#F6F8F7</color>
+    <color name="hobby_foreground">#16211D</color>
+    <color name="hobby_day_background">#FBFCFB</color>
+    <color name="hobby_day_surface">#FFFFFF</color>
+    <color name="hobby_day_surface_variant">#EEF3EF</color>
+    <color name="hobby_day_muted">#72827B</color>
+    <color name="hobby_day_nav_background">#F7FBF9</color>
+    <color name="hobby_card">#FFFFFF</color>
+    <color name="hobby_card_glass">#F2FFFFFF</color>
+    <color name="hobby_surface">#EDF3EF</color>
+    <color name="hobby_surface_variant">#DDE7E1</color>
+    <color name="hobby_primary">#2FB889</color>
+    <color name="hobby_primary_on">#10211A</color>
+    <color name="hobby_secondary">#D7E4DD</color>
+    <color name="hobby_secondary_on">#16211D</color>
+    <color name="hobby_muted">#63736B</color>
+    <color name="hobby_border">#CAD6D0</color>
+    <color name="hobby_error">#D14F4F</color>
+    <color name="hobby_nav_background">#E6FFFFFF</color>
 </resources>

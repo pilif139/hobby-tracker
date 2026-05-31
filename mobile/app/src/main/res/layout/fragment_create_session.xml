@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_hobby"
             android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
             android:layout_marginBottom="4dp" />
 
         <AutoCompleteTextView
@@ -36,8 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_hobby"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
             android:inputType="text"
             android:completionThreshold="1"
             android:background="@android:drawable/edit_text"
@@ -49,6 +50,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_start_time"
             android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -56,8 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_datetime"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
             android:focusable="false"
             android:clickable="true"
             android:layout_marginBottom="12dp" />
@@ -67,6 +69,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_end_time"
             android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -74,8 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_datetime"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
             android:focusable="false"
             android:clickable="true"
             android:layout_marginBottom="12dp" />
@@ -85,6 +88,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_notes"
             android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -92,8 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_notes"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
             android:inputType="textMultiLine"
             android:minLines="2"
             android:maxLines="5"
@@ -105,6 +109,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_images"
             android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
             android:layout_marginBottom="4dp" />
 
         <com.google.android.material.button.MaterialButton

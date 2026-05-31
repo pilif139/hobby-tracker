@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.HobbyTracker" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.HobbyTracker" parent="Theme.Material3.Dark.NoActionBar">
         <item name="colorPrimary">@color/hobby_primary</item>
         <item name="colorOnPrimary">@color/hobby_primary_on</item>
         <item name="colorPrimaryContainer">@color/hobby_secondary</item>
@@ -13,7 +13,7 @@
         <item name="colorSurface">@color/hobby_card</item>
         <item name="colorOnSurface">@color/hobby_foreground</item>
         <item name="colorSurfaceVariant">@color/hobby_surface_variant</item>
-        <item name="colorOnSurfaceVariant">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/hobby_muted</item>
         <item name="colorSurfaceContainerLowest">@color/hobby_background</item>
         <item name="colorSurfaceContainerLow">@color/hobby_card</item>
         <item name="colorSurfaceContainer">@color/hobby_card</item>
@@ -26,12 +26,12 @@
         <item name="colorErrorContainer">@color/hobby_error</item>
         <item name="colorOnErrorContainer">@color/hobby_primary_on</item>
         <item name="android:textColorPrimary">@color/hobby_foreground</item>
-        <item name="android:textColorSecondary">@color/white</item>
-        <item name="android:textColorTertiary">@color/white</item>
-        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColorSecondary">@color/hobby_muted</item>
+        <item name="android:textColorTertiary">@color/hobby_muted</item>
+        <item name="android:textColorHint">@color/hobby_muted</item>
         <item name="android:colorBackground">@color/hobby_background</item>
         <item name="android:windowBackground">@drawable/bg_gradient</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/hobby_background</item>
+        <item name="android:statusBarColor">@color/hobby_background</item>
+        <item name="android:navigationBarColor">@color/hobby_nav_background</item>
     </style>
 </resources>
