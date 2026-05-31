@@ -9,9 +9,11 @@ import androidx.fragment.app.FragmentManager;
 
 import com.filip.hobbytracker.data.local.AppDatabase;
 import com.filip.hobbytracker.data.local.UserEntity;
+import com.filip.hobbytracker.data.sync.SyncManager;
 import com.filip.hobbytracker.repository.UserRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private UserRepository userRepository;
     private AppDatabase db;
+    private final ExecutorService dbExecutor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,23 +55,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkAuth() {
-        userRepository.getCurrentUser(resource -> runOnUiThread(() -> {
-            if (resource.status == Resource.Status.SUCCESS) {
-                Executors.newSingleThreadExecutor().execute(() -> db.userDao().insertUser(new UserEntity(resource.data.getId(), resource.data.getName(), resource.data.getEmail())));
-                switchFragment(new FeedFragment(), false);
-            } else {
-                Executors.newSingleThreadExecutor().execute(() -> {
-                    UserEntity cachedUser = db.userDao().getUser();
-                    runOnUiThread(() -> {
-                        if (cachedUser != null) {
-                            switchFragment(new FeedFragment(), false);
-                        } else {
-                            switchFragment(new OnboardFragment(), false);
-                        }
+        userRepository.getCurrentUser(resource -> {
+            runOnUiThread(() -> {
+                if (resource.status == Resource.Status.SUCCESS) {
+                    dbExecutor.execute(() -> {
+                        db.userDao().insertUser(new UserEntity(resource.data.getId(), resource.data.getName(), resource.data.getEmail()));
                     });
-                });
-            }
-        }));
+                    SyncManager.scheduleSync(this);
+                    switchFragment(new FeedFragment(), false);
+                } else if (resource.status == Resource.Status.UNAUTHORIZED) {
+                    dbExecutor.execute(() -> {
+                        db.userDao().clearUser();
+                        runOnUiThread(() -> switchFragment(new OnboardFragment(), false));
+                    });
+                } else if (resource.status == Resource.Status.ERROR) {
+                    dbExecutor.execute(() -> {
+                        UserEntity cachedUser = db.userDao().getUser();
+                        runOnUiThread(() -> {
+                            if (cachedUser != null) {
+                                SyncManager.scheduleSync(this);
+                                switchFragment(new FeedFragment(), false);
+                            } else {
+                                switchFragment(new OnboardFragment(), false);
+                            }
+                        });
+                    });
+                }
+            });
+        });
     }
 
     public void switchFragment(Fragment fragment, boolean addToBackStack) {

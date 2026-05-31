@@ -78,15 +78,11 @@ public class FeedListFragment extends Fragment {
         attachNestedScrollListener(view);
     }
 
-    // Walk up the view hierarchy to find the parent NestedScrollView and attach a scroll listener.
-    // RecyclerView has nestedScrollingEnabled=false so its own OnScrollListener never fires.
     private void attachNestedScrollListener(View view) {
         ViewGroup.LayoutParams ignored = view.getLayoutParams();
         View current = view;
-        while (current.getParent() instanceof View) {
-            View parent = (View) current.getParent();
-            if (parent instanceof NestedScrollView) {
-                NestedScrollView nsv = (NestedScrollView) parent;
+        while (current.getParent() instanceof View parent) {
+            if (parent instanceof NestedScrollView nsv) {
                 nsv.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
                     Log.d(TAG, "NestedScrollView scrollY=" + scrollY + " oldScrollY=" + oldScrollY + " isLoading=" + isLoading);
                     if (scrollY <= oldScrollY) return; // not scrolling down
