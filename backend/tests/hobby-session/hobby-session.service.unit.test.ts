@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { HobbySessionRepository } from '@/src/modules/hobby-session/hobby-session.repository';
-import { HobbySessionService } from '@/src/modules/hobby-session/hobby-session.service';
+import {
+  HobbySessionService,
+  TooManySessionImagesException,
+} from '@/src/modules/hobby-session/hobby-session.service';
 
 const createRepositoryMock = () => ({
   findById: vi.fn(),
@@ -108,6 +111,35 @@ describe('HobbySessionService (unit)', () => {
       hobby: { connect: { id: 'h2' } },
     });
     expect(repositoryMock.findByIdWithFiles).toHaveBeenCalledWith('s1');
+  });
+
+  it('throws when update would exceed max image count', async () => {
+    const repositoryMock = createRepositoryMock();
+    repositoryMock.findByIdWithFiles.mockResolvedValue({
+      id: 's1',
+      files: [
+        { storageObjectKey: '1.jpg' },
+        { storageObjectKey: '2.jpg' },
+        { storageObjectKey: '3.jpg' },
+      ],
+    });
+
+    const service = new HobbySessionService(
+      repositoryMock as unknown as HobbySessionRepository,
+      'https://bucket.example.com',
+    );
+
+    const newImages = [
+      new File(['a'], '4.jpg', { type: 'image/jpeg' }),
+      new File(['b'], '5.jpg', { type: 'image/jpeg' }),
+    ];
+
+    await expect(
+      service.update('s1', 'u1', { newImages }),
+    ).rejects.toBeInstanceOf(TooManySessionImagesException);
+
+    expect(repositoryMock.update).not.toHaveBeenCalled();
+    expect(repositoryMock.uploadSessionFile).not.toHaveBeenCalled();
   });
 
   it('returns sessions and computed streak stats for user paginated query', async () => {
