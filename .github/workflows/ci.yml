@@ -10,25 +10,30 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up bun
-        uses: oven-sh/setup-bun@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
       - name: Install dependencies
-        run: bun install
+        run: pnpm install --frozen-lockfile
 
       - name: Generate prisma client
-        run: bunx prisma generate
+        run: pnpm prisma generate
 
       - name: Check types
-        run: bun run check-types
+        run: pnpm run check-types
 
       - name: Compile code
-        run: bun run build
+        run: pnpm run build
 
       - name: Run tests
-        run: bun run test
+        run: pnpm run test
   ci-frontend:
     runs-on: ubuntu-latest
     defaults:
@@ -38,16 +43,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up bun
-        uses: oven-sh/setup-bun@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          bun-version: latest
+          node-version: 22
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
       - name: Install dependencies
-        run: bun install
+        run: pnpm install --frozen-lockfile
 
       - name: Compile code
-        run: bun run build
+        run: pnpm run build
 
       - name: Run tests
-        run: bun run test
+        run: pnpm run test
