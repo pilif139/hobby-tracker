@@ -26,4 +26,17 @@
         android:layout_marginTop="8dp"
         android:textSize="14sp" />
 
+    <HorizontalScrollView
+        android:id="@+id/hsvImages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:visibility="gone">
+        <LinearLayout
+            android:id="@+id/llImages"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
 </LinearLayout>

@@ -7,6 +7,8 @@ import com.filip.hobbytracker.api.generated.model.GetFeed200Response;
 import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsHobby200Response;
 import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsSocial200Response;
 import com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200Response;
+import com.filip.hobbytracker.api.generated.model.PostFollow200Response;
+import com.filip.hobbytracker.api.generated.model.PostFollowRequest;
 
 import java.util.concurrent.ExecutorService;
 
@@ -30,5 +32,14 @@ public class FeedRepository extends BaseRepository {
 
     public void getHobbySuggestions(Integer limit, Callback<GetFeedHobbySuggestions200Response> callback) {
         executeRequest(() -> ApiProvider.feedApi().getFeedHobbySuggestions(limit, null), callback, R.string.error_network);
+    }
+
+    public void followUser(String followerId, String followingId, Callback<PostFollow200Response> callback) {
+        executeRequest(() -> {
+            PostFollowRequest req = new PostFollowRequest();
+            req.setFollowerId(followerId);
+            req.setFollowingId(followingId);
+            return ApiProvider.followApi().postFollow(req);
+        }, callback, R.string.error_network);
     }
 }

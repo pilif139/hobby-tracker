@@ -20,16 +20,19 @@ import com.filip.hobbytracker.api.generated.model.GetFeedFollowSuggestionsSocial
 import com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200ResponseSuggestionsInner;
 import com.filip.hobbytracker.repository.FeedRepository;
 import com.filip.hobbytracker.repository.Resource;
+import com.filip.hobbytracker.repository.UserRepository;
 
 import java.util.concurrent.Executors;
 
 public class DiscoverFragment extends Fragment {
 
     private FeedRepository repository;
+    private UserRepository userRepository;
     private LinearLayout layoutHobbyFollow;
     private LinearLayout layoutSocialFollow;
     private LinearLayout layoutHobbySuggestions;
     private ProgressBar progressBar;
+    private String currentUserId;
 
     @Nullable
     @Override
@@ -42,8 +45,17 @@ public class DiscoverFragment extends Fragment {
         progressBar = view.findViewById(R.id.discoverProgress);
 
         repository = new FeedRepository(requireContext(), Executors.newSingleThreadExecutor());
+        userRepository = new UserRepository(requireContext(), Executors.newSingleThreadExecutor());
 
-        loadSuggestions();
+        progressBar.setVisibility(View.VISIBLE);
+        userRepository.getCurrentUser(resource -> {
+            if (getActivity() == null) return;
+            if (resource.status == Resource.Status.LOADING) return;
+            if (resource.status == Resource.Status.SUCCESS && resource.data != null) {
+                currentUserId = resource.data.getId().toString();
+            }
+            getActivity().runOnUiThread(this::loadSuggestions);
+        });
 
         return view;
     }
@@ -58,62 +70,91 @@ public class DiscoverFragment extends Fragment {
     }
 
     private void loadSuggestions() {
-        progressBar.setVisibility(View.VISIBLE);
-
         repository.getHobbyFollowSuggestions(5, resource -> {
             if (getActivity() == null) return;
+            if (resource.status == Resource.Status.LOADING) return;
             getActivity().runOnUiThread(() -> {
                 if (resource.status == Resource.Status.ERROR) {
                     addEmptyMessage(layoutHobbyFollow, "Failed to load hobby suggestions.");
                     return;
                 }
 
-                if (resource.status == Resource.Status.SUCCESS) {
-                    layoutHobbyFollow.removeAllViews();
-                    if (resource.data.getSuggestions().isEmpty()) {
-                        addEmptyMessage(layoutHobbyFollow, "No suggestions based on your hobby.");
-                        return;
-                    }
+                layoutHobbyFollow.removeAllViews();
+                if (resource.data.getSuggestions().isEmpty()) {
+                    addEmptyMessage(layoutHobbyFollow, "No suggestions based on your hobby.");
+                    return;
+                }
 
-                    for (GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner user : resource.data.getSuggestions()) {
-                        Button btn = new Button(getContext());
-                        btn.setText(user.getName());
-                        String name = user.getName();
-                        btn.setOnClickListener(v -> Toast.makeText(getContext(), "Follow: " + name, Toast.LENGTH_SHORT).show());
-                        layoutHobbyFollow.addView(btn);
-                    }
+                for (GetFeedFollowSuggestionsHobby200ResponseSuggestionsInner user : resource.data.getSuggestions()) {
+                    Button btn = new Button(getContext());
+                    btn.setText(user.getName());
+                    String userId = user.getId();
+                    if (currentUserId == null) btn.setEnabled(false);
+                    btn.setOnClickListener(v -> {
+                        btn.setEnabled(false);
+                        repository.followUser(currentUserId, userId, res -> {
+                            if (getActivity() == null) return;
+                            if (res.status == Resource.Status.LOADING) return;
+                            getActivity().runOnUiThread(() -> {
+                                if (res.status == Resource.Status.SUCCESS) {
+                                    ViewGroup parent = (ViewGroup) btn.getParent();
+                                    if (parent != null) parent.removeView(btn);
+                                } else {
+                                    btn.setEnabled(true);
+                                    Toast.makeText(getContext(), res.message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        });
+                    });
+                    layoutHobbyFollow.addView(btn);
                 }
             });
         });
 
         repository.getSocialFollowSuggestions(5, resource -> {
             if (getActivity() == null) return;
+            if (resource.status == Resource.Status.LOADING) return;
             getActivity().runOnUiThread(() -> {
                 if (resource.status == Resource.Status.ERROR) {
                     addEmptyMessage(layoutSocialFollow, "Failed to load social suggestions.");
                     return;
                 }
 
-                if (resource.status == Resource.Status.SUCCESS) {
-                    layoutSocialFollow.removeAllViews();
-                    if (resource.data.getSuggestions().isEmpty()) {
-                        addEmptyMessage(layoutSocialFollow, "No social suggestions.");
-                        return;
-                    }
+                layoutSocialFollow.removeAllViews();
+                if (resource.data.getSuggestions().isEmpty()) {
+                    addEmptyMessage(layoutSocialFollow, "No social suggestions.");
+                    return;
+                }
 
-                    for (GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner user : resource.data.getSuggestions()) {
-                        Button btn = new Button(getContext());
-                        btn.setText(user.getName());
-                        String name = user.getName();
-                        btn.setOnClickListener(v -> Toast.makeText(getContext(), "Follow: " + name, Toast.LENGTH_SHORT).show());
-                        layoutSocialFollow.addView(btn);
-                    }
+                for (GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner user : resource.data.getSuggestions()) {
+                    Button btn = new Button(getContext());
+                    btn.setText(user.getName());
+                    String userId = user.getId();
+                    if (currentUserId == null) btn.setEnabled(false);
+                    btn.setOnClickListener(v -> {
+                        btn.setEnabled(false);
+                        repository.followUser(currentUserId, userId, res -> {
+                            if (getActivity() == null) return;
+                            if (res.status == Resource.Status.LOADING) return;
+                            getActivity().runOnUiThread(() -> {
+                                if (res.status == Resource.Status.SUCCESS) {
+                                    ViewGroup parent = (ViewGroup) btn.getParent();
+                                    if (parent != null) parent.removeView(btn);
+                                } else {
+                                    btn.setEnabled(true);
+                                    Toast.makeText(getContext(), res.message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        });
+                    });
+                    layoutSocialFollow.addView(btn);
                 }
             });
         });
 
         repository.getHobbySuggestions(5, resource -> {
             if (getActivity() == null) return;
+            if (resource.status == Resource.Status.LOADING) return;
             getActivity().runOnUiThread(() -> {
                 progressBar.setVisibility(View.GONE);
 
@@ -122,20 +163,18 @@ public class DiscoverFragment extends Fragment {
                     return;
                 }
 
-                if (resource.status == Resource.Status.SUCCESS) {
-                    layoutHobbySuggestions.removeAllViews();
-                    if (resource.data.getSuggestions().isEmpty()) {
-                        addEmptyMessage(layoutHobbySuggestions, "No new hobbies to suggest.");
-                        return;
-                    }
+                layoutHobbySuggestions.removeAllViews();
+                if (resource.data.getSuggestions().isEmpty()) {
+                    addEmptyMessage(layoutHobbySuggestions, "No new hobbies to suggest.");
+                    return;
+                }
 
-                    for (GetFeedHobbySuggestions200ResponseSuggestionsInner hobby : resource.data.getSuggestions()) {
-                        Button btn = new Button(getContext());
-                        btn.setText(hobby.getName() + " - " + hobby.getDescription());
-                        String name = hobby.getName();
-                        btn.setOnClickListener(v -> Toast.makeText(getContext(), "Hobby: " + name, Toast.LENGTH_SHORT).show());
-                        layoutHobbySuggestions.addView(btn);
-                    }
+                for (GetFeedHobbySuggestions200ResponseSuggestionsInner hobby : resource.data.getSuggestions()) {
+                    Button btn = new Button(getContext());
+                    btn.setText(hobby.getName() + " - " + hobby.getDescription());
+                    String name = hobby.getName();
+                    btn.setOnClickListener(v -> Toast.makeText(getContext(), "Hobby: " + name, Toast.LENGTH_SHORT).show());
+                    layoutHobbySuggestions.addView(btn);
                 }
             });
         });

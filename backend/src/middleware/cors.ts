@@ -7,12 +7,22 @@ export const corsMiddleware = createMiddleware<AppContext>(async (c, next) => {
     origin.trim(),
   );
 
+  const requestOrigin = c.req.header('Origin');
+  console.log(
+    `[CORS] ${c.req.method} ${c.req.path} | Origin: ${requestOrigin ?? '(none)'} | Allowed: ${allowedOrigins.join(', ')}`,
+  );
+
   const handler = cors({
     origin: (origin) => {
       if (!origin) {
+        console.log('[CORS] No origin header — returning null');
         return null;
       }
-      return allowedOrigins.includes(origin) ? origin : null;
+      const allowed = allowedOrigins.includes(origin);
+      console.log(
+        `[CORS] Origin "${origin}" → ${allowed ? 'allowed' : 'blocked'}`,
+      );
+      return allowed ? origin : null;
     },
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

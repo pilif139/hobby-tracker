@@ -237,6 +237,7 @@ public class CreateSessionFragment extends Fragment {
                 createSession(match.getId(), startIso, endIso, notes);
             } else {
                 hobbyRepository.createHobby(hobbyInput, resource -> requireActivity().runOnUiThread(() -> {
+                    if (resource.status == Resource.Status.LOADING) return;
                     if (resource.status == Resource.Status.SUCCESS && resource.data != null) {
                         createSession(resource.data.getId(), startIso, endIso, notes);
                     } else {
@@ -252,6 +253,7 @@ public class CreateSessionFragment extends Fragment {
         sessionRepository.createSession(hobbyId, startIso, endIso,
                 notes.isEmpty() ? null : notes, null,
                 resource -> requireActivity().runOnUiThread(() -> {
+                    if (resource.status == Resource.Status.LOADING) return;
                     btnCreateSession.setEnabled(true);
                     if (resource.status == Resource.Status.SUCCESS) {
                         Toast.makeText(getContext(), R.string.session_created, Toast.LENGTH_SHORT).show();

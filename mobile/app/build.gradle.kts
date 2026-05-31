@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.jakarta.ws.rs)
     implementation(libs.jakarta.annotation)
     implementation(libs.jackson.databind.nullable)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

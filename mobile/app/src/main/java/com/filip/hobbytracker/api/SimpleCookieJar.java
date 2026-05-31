@@ -59,13 +59,7 @@ public class SimpleCookieJar implements CookieJar {
     }
 
     private void removeCookie(List<Cookie> cookies, Cookie target) {
-        Iterator<Cookie> iterator = cookies.iterator();
-        while (iterator.hasNext()) {
-            Cookie current = iterator.next();
-            if (current.name().equals(target.name()) && current.path().equals(target.path())) {
-                iterator.remove();
-            }
-        }
+        cookies.removeIf(current -> current.name().equals(target.name()) && current.path().equals(target.path()));
     }
 
     private boolean isExpired(Cookie cookie) {
