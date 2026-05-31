@@ -4,10 +4,55 @@ All URIs are relative to *http://localhost*
 
 |Method | HTTP request | Description|
 |------------- | ------------- | -------------|
+|[**getAuthMe**](#getauthme) | **GET** /auth/me | |
 |[**postAuthLogin**](#postauthlogin) | **POST** /auth/login | |
 |[**postAuthLogout**](#postauthlogout) | **POST** /auth/logout | |
 |[**postAuthLogoutOtherDevices**](#postauthlogoutotherdevices) | **POST** /auth/logout-other-devices | |
 |[**postAuthRegister**](#postauthregister) | **POST** /auth/register | |
+
+# **getAuthMe**
+> PostAuthLogin200Response getAuthMe()
+
+
+### Example
+
+```typescript
+import {
+    AuthenticationApi,
+    Configuration
+} from './api';
+
+const configuration = new Configuration();
+const apiInstance = new AuthenticationApi(configuration);
+
+const { status, data } = await apiInstance.getAuthMe();
+```
+
+### Parameters
+This endpoint does not have any parameters.
+
+
+### Return type
+
+**PostAuthLogin200Response**
+
+### Authorization
+
+[accessTokenCookie](../README.md#accessTokenCookie), [refreshTokenCookie](../README.md#refreshTokenCookie)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+|**200** | Current authenticated user |  -  |
+|**404** | Not Found |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **postAuthLogin**
 > PostAuthLogin200Response postAuthLogin(postAuthLoginRequest)
@@ -105,7 +150,7 @@ This endpoint does not have any parameters.
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **postAuthLogoutOtherDevices**
-> PostAuthLogoutOtherDevices200Response postAuthLogoutOtherDevices()
+> PostAuthLogout200Response postAuthLogoutOtherDevices()
 
 
 ### Example
@@ -128,7 +173,7 @@ This endpoint does not have any parameters.
 
 ### Return type
 
-**PostAuthLogoutOtherDevices200Response**
+**PostAuthLogout200Response**
 
 ### Authorization
 

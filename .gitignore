@@ -36,4 +36,17 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # VSCode settings
 .vscode/
 logs/*.log
-.cursor
+# AI tools
+.cursor/
+.gemini/
+.copilot/
+.anthropic/
+
+# Archives
+*.zip
+*.gzip
+*.gz
+*.tgz
+*.tar
+*.rar
+*.7z

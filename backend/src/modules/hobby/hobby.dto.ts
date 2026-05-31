@@ -18,7 +18,16 @@ export type HobbyResponse = Prisma.HobbyGetPayload<{
   select: typeof hobbyResponseSelect;
 }>;
 
-export const HobbyResponseSchema = z.object<HobbyResponse>();
+export const HobbyResponseSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  _count: z.object({
+    users: z.number(),
+  }),
+});
 
 export const createHobbySchema = z.object({
   name: z.string().min(2).max(100),

@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**message** | **string** |  | [optional] [default to 'Credentials are invalid']
+**message** | **string** |  | [default to undefined]
 **cause** | **string** |  | [optional] [default to undefined]
 
 ## Example

@@ -1,14 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
-import { Clock3, Compass, Shapes, Sparkles, TriangleAlert } from 'lucide-react';
+import { Link, createFileRoute } from '@tanstack/react-router';
+import {
+  Activity,
+  ArrowRight,
+  Calendar,
+  Clock3,
+  Compass,
+  Shapes,
+  TriangleAlert,
+  Trophy,
+  Users,
+} from 'lucide-react';
 import type {
+  GetHobbySessionUserByUserId200Response,
   GetHobbyUserByUserId200ResponseInner,
   GetUserById200Response,
 } from '@/api/generated/api';
-import { hobbyApiClient, userApiClient } from '@/api';
+import { hobbyApiClient, hobbySessionApiClient, userApiClient } from '@/api';
 import EmptyState from '@/components/empty-state';
 import { FeedListSkeleton } from '@/components/feed-list-skeleton';
-import Header from '@/components/header';
+import { buttonVariants } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -57,81 +68,111 @@ function App() {
     enabled: Boolean(userId),
   });
 
+  const statsQuery = useQuery<GetHobbySessionUserByUserId200Response>({
+    queryKey: ['dashboard-stats', userId],
+    queryFn: async () => {
+      const res = await hobbySessionApiClient.getHobbySessionUserByUserId({
+        userId: userId as string,
+        limit: 1, // We only need stats for now
+      });
+      return res.data;
+    },
+    enabled: Boolean(userId),
+  });
+
   const profile = profileQuery.data;
   const hobbies = hobbiesQuery.data ?? [];
+  const stats = statsQuery.data?.stats;
   const hasSessions = (profile?.hobbySessionsCount ?? 0) > 0;
   const hasHobbies = hobbies.length > 0;
 
+  const formatDuration = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Header />
-
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:py-8">
         {/* Welcome banner */}
-        <section className="rounded-2xl border bg-card p-6 shadow-sm sm:p-8">
-          <p className="text-sm font-medium text-primary">Welcome back</p>
-          <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
-            Your hobby dashboard
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-            Keep an eye on your recent progress and the hobbies on your profile.
-          </p>
+        <section className="flex flex-col items-start justify-between gap-6 rounded-2xl border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:p-8">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-primary">Welcome back</p>
+            <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
+              Your hobby dashboard
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+              Keep an eye on your recent progress and the hobbies on your
+              profile.
+            </p>
+          </div>
+          <Link
+            to="/feed"
+            className={buttonVariants({
+              variant: 'default',
+              size: 'lg',
+              className:
+                'h-12 w-full gap-2 rounded-xl px-8 sm:w-auto font-heading text-xl',
+            })}
+          >
+            Explore activity feed
+            <ArrowRight className="size-5" />
+          </Link>
         </section>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2">
-          {/* Session feed */}
-          {profileQuery.isLoading ? (
+          {/* Stats section */}
+          {statsQuery.isLoading ? (
             <FeedListSkeleton
-              title="Session feed"
-              description="A quick view of your recent activity and tracked sessions."
+              title="Your performance"
+              description="A quick overview of your activity and momentum."
             />
-          ) : profileQuery.isError ? (
-            <SectionError message="We couldn't load your session activity right now." />
+          ) : statsQuery.isError ? (
+            <SectionError message="We couldn't load your stats right now." />
           ) : (
             <Card className="min-h-80">
               <CardHeader>
-                <CardTitle>Session feed</CardTitle>
+                <CardTitle>Your performance</CardTitle>
                 <CardDescription>
-                  A quick view of your recent activity and tracked sessions.
+                  A quick overview of your activity and momentum.
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col justify-center">
-                {!hasSessions ? (
+                {!hasSessions || !stats ? (
                   <EmptyState
                     icon={Compass}
-                    title="No sessions yet"
-                    description="Your adventures will appear here. Create your first session above!"
+                    title="No stats yet"
+                    description="Start tracking your hobby sessions to see your progress here."
                   />
                 ) : (
-                  <ItemGroup>
-                    <Item variant="muted" className="rounded-xl px-4 py-4">
-                      <ItemMedia variant="icon">
-                        <Clock3 className="size-4" />
-                      </ItemMedia>
-                      <ItemContent>
-                        <ItemTitle>
-                          {profile?.hobbySessionsCount ?? 0} sessions recorded
-                        </ItemTitle>
-                        <ItemDescription>
-                          You&apos;re building momentum. A full session feed is
-                          coming next.
-                        </ItemDescription>
-                      </ItemContent>
-                    </Item>
-                    <Item variant="muted" className="rounded-xl px-4 py-4">
-                      <ItemMedia variant="icon">
-                        <Sparkles className="size-4" />
-                      </ItemMedia>
-                      <ItemContent>
-                        <ItemTitle>
-                          {profile?.hobbiesCount ?? 0} hobbies tracked
-                        </ItemTitle>
-                        <ItemDescription>
-                          Each session makes your dashboard come alive.
-                        </ItemDescription>
-                      </ItemContent>
-                    </Item>
-                  </ItemGroup>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <StatItem
+                      icon={Activity}
+                      label="Total Sessions"
+                      value={stats.totalCount}
+                      description={`${stats.sessionsLast30Days} in last 30 days`}
+                    />
+                    <StatItem
+                      icon={Clock3}
+                      label="Total Time"
+                      value={formatDuration(stats.totalDurationInSeconds)}
+                      description={`Avg. ${formatDuration(stats.averageDurationInSeconds)}`}
+                    />
+                    <StatItem
+                      icon={Trophy}
+                      label="Current Streak"
+                      value={`${stats.currentStreakDays} days`}
+                      description={`Best: ${stats.longestStreakDays} days`}
+                    />
+                    <StatItem
+                      icon={Calendar}
+                      label="Active Days"
+                      value={stats.activeDaysCount}
+                      description="Days with at least one session"
+                    />
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -146,20 +187,22 @@ function App() {
           ) : hobbiesQuery.isError ? (
             <SectionError message="We couldn't load your hobbies right now." />
           ) : (
-            <Card className="min-h-80">
+            <Card className="flex h-full min-h-80 flex-col xl:max-h-[440px]">
               <CardHeader>
                 <CardTitle>Your hobbies</CardTitle>
                 <CardDescription>
                   Hobbies added to your profile, with their session counts.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="flex flex-1 flex-col justify-center">
+              <CardContent className="flex-1 overflow-y-auto">
                 {!hasHobbies ? (
-                  <EmptyState
-                    icon={Shapes}
-                    title="No hobbies on your profile"
-                    description="Add your first hobby to start tracking the time you invest in it."
-                  />
+                  <div className="flex h-full flex-col justify-center">
+                    <EmptyState
+                      icon={Shapes}
+                      title="No hobbies on your profile"
+                      description="Add your first hobby to start tracking the time you invest in it."
+                    />
+                  </div>
                 ) : (
                   <ItemGroup>
                     {hobbies.map((hobby) => (
@@ -179,21 +222,52 @@ function App() {
   );
 }
 
+function StatItem({
+  icon: Icon,
+  label,
+  value,
+  description,
+}: {
+  icon: any;
+  label: string;
+  value: string | number;
+  description: string;
+}) {
+  return (
+    <Item variant="muted" className="rounded-xl px-4 py-4">
+      <ItemMedia variant="icon">
+        <Icon className="size-4" />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle className="text-2xl font-bold tracking-tight">
+          {value}
+        </ItemTitle>
+        <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          {label}
+        </div>
+        <ItemDescription className="mt-1 line-clamp-1">
+          {description}
+        </ItemDescription>
+      </ItemContent>
+    </Item>
+  );
+}
+
 function HobbyItem({ hobby }: { hobby: GetHobbyUserByUserId200ResponseInner }) {
   return (
     <Item variant="muted" className="rounded-xl px-4 py-4">
       <ItemMedia variant="icon">
-        <Shapes className="size-4" />
+        <Shapes className="size-4 text-primary" />
       </ItemMedia>
       <ItemContent>
-        <ItemTitle>{hobby.name ?? 'Unnamed hobby'}</ItemTitle>
-        <ItemDescription>
-          {hobby.description ?? 'No description yet.'}
+        <ItemTitle className="font-semibold">
+          {hobby.name ?? 'Unnamed hobby'}
+        </ItemTitle>
+        <ItemDescription className="flex items-center gap-1.5">
+          <Clock3 className="size-3" />
+          {hobby.sessionCount} sessions recorded
         </ItemDescription>
       </ItemContent>
-      <div className="ml-auto rounded-full bg-background px-3 py-1 text-xs font-medium text-muted-foreground ring-1 ring-border">
-        {hobby.sessionCount} sessions
-      </div>
     </Item>
   );
 }

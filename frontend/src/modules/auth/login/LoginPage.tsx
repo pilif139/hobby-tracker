@@ -49,9 +49,9 @@ export default function LoginPage() {
       toast.success('Signed in');
       await navigate({ to: '/' });
     },
-    onError: (err: unknown) => {
-      const message = err instanceof Error ? err.message : 'Sign in failed';
-      toast.error(message);
+    onError: (err: any) => {
+      const message = err?.message ?? 'Sign in failed';
+      toast.error(String(message));
     },
   });
 

@@ -209,6 +209,7 @@ hobbySessionController.post(
   validator('form', createHobbySessionDto),
   async (c) => {
     const { hobbyId, startTime, endTime, notes, images } = c.req.valid('form');
+
     const userId = c.get('userId');
     const hobbySessionService = c.get('services').hobbySession;
 
