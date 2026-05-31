@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.security.crypto)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
+    implementation(libs.work.runtime)
     ksp(libs.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

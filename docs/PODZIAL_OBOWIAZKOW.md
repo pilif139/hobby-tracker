@@ -8,7 +8,9 @@
 - CI/CD
 - deploy na cloudflare
 - setup bazy danych
-- Aplikacja mobilna
+- połączenie aplikacji mobilnej z backendem
+- architektura aplikacji mobilnej
+- lokalna baza danych aplikacji mobilnej
 
 ## Filip Nyćkowiak
 
@@ -17,4 +19,6 @@
 - Code review
 - Testy jednostkowe
 - Testy integracyjne
-- Aplikacja mobilna
+- wystylowanie aplikacji mobilnej
+- layouty aplikacji mobilnej
+- testowanie manualne aplikacji mobilnej

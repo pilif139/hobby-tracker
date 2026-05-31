@@ -5,9 +5,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {UserEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {UserEntity.class, HobbySessionEntity.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
+    public abstract HobbySessionDao hobbySessionDao();
 
     private static volatile AppDatabase INSTANCE;
 
@@ -17,6 +18,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "hobby_tracker_database")
+                            .fallbackToDestructiveMigration(false)
                             .build();
                 }
             }
