@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 import { ChevronDown, LayoutDashboard, LogOut, Settings } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-=======
-import { ChevronDown, LogOut } from 'lucide-react';
->>>>>>> 27afad7 ([feature/user-dropdown] feat(ux): add sonner toast notifications for async actions and fixed some errors)
 import { toast } from 'sonner';
 import { authApiClient } from '@/api';
 import { ModeToggle } from '@/components/mode-toggle';
