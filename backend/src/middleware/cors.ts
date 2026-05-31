@@ -25,7 +25,12 @@ export const corsMiddleware = createMiddleware<AppContext>(async (c, next) => {
       return allowed ? origin : null;
     },
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    allowHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Requested-With',
+      'x-toast-suppressed',
+    ],
     credentials: true,
     maxAge: 24 * 60 * 60,
   });

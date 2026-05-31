@@ -16,12 +16,17 @@ export default defineConfig({
   },
 
   plugins: [
-    cloudflareTest({
-      wrangler: { configPath: './wrangler.toml' },
-    }),
+    ...(process.env.CF_VPW
+      ? [
+          cloudflareTest({
+            wrangler: { configPath: './wrangler.toml' },
+          }),
+        ]
+      : []),
   ],
 
   test: {
     include: ['tests/**/*.test.ts', 'tests/**/*.spec.ts'],
+    environment: 'node',
   },
 });

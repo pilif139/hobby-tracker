@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 interface FeedImageDialogProps {
-  imageUrls: string[];
+  imageUrls: Array<string>;
 }
 
 export function FeedImageDialog({ imageUrls }: FeedImageDialogProps) {

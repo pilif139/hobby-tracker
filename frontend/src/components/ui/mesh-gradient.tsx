@@ -4,7 +4,7 @@ export interface MeshGradientBackgroundProps {
   className?: string;
   children?: React.ReactNode;
   /** Gradient colors */
-  colors?: string[];
+  colors?: Array<string>;
   /** Animation speed multiplier */
   speed?: number;
   /** Background color */

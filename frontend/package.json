@@ -2,17 +2,17 @@
   "name": "frontend",
   "private": true,
   "type": "module",
-  "packageManager": "bun@1.2.21",
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc",
-    "preview": "bun run build && wrangler dev",
+    "preview": "pnpm run build && wrangler dev",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "check-types": "tsc --noEmit",
     "api:generate": "openapi-generator-cli generate -i http://localhost:8787/doc -g typescript-axios -o src/api/generated --additional-properties=supportsES6=true,typescriptThreePlus=true,stringEnums=true,useSingleRequestParameter=true --skip-validate-spec --verbose",
-    "deploy": "bun run build && wrangler deploy"
+    "deploy": "pnpm run build && wrangler deploy"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -48,7 +48,8 @@
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.0.6",
     "tw-animate-css": "^1.4.0",
-    "wrangler": "^4.82.1"
+    "wrangler": "^4.82.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.32.1",
@@ -64,10 +65,13 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
     "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^9.39.4",
     "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.6.0",
     "jsdom": "^27.0.0",
     "prettier": "^3.5.3",
-    "typescript": "^5.7.2",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.60.0",
     "vite": "^7.1.7",
     "vitest": "^3.0.5",
     "web-vitals": "^5.1.0"

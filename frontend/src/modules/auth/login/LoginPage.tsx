@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useNavigate } from '@tanstack/react-router';
 import { TriangleAlert } from 'lucide-react';
+import { toast } from 'sonner';
 import { useCurrentUser } from '../current-user/CurrentUserContext';
 import LoginSchema from './LoginSchema';
 import type { PostAuthLoginRequest } from '@/api/generated/api';
@@ -33,27 +34,34 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationKey: ['login'],
     mutationFn: async (input: PostAuthLoginRequest) => {
-      const res = await authApiClient.postAuthLogin({
-        postAuthLoginRequest: input,
-      });
+      // suppress global API error toast here — this action will show its own toast
+      const res = await authApiClient.postAuthLogin(
+        { postAuthLoginRequest: input },
+        { headers: { 'x-toast-suppressed': '1' } },
+      );
       return res.data;
     },
     onSuccess: async (user) => {
       setCurrentUser(user);
-      await navigate({ to: '/feed' });
+      toast.success('Signed in');
+      await navigate({ to: '/' });
+    },
+    onError: (err: any) => {
+      const message = err?.message ?? 'Sign in failed';
+      toast.error(String(message));
     },
   });
 
   return (
     <MeshGradientBackground className="dark">
-      <div className="flex min-h-screen w-full lg:flex-row">
-        <div className="relative hidden flex-col text-white lg:flex lg:w-[60%] z-20">
+      <div className="grid min-h-screen w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-[60%_40%]">
+        <div className="relative hidden flex-col text-white sm:flex z-20">
           <div className="relative z-20 flex">
             <img src="/logo-2.png" alt="Logo" className="h-full w-auto" />
           </div>
         </div>
 
-        <div className="flex w-full lg:w-[40%] items-center justify-center p-6 sm:p-10 text-foreground z-20 bg-background/60 backdrop-blur-xl lg:border-l border-white/10">
+        <div className="flex w-full items-center justify-center px-4 py-6 text-foreground z-20 bg-background/60 backdrop-blur-xl sm:px-6 sm:py-10 lg:border-l border-white/10">
           <div className="mx-auto w-full max-w-sm space-y-6">
             <div className="flex flex-col gap-y-2 text-center">
               <h1 className="text-3xl font-bold tracking-tight">

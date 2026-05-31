@@ -1,0 +1,17 @@
+packages:
+  - backend
+  - frontend
+  - lib
+
+verifyDepsBeforeRun: false
+
+allowBuilds:
+  '@nestjs/core': true
+  '@openapitools/openapi-generator-cli': true
+  '@prisma/engines': true
+  esbuild: true
+  msw: true
+  prisma: true
+  sharp: true
+  unrs-resolver: true
+  workerd: true
