@@ -13,7 +13,8 @@ const mockSetCurrentUser = vi.fn();
 vi.mock('@tanstack/react-router', () => {
   const React = require('react');
   return {
-    Link: (props: any) => React.createElement('a', props),
+    Link: ({ to, ...props }: any) =>
+      React.createElement('a', { href: to, ...props }),
     useNavigate: () => mockNavigate,
   };
 });
@@ -54,14 +55,14 @@ describe('LoginPage (unit)', () => {
     renderWithQuery(<LoginPage />);
 
     await userEvent.type(screen.getByLabelText(/email/i), 'a@b.com');
-    await userEvent.type(screen.getByLabelText(/password/i), 'secret');
+    await userEvent.type(screen.getByLabelText(/password/i), 'password123');
 
     await userEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => expect(authApiClient.postAuthLogin).toHaveBeenCalled());
 
     expect(authApiClient.postAuthLogin).toHaveBeenCalledWith(
-      { postAuthLoginRequest: { email: 'a@b.com', password: 'secret' } },
+      { postAuthLoginRequest: { email: 'a@b.com', password: 'password123' } },
       expect.any(Object),
     );
 
@@ -81,7 +82,7 @@ describe('LoginPage (unit)', () => {
     renderWithQuery(<LoginPage />);
 
     await userEvent.type(screen.getByLabelText(/email/i), 'a@b.com');
-    await userEvent.type(screen.getByLabelText(/password/i), 'wrong');
+    await userEvent.type(screen.getByLabelText(/password/i), 'wrongpassword');
     await userEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
     const { toast } = await import('sonner');
@@ -106,7 +107,7 @@ describe('LoginPage (unit)', () => {
     renderWithQuery(<LoginPage />);
 
     await userEvent.type(screen.getByLabelText(/email/i), 'a@b.com');
-    await userEvent.type(screen.getByLabelText(/password/i), 'secret');
+    await userEvent.type(screen.getByLabelText(/password/i), 'password123');
 
     await userEvent.click(screen.getByRole('button', { name: /sign in/i }));
 

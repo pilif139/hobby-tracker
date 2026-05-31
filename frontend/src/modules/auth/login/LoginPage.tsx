@@ -26,7 +26,11 @@ export default function LoginPage() {
       password: '',
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value);
+      try {
+        await loginMutation.mutateAsync(value);
+      } catch {
+        // Error is handled in useMutation onError callback
+      }
     },
     validators: {
       onChangeAsync: LoginSchema,
