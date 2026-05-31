@@ -1,10 +1,10 @@
-# Aplikacja Mobilna Hobby Tracker
+# Hobby Tracker Mobile
 
 Aplikacja Hobby Tracker na Androida napisana w języku Java - zamysł aplikacji taki sam jak wersji webowej.
 
 ## Środowisko i Wymagania
 
-- **Język:** Java 17 (Oracle JDK)
+- **Język:** Java 17
 - **Minimum Android SDK:** 29
 - **Zalecany Emulator:** Medium Phone API 36
 
@@ -14,16 +14,51 @@ Projekt wykorzystuje **Repository Pattern**, aby oddzielić warstwę interfejsu 
 
 - **Modułowość:**
     - `com.filip.hobbytracker`: Komponenty interfejsu (Fragmenty, Adaptery, Aktywności).
-    - `com.filip.hobbytracker.repository`: Warstwa danych, abstrakcjonująca wywołania API i zarządzająca wątkami w tle przy użyciu `ExecutorService`.
+    - `com.filip.hobbytracker.repository`: Warstwa danych, abstrahująca wywołania API i zarządzająca wątkami w tle przy użyciu `ExecutorService`.
+    - `com.filip.hobbytracker.data`: Warstwa lokalnej bazy danych oraz menedżerów synchronizacji (WorkManager).
     - `com.filip.hobbytracker.api`: Moduły pomocnicze, m.in. dostawcy API i obsługa sesji.
     - `com.filip.hobbytracker.api.generated`: Kod wygenerowany na podstawie specyfikacji OpenAPI backendu.
-- **UI:** XML Layouts, ConstraintLayout, Material Components.
-- **Listy:** Implementacja `RecyclerView` dla wydajnego wyświetlania danych chcociażby na głównym feedzie.
+    - `com.filip.hobbytracker.lib`: Klasy pomocnicze.
+- **UI:** XML Layouts i Material Components.
+- **Listy:** Implementacja `RecyclerView` dla wydajnego wyświetlania danych.
 
 ## Przepływ aplikacji
 
 Aplikacja opiera się na nawigacji między fragmentami:
-`OnboardFragment` -> `LoginFragment` lub `RegisterFragment` -> `FeedFragment` (główny ekran).
+`OnboardFragment` -> `LoginFragment` lub `RegisterFragment` -> `FeedFragment` (główny ekran) <-> `DiscoveryFragment`.
+
+### Opis fragmentów
+- **OnboardFragment**: Ekran powitalny wprowadzający użytkownika w funkcje aplikacji.
+- **LoginFragment**: Formularz logowania dla istniejących użytkowników.
+- **RegisterFragment**: Formularz rejestracji dla nowych użytkowników.
+- **FeedFragment**: Główny ekran wyświetlający listę sesji hobby.
+- **DiscoveryFragment**: Ekran umożliwiający przeglądanie sugestii dotyczących ludzi oraz hobby, którymi użytkownik może się zainteresować.
+
+## Lokalna Baza Danych (Room)
+
+Projekt wykorzystuje bibliotekę Room do lokalnego przechowywania danych (SQLite), co umożliwia pracę w trybie offline i synchronizację.
+
+### Tabela `user_cache`
+| Nazwa pola | Typ | Opis |
+| :--- | :--- | :--- |
+| `id` | UUID | Identyfikator użytkownika (Primary Key) |
+| `name` | String | Nazwa użytkownika |
+| `email` | String | Adres email |
+
+### Tabela `hobby_sessions`
+| Nazwa pola | Typ | Opis |
+| :--- | :--- | :--- |
+| `localId` | long | Lokalny identyfikator (Primary Key) |
+| `remoteId` | String | Identyfikator z backendu |
+| `hobbyId` | String | Powiązanie z hobby |
+| `userId` | String | Powiązanie z użytkownikiem |
+| `startTime` | String | Czas rozpoczęcia |
+| `endTime` | String | Czas zakończenia |
+| `notes` | String | Notatki |
+| `imageUrlsJson`| String | Obrazy w formacie JSON |
+| `syncStatus` | String | Status synchronizacji: `SYNCED` (zsynchronizowane), `PENDING_CREATE` (oczekuje na utworzenie), `PENDING_UPDATE` (oczekuje na aktualizację), `PENDING_DELETE` (oczekuje na usunięcie) |
+| `createdAt` | String | Data utworzenia |
+| `updatedAt` | String | Data aktualizacji |
 
 ## Generowanie klienta API
 
