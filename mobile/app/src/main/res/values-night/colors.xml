@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="hobby_background">#0F1A16</color>
+    <color name="hobby_foreground">#E0EAE5</color>
+    <color name="hobby_card">#162018</color>
+    <color name="hobby_card_glass">#CC162018</color>
+    <color name="hobby_surface">#1A2B22</color>
+    <color name="hobby_surface_variant">#223529</color>
+    <color name="hobby_secondary">#1C3028</color>
+    <color name="hobby_primary">#2FB889</color>
+    <color name="hobby_primary_on">#E0EAE5</color>
+    <color name="hobby_secondary_on">#E0EAE5</color>
+    <color name="hobby_muted">#7A9489</color>
+    <color name="hobby_border">#2D4A3E</color>
+    <color name="hobby_error">#E07070</color>
+    <color name="hobby_nav_background">#E6111A16</color>
+</resources>
