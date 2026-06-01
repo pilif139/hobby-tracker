@@ -1,7 +1,7 @@
 package com.filip.hobbytracker.repository;
 
 public class Resource<T> {
-    public enum Status { SUCCESS, ERROR, LOADING }
+    public enum Status { SUCCESS, ERROR, LOADING, UNAUTHORIZED }
 
     public final Status status;
     public final T data;
@@ -19,6 +19,10 @@ public class Resource<T> {
 
     public static <T> Resource<T> error(String msg, T data) {
         return new Resource<>(Status.ERROR, data, msg);
+    }
+
+    public static <T> Resource<T> unauthorized(String msg) {
+        return new Resource<>(Status.UNAUTHORIZED, null, msg);
     }
 
     public static <T> Resource<T> loading(T data) {

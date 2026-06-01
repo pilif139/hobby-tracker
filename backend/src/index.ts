@@ -84,7 +84,7 @@ app.get(
 );
 
 app.onError((err, c) => {
-  c.get('logger').error(`Error: ${err.message}`);
+  c.get('logger').error(`Error: ${err}`);
   if (err instanceof HTTPException) {
     return err.getResponse();
   }

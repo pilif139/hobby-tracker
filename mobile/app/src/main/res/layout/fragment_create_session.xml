@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/hobby_card_glass"
+    app:cardCornerRadius="28dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/hobby_border"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_session_title"
+            android:textColor="@color/hobby_foreground"
+            android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_hobby"
+            android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
+            android:layout_marginBottom="4dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/actvHobby"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_hobby"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
+            android:inputType="text"
+            android:completionThreshold="1"
+            android:background="@android:drawable/edit_text"
+            android:padding="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_start_time"
+            android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_datetime"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_end_time"
+            android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etEndTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_datetime"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_notes"
+            android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
+            android:layout_marginBottom="4dp" />
+
+        <EditText
+            android:id="@+id/etNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_notes"
+            android:textColor="@color/hobby_foreground"
+            android:textColorHint="@color/hobby_muted"
+            android:inputType="textMultiLine"
+            android:minLines="2"
+            android:maxLines="5"
+            android:gravity="top"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_images"
+            android:textSize="12sp"
+            android:textColor="@color/hobby_muted"
+            android:layout_marginBottom="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickImages"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_pick_images"
+            android:layout_marginBottom="4dp"
+            app:cornerRadius="16dp" />
+
+        <TextView
+            android:id="@+id/tvSelectedImages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:layout_marginBottom="12dp" />
+
+        <TextView
+            android:id="@+id/tvCreateSessionError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/hobby_error"
+            android:textSize="12sp"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCreateSession"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/btn_create_session"
+            app:cornerRadius="18dp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

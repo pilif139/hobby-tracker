@@ -96,6 +96,7 @@ public class JSON {
         gsonBuilder.registerTypeAdapter(OffsetDateTime.class, offsetDateTimeTypeAdapter);
         gsonBuilder.registerTypeAdapter(LocalDate.class, localDateTypeAdapter);
         gsonBuilder.registerTypeAdapter(byte[].class, byteArrayAdapter);
+        gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.DeleteFollowRequest.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetAuthMe404Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetFeed200Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetFeed200ResponseSessionsInner.CustomTypeAdapterFactory());
@@ -108,6 +109,8 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetFeedHobbySuggestions200ResponseSuggestionsInner.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetHealth200Response.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetHobby200ResponseInner.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetHobby200ResponseInnerCount.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetHobbySessionById200Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetHobbySessionUserByUserId200Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.GetHobbySessionUserByUserId200ResponseSessionsInner.CustomTypeAdapterFactory());
@@ -121,6 +124,9 @@ public class JSON {
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostAuthLogout200Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostAuthRegister403Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostAuthRegisterRequest.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostFollow200Response.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostFollowRequest.CustomTypeAdapterFactory());
+        gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostHobby201Response.CustomTypeAdapterFactory());
         gsonBuilder.registerTypeAdapterFactory(new com.filip.hobbytracker.api.generated.model.PostHobbyRequest.CustomTypeAdapterFactory());
         gson = gsonBuilder.create();
     }

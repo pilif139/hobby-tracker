@@ -135,6 +135,8 @@ Class | Method | HTTP request | Description
 *FeedApi* | [**getFeedFollowSuggestionsHobby**](docs/FeedApi.md#getFeedFollowSuggestionsHobby) | **GET** /feed/follow-suggestions/hobby | 
 *FeedApi* | [**getFeedFollowSuggestionsSocial**](docs/FeedApi.md#getFeedFollowSuggestionsSocial) | **GET** /feed/follow-suggestions/social | 
 *FeedApi* | [**getFeedHobbySuggestions**](docs/FeedApi.md#getFeedHobbySuggestions) | **GET** /feed/hobby-suggestions | 
+*FollowApi* | [**deleteFollow**](docs/FollowApi.md#deleteFollow) | **DELETE** /follow | 
+*FollowApi* | [**postFollow**](docs/FollowApi.md#postFollow) | **POST** /follow | 
 *HealthCheckApi* | [**getHealth**](docs/HealthCheckApi.md#getHealth) | **GET** /health | 
 *HobbyApi* | [**deleteHobbyRemoveFromProfileByHobbyId**](docs/HobbyApi.md#deleteHobbyRemoveFromProfileByHobbyId) | **DELETE** /hobby/remove-from-profile/{hobbyId} | 
 *HobbyApi* | [**getHobby**](docs/HobbyApi.md#getHobby) | **GET** /hobby | 
@@ -156,6 +158,7 @@ Class | Method | HTTP request | Description
 
 ## Documentation for Models
 
+ - [DeleteFollowRequest](docs/DeleteFollowRequest.md)
  - [GetAuthMe404Response](docs/GetAuthMe404Response.md)
  - [GetFeed200Response](docs/GetFeed200Response.md)
  - [GetFeed200ResponseSessionsInner](docs/GetFeed200ResponseSessionsInner.md)
@@ -168,6 +171,8 @@ Class | Method | HTTP request | Description
  - [GetFeedHobbySuggestions200Response](docs/GetFeedHobbySuggestions200Response.md)
  - [GetFeedHobbySuggestions200ResponseSuggestionsInner](docs/GetFeedHobbySuggestions200ResponseSuggestionsInner.md)
  - [GetHealth200Response](docs/GetHealth200Response.md)
+ - [GetHobby200ResponseInner](docs/GetHobby200ResponseInner.md)
+ - [GetHobby200ResponseInnerCount](docs/GetHobby200ResponseInnerCount.md)
  - [GetHobbySessionById200Response](docs/GetHobbySessionById200Response.md)
  - [GetHobbySessionUserByUserId200Response](docs/GetHobbySessionUserByUserId200Response.md)
  - [GetHobbySessionUserByUserId200ResponseSessionsInner](docs/GetHobbySessionUserByUserId200ResponseSessionsInner.md)
@@ -181,6 +186,9 @@ Class | Method | HTTP request | Description
  - [PostAuthLogout200Response](docs/PostAuthLogout200Response.md)
  - [PostAuthRegister403Response](docs/PostAuthRegister403Response.md)
  - [PostAuthRegisterRequest](docs/PostAuthRegisterRequest.md)
+ - [PostFollow200Response](docs/PostFollow200Response.md)
+ - [PostFollowRequest](docs/PostFollowRequest.md)
+ - [PostHobby201Response](docs/PostHobby201Response.md)
  - [PostHobbyRequest](docs/PostHobbyRequest.md)
 
 

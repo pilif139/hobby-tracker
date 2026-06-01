@@ -33,6 +33,14 @@ public abstract class BaseRepository {
                 T result = apiCall.execute();
                 callback.onResult(Resource.success(result));
             } catch (ApiException e) {
+                if (e.getCode() == 401 || e.getCode() == 403) {
+                    String errorMessage = context.getString(defaultErrorResId);
+                    if (e.getResponseBody() != null && !e.getResponseBody().trim().isEmpty()) {
+                        errorMessage = e.getResponseBody();
+                    }
+                    callback.onResult(Resource.unauthorized(errorMessage));
+                    return;
+                }
                 String errorMessage = context.getString(defaultErrorResId);
                 if (e.getResponseBody() != null && !e.getResponseBody().trim().isEmpty()) {
                     errorMessage = e.getResponseBody();
