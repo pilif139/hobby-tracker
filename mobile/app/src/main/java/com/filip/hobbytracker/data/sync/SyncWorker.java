@@ -41,13 +41,10 @@ public class SyncWorker extends Worker {
         Log.d("SyncWorker", "Starting synchronization...");
 
         try {
-            // 1. Re-validate session (check if user is still logged in)
             ApiProvider.authenticationApi().getAuthMe();
 
-            // 2. Push local pending changes to backend
             pushPendingChanges();
 
-            // 3. Pull latest state from backend and reconcile
             reconcileWithBackend();
 
             Log.d("SyncWorker", "Synchronization completed successfully.");
