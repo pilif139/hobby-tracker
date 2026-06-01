@@ -8,6 +8,10 @@ Aplikacja Hobby Tracker na Androida napisana w języku Java - zamysł aplikacji 
 - **Minimum Android SDK:** 29
 - **Zalecany Emulator:** Medium Phone API 36
 
+## Jak uruchomić
+- Należy najpierw odpalić backend (zgodnie z instrukcjami w [backend/README.md](../backend/README.md))
+- Aby uruchomić aplikację, należy otworzyć projekt w Android Studio i uruchomić odpowiedni emulator lub urządzenie.
+
 ## Architektura
 
 Projekt wykorzystuje **Repository Pattern**, aby oddzielić warstwę interfejsu (Fragments) od źródła danych (wygenerowany klient API).
