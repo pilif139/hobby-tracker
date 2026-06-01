@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **id** | **string** |  | [default to undefined]
 **email** | **string** |  | [default to undefined]
 **name** | **string** |  | [default to undefined]
+**avatarUrl** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -18,6 +19,7 @@ const instance: PostAuthLogin200Response = {
     id,
     email,
     name,
+    avatarUrl,
 };
 ```
 

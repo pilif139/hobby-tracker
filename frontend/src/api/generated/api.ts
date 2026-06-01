@@ -155,6 +155,7 @@ export interface GetUserById200Response {
     'followsCount': number;
     'hobbiesCount': number;
     'hobbySessionsCount': number;
+    'avatarUrl'?: string | null;
 }
 export interface PatchUserMeRequest {
     'name'?: string;
@@ -163,6 +164,7 @@ export interface PostAuthLogin200Response {
     'id': string;
     'email': string;
     'name': string;
+    'avatarUrl'?: string | null;
 }
 export interface PostAuthLogin401Response {
     'message': string | null;
@@ -202,6 +204,10 @@ export interface PostHobby201Response {
 export interface PostHobbyRequest {
     'name': string;
     'description'?: string;
+}
+export interface PostUserAvatar200Response {
+    'url': string | null;
+    'message': string | null;
 }
 
 /**
@@ -2555,7 +2561,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postUserAvatar(file: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async postUserAvatar(file: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PostUserAvatar200Response>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postUserAvatar(file, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.postUserAvatar']?.[localVarOperationServerIndex]?.url;
@@ -2602,7 +2608,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUserAvatar(requestParameters: UserApiPostUserAvatarRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        postUserAvatar(requestParameters: UserApiPostUserAvatarRequest, options?: RawAxiosRequestConfig): AxiosPromise<PostUserAvatar200Response> {
             return localVarFp.postUserAvatar(requestParameters.file, options).then((request) => request(axios, basePath));
         },
     };

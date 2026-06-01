@@ -11,6 +11,7 @@ import {
   getAuthCookieOptions,
 } from '../auth/auth.config';
 import {
+  AvatarUploadResponse,
   UpdateUserSchema,
   UserProfileSchema,
   UserSafeSchema,
@@ -46,6 +47,7 @@ userController.get(
       followsCount: user._count.follows,
       hobbiesCount: user._count.hobbies,
       hobbySessionsCount: user._count.hobbySessions,
+      avatarUrl: userService.fileKeyToUrl(user.avatarFileKey),
     });
   },
 );
@@ -94,6 +96,7 @@ userController.patch(
       id: updatedUser.id,
       name: updatedUser.name,
       email: updatedUser.email,
+      avatarUrl: userService.fileKeyToUrl(updatedUser.avatarFileKey),
     });
   },
 );
@@ -103,7 +106,7 @@ userController.post(
   describeRoute({
     tags: ['User'],
     responses: {
-      200: { description: 'Avatar uploaded successfully' },
+      200: jsonResponse(AvatarUploadResponse, 'Avatar uploaded successfully'),
       413: response.contentTooLarge(),
       400: response.badRequest(),
       500: response.serverError(),
@@ -141,7 +144,7 @@ userController.post(
       }
       throw new HTTPException(500, {
         message: 'Failed to upload avatar',
-        cause: error instanceof Error ? error.message : String(error),
+        cause: String(error),
       });
     }
   },
