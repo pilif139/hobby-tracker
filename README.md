@@ -4,7 +4,7 @@ Projekt z programowania aplikacji webowych i mobilnych
 
 ## Dla całego projektu
 
-- bun jako runtime javascriptu
+- pnpm jako runtime i package manager
 - typescript
 - prettier
 - eslint

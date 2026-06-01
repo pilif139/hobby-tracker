@@ -34,6 +34,16 @@ Głównym załoeniem aplikacji backendowej jest nauczenie się czegoś nowego, 
 - folder .wrangler - folder z lokalnymi danymi cloudflare'a np. lokalna baza danych D1 lub KV namespace
 - worker-configuration.d.ts - plik automatycznie generowany za pomocą komendy `bunx wrangler types` (nie zmieniać go ręcznie), zawiera typy potrzebne do integracji z cloudflarem i nie trzeba go importować
 
+## Schemat bazy danych
+
+Screenshot z prisma studio visualizera
+
+![Schemat bazy danych](./db-schema.png)
+
+## Testy
+
+![Scenariusze testowe](./backend-tests.png)
+
 ## Uruchamianie aplikacji lokalnie
 
 1. Utwórz plik .env z następującą zawartością:
@@ -51,20 +61,20 @@ Sekrety można wygenerować za pomocą komendy `openssl rand -base64 32`
 2. Zainstaluj zależności:
 
 ```bash
-bun install
+pnpm install
 ```
 
 3. Uruchom migracje i wygeneruj klienta prismy
 
 ```bash
-bunx wrangler d1 migrations apply hobby-tracker-db --local
-bunx prisma generate
+pnpm exec wrangler d1 migrations apply hobby-tracker-db --local
+pnpm exec prisma generate
 ```
 
 4. Uruchom aplikację lokalnie:
 
 ```bash
-bun dev
+pnpm dev
 ```
 
 Aplikacja będzie dostępna pod adresem http://localhost:8787
