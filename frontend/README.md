@@ -5,13 +5,13 @@
 - Zainstaluj zależności:
 
 ```bash
-bun install
+pnpm install
 ```
 
 - Uruchom aplikację:
 
 ```bash
-bun dev
+pnpm dev
 ```
 
 - Otwórz przeglądarkę i przejdź do `http://localhost:5173`
@@ -40,7 +40,7 @@ bun dev
 Komunikacja z backendem odbywa się za pomocą wygenerowanego klienta OpenAPI, który znajduje się w `src/api/generated`. W `src/api/index.ts` tworzymy instancję tego klienta i eksportujemy ją, aby można było jej używać w całej aplikacji. Aby wygenerować klienta, należy mieć zainstalowaną javę i uruchomić komendę:
 
 ```bash
-bun run generate:api
+pnpm run generate:api
 ```
 
 Zimportowany klient API powinien mieć wszystkie potrzebne metody, które są w danym kontrolerze na backendzie.

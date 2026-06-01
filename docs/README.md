@@ -4,14 +4,14 @@ Projekt z programowania aplikacji webowych i mobilnych
 
 ## Dla całego projektu
 
-- bun jako package manager
+- pnpm jako package manager
 - typescript
 - prettier
 - eslint
 
 ## Frontend
 
-- runtime: bun
+- runtime: node
 - react
 - testy: vitest, react-testing-library
 - tanstack router
