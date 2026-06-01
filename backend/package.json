@@ -10,7 +10,11 @@
     "test": "vitest run --environment node",
     "lint:fix": "eslint --fix",
     "test:watch": "vitest watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "seed": "bun run src/db/seed.ts"
+  },
+  "prisma": {
+    "seed": "bun run seed"
   },
   "dependencies": {
     "@cf-wasm/photon": "^0.3.4",

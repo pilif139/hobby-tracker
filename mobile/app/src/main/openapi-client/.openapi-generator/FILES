@@ -6,7 +6,9 @@ api/openapi.yaml
 build.gradle
 build.sbt
 docs/AuthenticationApi.md
+docs/DeleteFollowRequest.md
 docs/FeedApi.md
+docs/FollowApi.md
 docs/GetAuthMe404Response.md
 docs/GetFeed200Response.md
 docs/GetFeed200ResponseSessionsInner.md
@@ -19,6 +21,8 @@ docs/GetFeedFollowSuggestionsSocial200ResponseSuggestionsInner.md
 docs/GetFeedHobbySuggestions200Response.md
 docs/GetFeedHobbySuggestions200ResponseSuggestionsInner.md
 docs/GetHealth200Response.md
+docs/GetHobby200ResponseInner.md
+docs/GetHobby200ResponseInnerCount.md
 docs/GetHobbySessionById200Response.md
 docs/GetHobbySessionUserByUserId200Response.md
 docs/GetHobbySessionUserByUserId200ResponseSessionsInner.md
@@ -35,6 +39,9 @@ docs/PostAuthLoginRequest.md
 docs/PostAuthLogout200Response.md
 docs/PostAuthRegister403Response.md
 docs/PostAuthRegisterRequest.md
+docs/PostFollow200Response.md
+docs/PostFollowRequest.md
+docs/PostHobby201Response.md
 docs/PostHobbyRequest.md
 docs/UserApi.md
 git_push.sh
@@ -48,11 +55,13 @@ settings.gradle
 src/main/AndroidManifest.xml
 src/main/java/com/filip/hobbytracker/api/generated/api/AuthenticationApi.java
 src/main/java/com/filip/hobbytracker/api/generated/api/FeedApi.java
+src/main/java/com/filip/hobbytracker/api/generated/api/FollowApi.java
 src/main/java/com/filip/hobbytracker/api/generated/api/HealthCheckApi.java
 src/main/java/com/filip/hobbytracker/api/generated/api/HobbyApi.java
 src/main/java/com/filip/hobbytracker/api/generated/api/HobbySessionApi.java
 src/main/java/com/filip/hobbytracker/api/generated/api/UserApi.java
 src/main/java/com/filip/hobbytracker/api/generated/model/AbstractOpenApiSchema.java
+src/main/java/com/filip/hobbytracker/api/generated/model/DeleteFollowRequest.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetAuthMe404Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetFeed200Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetFeed200ResponseSessionsInner.java
@@ -65,6 +74,8 @@ src/main/java/com/filip/hobbytracker/api/generated/model/GetFeedFollowSuggestion
 src/main/java/com/filip/hobbytracker/api/generated/model/GetFeedHobbySuggestions200Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetFeedHobbySuggestions200ResponseSuggestionsInner.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetHealth200Response.java
+src/main/java/com/filip/hobbytracker/api/generated/model/GetHobby200ResponseInner.java
+src/main/java/com/filip/hobbytracker/api/generated/model/GetHobby200ResponseInnerCount.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetHobbySessionById200Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetHobbySessionUserByUserId200Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/GetHobbySessionUserByUserId200ResponseSessionsInner.java
@@ -78,6 +89,9 @@ src/main/java/com/filip/hobbytracker/api/generated/model/PostAuthLoginRequest.ja
 src/main/java/com/filip/hobbytracker/api/generated/model/PostAuthLogout200Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/PostAuthRegister403Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/PostAuthRegisterRequest.java
+src/main/java/com/filip/hobbytracker/api/generated/model/PostFollow200Response.java
+src/main/java/com/filip/hobbytracker/api/generated/model/PostFollowRequest.java
+src/main/java/com/filip/hobbytracker/api/generated/model/PostHobby201Response.java
 src/main/java/com/filip/hobbytracker/api/generated/model/PostHobbyRequest.java
 src/main/java/com/filip/hobbytracker/api/invoker/ApiCallback.java
 src/main/java/com/filip/hobbytracker/api/invoker/ApiClient.java
@@ -96,3 +110,10 @@ src/main/java/com/filip/hobbytracker/api/invoker/auth/ApiKeyAuth.java
 src/main/java/com/filip/hobbytracker/api/invoker/auth/Authentication.java
 src/main/java/com/filip/hobbytracker/api/invoker/auth/HttpBasicAuth.java
 src/main/java/com/filip/hobbytracker/api/invoker/auth/HttpBearerAuth.java
+src/test/java/com/filip/hobbytracker/api/generated/api/FollowApiTest.java
+src/test/java/com/filip/hobbytracker/api/generated/model/DeleteFollowRequestTest.java
+src/test/java/com/filip/hobbytracker/api/generated/model/GetHobby200ResponseInnerCountTest.java
+src/test/java/com/filip/hobbytracker/api/generated/model/GetHobby200ResponseInnerTest.java
+src/test/java/com/filip/hobbytracker/api/generated/model/PostFollow200ResponseTest.java
+src/test/java/com/filip/hobbytracker/api/generated/model/PostFollowRequestTest.java
+src/test/java/com/filip/hobbytracker/api/generated/model/PostHobby201ResponseTest.java

@@ -4,10 +4,11 @@ import viteReact from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import type { PluginOption } from 'vite';
 
 // Dynamically import ESM-only plugins to avoid bundler `require` issues during CI/build tools
 export default defineConfig(async () => {
-  const plugins: any[] = [];
+  const plugins: Array<PluginOption> = [];
 
   try {
     const devtools = (await import('@tanstack/devtools-vite')).devtools;
@@ -43,9 +44,36 @@ export default defineConfig(async () => {
   return {
     plugins,
     resolve: {
-      alias: {
-        '@': fileURLToPath(new URL('./src', import.meta.url)),
-      },
+      alias: [
+        {
+          find: /^react$/,
+          replacement: fileURLToPath(
+            new URL('./node_modules/react/index.js', import.meta.url),
+          ),
+        },
+        {
+          find: /^react-dom$/,
+          replacement: fileURLToPath(
+            new URL('./node_modules/react-dom/index.js', import.meta.url),
+          ),
+        },
+        {
+          find: /^react\/jsx-runtime$/,
+          replacement: fileURLToPath(
+            new URL('./node_modules/react/jsx-runtime.js', import.meta.url),
+          ),
+        },
+        {
+          find: /^react\/jsx-dev-runtime$/,
+          replacement: fileURLToPath(
+            new URL('./node_modules/react/jsx-dev-runtime.js', import.meta.url),
+          ),
+        },
+        {
+          find: '@',
+          replacement: fileURLToPath(new URL('./src', import.meta.url)),
+        },
+      ],
     },
   };
 });

@@ -33,9 +33,9 @@ followController.post(
 
     const followService = c.get('services').follow;
     try {
-      const result = await followService.followUser(followerId, followingId);
+      await followService.followUser(followerId, followingId);
 
-      return c.json(result);
+      return c.json({ success: true });
     } catch (error) {
       if (error instanceof FollowUserNotFoundError) {
         return c.json({ message: error.message }, 404);
@@ -74,8 +74,8 @@ followController.delete(
 
     const followService = c.get('services').follow;
     try {
-      const result = await followService.unfollowUser(followerId, followingId);
-      return c.json(result);
+      await followService.unfollowUser(followerId, followingId);
+      return c.json({ success: true });
     } catch (error) {
       if (error instanceof FollowUserNotFoundError) {
         return c.json({ message: error.message }, 404);

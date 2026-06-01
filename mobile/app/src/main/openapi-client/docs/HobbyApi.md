@@ -89,7 +89,7 @@ public class Example {
 
 <a id="getHobby"></a>
 # **getHobby**
-> List&lt;Object&gt; getHobby(search, offset, limit)
+> List&lt;GetHobby200ResponseInner&gt; getHobby(search, offset, limit)
 
 
 
@@ -125,7 +125,7 @@ public class Example {
     BigDecimal offset = new BigDecimal(78); // BigDecimal | 
     BigDecimal limit = new BigDecimal(78); // BigDecimal | 
     try {
-      List<Object> result = apiInstance.getHobby(search, offset, limit);
+      List<GetHobby200ResponseInner> result = apiInstance.getHobby(search, offset, limit);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling HobbyApi#getHobby");
@@ -148,7 +148,7 @@ public class Example {
 
 ### Return type
 
-**List&lt;Object&gt;**
+[**List&lt;GetHobby200ResponseInner&gt;**](GetHobby200ResponseInner.md)
 
 ### Authorization
 
@@ -166,7 +166,7 @@ public class Example {
 
 <a id="getHobbyById"></a>
 # **getHobbyById**
-> Object getHobbyById(id)
+> PostHobby201Response getHobbyById(id)
 
 
 
@@ -200,7 +200,7 @@ public class Example {
     HobbyApi apiInstance = new HobbyApi(defaultClient);
     String id = "id_example"; // String | 
     try {
-      Object result = apiInstance.getHobbyById(id);
+      PostHobby201Response result = apiInstance.getHobbyById(id);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling HobbyApi#getHobbyById");
@@ -221,7 +221,7 @@ public class Example {
 
 ### Return type
 
-**Object**
+[**PostHobby201Response**](PostHobby201Response.md)
 
 ### Authorization
 
@@ -313,7 +313,7 @@ public class Example {
 
 <a id="postHobby"></a>
 # **postHobby**
-> Object postHobby(postHobbyRequest)
+> PostHobby201Response postHobby(postHobbyRequest)
 
 
 
@@ -347,7 +347,7 @@ public class Example {
     HobbyApi apiInstance = new HobbyApi(defaultClient);
     PostHobbyRequest postHobbyRequest = new PostHobbyRequest(); // PostHobbyRequest | 
     try {
-      Object result = apiInstance.postHobby(postHobbyRequest);
+      PostHobby201Response result = apiInstance.postHobby(postHobbyRequest);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling HobbyApi#postHobby");
@@ -368,7 +368,7 @@ public class Example {
 
 ### Return type
 
-**Object**
+[**PostHobby201Response**](PostHobby201Response.md)
 
 ### Authorization
 

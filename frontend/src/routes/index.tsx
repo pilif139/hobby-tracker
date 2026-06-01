@@ -96,7 +96,6 @@ function App() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
-
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:py-8">
         {/* Welcome banner */}
         <section className="flex flex-col items-start justify-between gap-6 rounded-2xl border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:p-8">

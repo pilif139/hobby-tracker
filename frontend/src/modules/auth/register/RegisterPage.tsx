@@ -54,16 +54,29 @@ export default function RegisterPage() {
   return (
     <MeshGradientBackground className="dark">
       <div className="flex min-h-screen w-full lg:flex-row">
-        <div className="relative hidden flex-col text-white lg:flex lg:w-[60%] z-20">
+        <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-primary/20 to-transparent p-8 text-white lg:flex lg:w-[60%] z-20 lg:p-12">
           <div className="relative z-20 flex">
-            <img src="/logo-2.png" alt="Logo" className="h-full w-auto" />
+            <img src="/logo-2.png" alt="Logo" className="h-16 w-auto lg:h-20" />
+          </div>
+
+          <div className="relative z-20 max-w-md space-y-4">
+            <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80">
+              Hobby Tracker
+            </p>
+            <h2 className="font-heading text-4xl font-semibold tracking-tight lg:text-5xl">
+              Turn new habits into visible progress
+            </h2>
+            <p className="text-base text-white/80">
+              Create an account to track sessions, stay organized, and keep your
+              goals moving.
+            </p>
           </div>
         </div>
 
         <div className="flex w-full lg:w-[40%] items-center justify-center p-6 sm:p-10 text-foreground z-20 bg-background/60 backdrop-blur-xl lg:border-l border-white/10">
           <div className="mx-auto w-full max-w-sm space-y-6">
             <div className="flex flex-col gap-y-2 text-center">
-              <h1 className="text-3xl font-bold tracking-tight">
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
                 Create your account
               </h1>
               <p className="text-sm text-muted-foreground">

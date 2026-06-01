@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.filip.hobbytracker.repository.AuthRepository;
-import com.filip.hobbytracker.repository.BaseRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -72,16 +71,14 @@ public class LoginFragment extends Fragment {
 
         authRepository.login(email, password, result -> {
             if (getActivity() == null) return;
-            
+
             getActivity().runOnUiThread(() -> {
                 if (result.status == Resource.Status.LOADING) {
                     setLoading(true);
                 } else if (result.status == Resource.Status.SUCCESS) {
                     setLoading(false);
-                    // Navigate to HomeFragment
-                    requireActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new HomeFragment())
-                            .commit();
+                    // Navigate to FeedFragment
+                    ((MainActivity) requireActivity()).navigateHome(new FeedFragment());
                 } else if (result.status == Resource.Status.ERROR) {
                     setLoading(false);
                     showError(result.message != null ? result.message : getString(R.string.error_login_failed));

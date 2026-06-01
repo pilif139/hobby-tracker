@@ -288,8 +288,7 @@ paths:
             application/json:
               schema:
                 items:
-                  properties: {}
-                  type: object
+                  $ref: "#/components/schemas/getHobby_200_response_inner"
                 type: array
           description: Search Results
       tags:
@@ -309,8 +308,7 @@ paths:
           content:
             application/json:
               schema:
-                properties: {}
-                type: object
+                $ref: "#/components/schemas/postHobby_201_response"
           description: Created Hobby
       tags:
       - Hobby
@@ -358,8 +356,7 @@ paths:
           content:
             application/json:
               schema:
-                properties: {}
-                type: object
+                $ref: "#/components/schemas/postHobby_201_response"
           description: Hobby
         "404":
           content:
@@ -732,6 +729,95 @@ paths:
       x-content-type: multipart/form-data
       x-accepts:
       - application/json
+  /follow:
+    delete:
+      operationId: deleteFollow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/deleteFollow_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postFollow_200_response"
+          description: Unfollow Result
+        "400":
+          content:
+            application/json:
+              example:
+                message: Bad request
+              schema:
+                $ref: "#/components/schemas/postAuthRegister_403_response"
+          description: Bad Request
+        "403":
+          content:
+            application/json:
+              example:
+                message: Forbidden
+              schema:
+                $ref: "#/components/schemas/postAuthRegister_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                message: Not Found
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Not Found
+      tags:
+      - Follow
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+    post:
+      operationId: postFollow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postFollow_request"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/postFollow_200_response"
+          description: Follow Result
+        "400":
+          content:
+            application/json:
+              example:
+                message: Bad request
+              schema:
+                $ref: "#/components/schemas/postAuthRegister_403_response"
+          description: Bad Request
+        "403":
+          content:
+            application/json:
+              example:
+                message: Forbidden
+              schema:
+                $ref: "#/components/schemas/postAuthRegister_403_response"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              example:
+                message: Not Found
+              schema:
+                $ref: "#/components/schemas/postAuthLogout_200_response"
+          description: Not Found
+      tags:
+      - Follow
+      x-content-type: application/json
+      x-accepts:
+      - application/json
   /feed:
     get:
       operationId: getFeed
@@ -1078,6 +1164,7 @@ components:
         images:
           items: {}
           maxItems: 4
+          minItems: 0
           type: array
         deletedImageKeys:
           items:
@@ -1200,6 +1287,15 @@ components:
           type: array
       required:
       - suggestions
+    postFollow_request:
+      properties:
+        followerId:
+          type: string
+        followingId:
+          type: string
+      required:
+      - followerId
+      - followingId
     getHobbyUserByUserId_200_response_inner:
       example:
         sessionCount: 0.8008281904610115
@@ -1260,6 +1356,17 @@ components:
           type: string
       required:
       - message
+    deleteFollow_request:
+      properties:
+        followerId:
+          nullable: true
+          type: string
+        followingId:
+          nullable: true
+          type: string
+      required:
+      - followerId
+      - followingId
     getFeedHobbySuggestions_200_response_suggestions_inner:
       example:
         userCount: 6.027456183070403
@@ -1287,6 +1394,40 @@ components:
       - name
       - sessionCount
       - userCount
+    getHobby_200_response_inner:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        _count:
+          users: 0.8008281904610115
+        name: name
+        description: description
+        id: id
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        description:
+          nullable: true
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        _count:
+          $ref: "#/components/schemas/getHobby_200_response_inner__count"
+      required:
+      - _count
+      - createdAt
+      - description
+      - id
+      - name
+      - updatedAt
     postAuthLogin_401_response:
       example:
         cause: cause
@@ -1300,6 +1441,46 @@ components:
           type: string
       required:
       - message
+    postHobby_201_response:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        _count:
+          users: 0.8008281904610115
+        name: name
+        description: description
+        id: id
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          nullable: true
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        _count:
+          $ref: "#/components/schemas/getHobby_200_response_inner__count"
+      required:
+      - _count
+      - createdAt
+      - description
+      - id
+      - name
+      - updatedAt
+    postFollow_200_response:
+      example:
+        success: true
+      properties:
+        success:
+          type: boolean
+      required:
+      - success
     getFeedFollowSuggestionsSocial_200_response_suggestions_inner:
       example:
         avatarUrl: avatarUrl
@@ -1384,6 +1565,14 @@ components:
           type: string
       required:
       - message
+    getHobby_200_response_inner__count:
+      example:
+        users: 0.8008281904610115
+      properties:
+        users:
+          type: number
+      required:
+      - users
     postHobbySession_request:
       properties:
         hobbyId:
@@ -1401,6 +1590,7 @@ components:
         images:
           items: {}
           maxItems: 4
+          minItems: 0
           type: array
       required:
       - endTime

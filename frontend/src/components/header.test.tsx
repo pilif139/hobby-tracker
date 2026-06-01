@@ -1,15 +1,14 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import Header from './header';
+import Header from './header.tsx';
 
 vi.mock('@tanstack/react-router', () => {
   const React = require('react');
   return { Link: (props: any) => React.createElement('a', props) };
 });
 
-vi.mock('@/components/user-nav', () => ({
+vi.mock('./user-nav', () => ({
   default: () => <div data-testid="mock-user-nav">UserNav</div>,
 }));
 

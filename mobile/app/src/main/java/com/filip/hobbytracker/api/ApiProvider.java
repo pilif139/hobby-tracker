@@ -2,6 +2,7 @@ package com.filip.hobbytracker.api;
 
 import com.filip.hobbytracker.api.generated.api.AuthenticationApi;
 import com.filip.hobbytracker.api.generated.api.FeedApi;
+import com.filip.hobbytracker.api.generated.api.FollowApi;
 import com.filip.hobbytracker.api.generated.api.HealthCheckApi;
 import com.filip.hobbytracker.api.generated.api.HobbyApi;
 import com.filip.hobbytracker.api.generated.api.HobbySessionApi;
@@ -21,6 +22,7 @@ public final class ApiProvider {
     private static final UserApi USER_API;
     private static final HealthCheckApi HEALTH_CHECK_API;
     private static final FeedApi FEED_API;
+    private static final FollowApi FOLLOW_API;
 
     static {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -37,6 +39,7 @@ public final class ApiProvider {
         USER_API = new UserApi(API_CLIENT);
         HEALTH_CHECK_API = new HealthCheckApi(API_CLIENT);
         FEED_API = new FeedApi(API_CLIENT);
+        FOLLOW_API = new FollowApi(API_CLIENT);
     }
 
     private ApiProvider() {
@@ -64,5 +67,9 @@ public final class ApiProvider {
 
     public static FeedApi feedApi() {
         return FEED_API;
+    }
+
+    public static FollowApi followApi() {
+        return FOLLOW_API;
     }
 }

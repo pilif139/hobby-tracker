@@ -26,9 +26,10 @@ public class AuthRepository extends BaseRepository {
         }, callback, R.string.error_login_failed);
     }
 
-    public void register(String email, String password, Callback<Void> callback) {
+    public void register(String name, String email, String password, Callback<Void> callback) {
         executeRequest(() -> {
             PostAuthRegisterRequest request = new PostAuthRegisterRequest()
+                    .name(name)
                     .email(email)
                     .password(password);
             ApiProvider.authenticationApi().postAuthRegister(request);
