@@ -36,4 +36,18 @@ public class AuthRepository extends BaseRepository {
             return null;
         }, callback, R.string.error_registration_failed);
     }
+
+    public void logout(Callback<Void> callback) {
+        executeRequest(() -> {
+            ApiProvider.authenticationApi().postAuthLogout();
+            return null;
+        }, callback, R.string.error_network);
+    }
+
+    public void logoutOtherDevices(Callback<Void> callback) {
+        executeRequest(() -> {
+            ApiProvider.authenticationApi().postAuthLogoutOtherDevices();
+            return null;
+        }, callback, R.string.error_network);
+    }
 }

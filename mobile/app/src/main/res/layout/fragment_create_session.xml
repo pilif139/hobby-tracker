@@ -41,7 +41,6 @@
             android:textColorHint="@color/hobby_muted"
             android:inputType="text"
             android:completionThreshold="1"
-            android:background="@android:drawable/edit_text"
             android:padding="8dp"
             android:layout_marginBottom="12dp" />
 
