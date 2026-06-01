@@ -5,13 +5,13 @@
 - Zainstaluj zależności:
 
 ```bash
-bun install
+pnpm install
 ```
 
 - Uruchom aplikację:
 
 ```bash
-bun dev
+pnpm dev
 ```
 
 - Zanim otworzysz przeglądarkę, upewnij się, że backend jest uruchomiony lokalnie na porcie 8787, ponieważ frontend będzie próbował się z nim połączyć, aby pobrać dane. Jeśli backend nie jest uruchomiony, to frontend może wyświetlać błędy związane z brakiem połączenia z API.
@@ -40,14 +40,18 @@ bun dev
 - modules - folder, który zawiera wszystkie rzeczy związane z danym 1 routem, np. jeśli mamy route feed to w modules/feed będzie folder components z komponentami specyficznymi dla tego route, folder hooks z hookami specyficznymi dla tego route i ewentualnie inne rzeczy, które są związane tylko z tym route, jeśli strona ma np. więcej podstron, to dzielimy wtedy ten moduł na podmoduły, np. modules/feed/posts i modules/feed/comments, w zależności od tego jak duża jest ta strona
 - tests - folder z testami jednostkowymi
 
+## Testy
+
+![Scenariusze testowe](./frontend-tests.png)
+
 ## Komunikacja z backendem
 
 Komunikacja z backendem odbywa się za pomocą wygenerowanego przez bilbiotekę @openapitools/openapi-generator-cli klienta axios, który znajduje się w `src/api/generated`. W `src/api/index.ts` tworzymy instancję tego klienta i eksportujemy ją, aby można było jej używać w całej aplikacji. Aby wygenerować klienta, należy mieć zainstalowaną javę i uruchomić komendę:
 
 ```bash
-bun run generate:api
+pnpm run generate:api
 ```
 
 Zimportowany klient API powinien mieć wszystkie potrzebne metody, które są w danym kontrolerze na backendzie.
 
->**Uwaga**: Requesty typu 'multipart/form-data', które wysyłają pliki, się źle generują i nie są obsługiwane poprawnie przez klienta. Trzeba używać apiHttpClient i wysyłać requesty ręcznie.
+>**Uwaga dla developmentu**: Requesty typu 'multipart/form-data', które wysyłają pliki, się źle generują i nie są obsługiwane poprawnie przez klienta. Trzeba używać apiHttpClient i wysyłać requesty ręcznie.

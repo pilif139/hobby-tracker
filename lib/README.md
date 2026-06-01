@@ -10,4 +10,4 @@ To use code from this workspace, simply add the following line to package.json d
 "lib": "workspace:*"
 ```
 
-For more info go to [Bun package manager workspace docs](https://bun.sh/docs/pm/workspaces).
+For more info go to [PNPM workspaces docs](https://pnpm.io/workspaces).
