@@ -11,6 +11,7 @@ public class PreferencesManager {
     private static final String PREF_NAME = "hobby_tracker_prefs";
 
     private static final String KEY_DARK_MODE = "dark_mode_enabled";
+    private static final String KEY_AVATAR_PATH = "avatar_path";
 
     private PreferencesManager(Context context) {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -33,6 +34,14 @@ public class PreferencesManager {
 
     public boolean isDarkMode() {
         return sharedPreferences.getBoolean(KEY_DARK_MODE, false);
+    }
+
+    public void setAvatarPath(String path) {
+        sharedPreferences.edit().putString(KEY_AVATAR_PATH, path).apply();
+    }
+
+    public String getAvatarPath() {
+        return sharedPreferences.getString(KEY_AVATAR_PATH, null);
     }
 
     public void clear() {
