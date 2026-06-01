@@ -34,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.navigation_feed) {
+            if (itemId == R.id.navigation_dashboard) {
+                switchFragment(new DashboardFragment(), false);
+                return true;
+            } else if (itemId == R.id.navigation_feed) {
                 switchFragment(new FeedFragment(), false);
                 return true;
             } else if (itemId == R.id.navigation_discover) {
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         db.userDao().insertUser(new UserEntity(resource.data.getId(), resource.data.getName(), resource.data.getEmail()));
                     });
                     SyncManager.scheduleSync(this);
-                    switchFragment(new FeedFragment(), false);
+                    switchFragment(new DashboardFragment(), false);
                 } else if (resource.status == Resource.Status.UNAUTHORIZED) {
                     dbExecutor.execute(() -> {
                         db.userDao().clearUser();
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (cachedUser != null) {
                                 SyncManager.scheduleSync(this);
-                                switchFragment(new FeedFragment(), false);
+                                switchFragment(new DashboardFragment(), false);
                             } else {
                                 switchFragment(new OnboardFragment(), false);
                             }
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateBottomNavVisibility(Fragment fragment) {
-        if (fragment instanceof FeedFragment || fragment instanceof DiscoverFragment) {
+        if (fragment instanceof DashboardFragment || fragment instanceof FeedFragment || fragment instanceof DiscoverFragment) {
             bottomNavigationView.setVisibility(View.VISIBLE);
         } else {
             bottomNavigationView.setVisibility(View.GONE);
