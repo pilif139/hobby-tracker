@@ -8,7 +8,7 @@ import type { PluginOption } from 'vite';
 
 // Dynamically import ESM-only plugins to avoid bundler `require` issues during CI/build tools
 export default defineConfig(async () => {
-  const plugins: Array<PluginOption> = [];
+  const plugins: any[] = [];
 
   try {
     const devtools = (await import('@tanstack/devtools-vite')).devtools;
