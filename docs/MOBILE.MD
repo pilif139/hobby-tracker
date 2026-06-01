@@ -25,14 +25,20 @@ Projekt wykorzystuje **Repository Pattern**, aby oddzielić warstwę interfejsu 
 ## Przepływ aplikacji
 
 Aplikacja opiera się na nawigacji między fragmentami:
-`OnboardFragment` -> `LoginFragment` lub `RegisterFragment` -> `FeedFragment` (główny ekran) <-> `DiscoveryFragment`.
+`OnboardFragment` -> `LoginFragment` lub `RegisterFragment` -> `FeedFragment` (główny ekran) <-> `DiscoveryFragment` <-> `DashboardFragment` <-> `SettingsFragment`.
 
 ### Opis fragmentów
 - **OnboardFragment**: Ekran powitalny wprowadzający użytkownika w funkcje aplikacji.
 - **LoginFragment**: Formularz logowania dla istniejących użytkowników.
 - **RegisterFragment**: Formularz rejestracji dla nowych użytkowników.
 - **FeedFragment**: Główny ekran wyświetlający listę sesji hobby.
-- **DiscoveryFragment**: Ekran umożliwiający przeglądanie sugestii dotyczących ludzi oraz hobby, którymi użytkownik może się zainteresować.
+- DiscoveryFragment: Ekran umożliwiający przeglądanie sugestii dotyczących ludzi oraz hobby, którymi użytkownik może się zainteresować.
+- DashboardFragment: Główny panel użytkownika z podsumowaniem statystyk i aktywności.
+- SettingsFragment: Ekran ustawień, na którym użytkownik może:
+    - zmienić zdjęcie profilowe,
+    - zmienić nazwę użytkownika,
+    - włączyć/wyłączyć tryb ciemny,
+    - wylogować się z aplikacji.
 
 ## Lokalna Baza Danych (Room)
 

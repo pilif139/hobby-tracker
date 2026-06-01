@@ -97,6 +97,11 @@ public class SettingsFragment extends Fragment {
             });
         });
 
+        String cachedAvatarPath = prefsManager.getAvatarPath();
+        if (cachedAvatarPath != null) {
+            avatarImage.setImageURI(Uri.fromFile(new File(cachedAvatarPath)));
+        }
+
         darkModeSwitch.setChecked(prefsManager.isDarkMode());
         darkModeSwitch.setOnCheckedChangeListener((btn, checked) -> {
             prefsManager.setDarkMode(checked);
@@ -155,6 +160,19 @@ public class SettingsFragment extends Fragment {
                         avatarProgress.setVisibility(View.GONE);
                         if (result.status == Resource.Status.SUCCESS) {
                             avatarImage.setImageURI(uri);
+                            executor.execute(() -> {
+                                try {
+                                    File persistent = new File(requireContext().getFilesDir(), "avatar.jpg");
+                                    File temp = uriToTempFile(uri);
+                                    try (java.io.InputStream in = new java.io.FileInputStream(temp);
+                                         FileOutputStream out = new FileOutputStream(persistent)) {
+                                        byte[] buf = new byte[4096];
+                                        int len;
+                                        while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
+                                    }
+                                    prefsManager.setAvatarPath(persistent.getAbsolutePath());
+                                } catch (Exception ignored) {}
+                            });
                             Toast.makeText(requireContext(), "Avatar updated.", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(requireContext(),
