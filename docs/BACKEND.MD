@@ -78,3 +78,19 @@ pnpm dev
 ```
 
 Aplikacja będzie dostępna pod adresem http://localhost:8787
+
+## Uruchamianie seedera do bazy danych
+
+Do seedowania bazy danych można użyć skryptu seed.sh. Skrypt ten wykorzystuje narzędzie wrangler do uruchomienia przygotowanych w folderze fixtures skryptów SQL, które wstawiają przykładowe dane do bazy danych D1.
+
+```bash
+./seed.sh
+```
+
+## Uruchamianie testów
+
+Testy można uruchomić za pomocą komendy:
+
+```bash
+pnpm test
+```
