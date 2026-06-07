@@ -67,13 +67,6 @@ describe('LoginPage (unit)', () => {
     expect(link).toHaveTextContent(/sign up/i);
   });
 
-  it('Renders logo image with alt text', async () => {
-    renderWithQuery(<LoginPage />);
-
-    const logo = screen.getByAltText(/logo/i);
-    expect(logo).toBeInTheDocument();
-  });
-
   it('Given valid credentials, submits and navigates (success path)', async () => {
     const { authApiClient } = await import('@/api');
     (authApiClient.postAuthLogin as any).mockResolvedValue({

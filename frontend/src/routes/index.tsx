@@ -9,7 +9,6 @@ import {
   Shapes,
   TriangleAlert,
   Trophy,
-  Users,
 } from 'lucide-react';
 import type {
   GetHobbySessionUserByUserId200Response,
@@ -37,6 +36,7 @@ import {
 } from '@/components/ui/item';
 import { requireAuth } from '@/modules/auth/route-guards';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
+import { FadeIn } from '@/components/animations';
 
 export const Route = createFileRoute('/')({
   beforeLoad: requireAuth,
@@ -97,30 +97,32 @@ function App() {
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:py-8">
         {/* Welcome banner */}
-        <section className="flex flex-col items-start justify-between gap-6 rounded-2xl border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:p-8">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-primary">Welcome back</p>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
-              Your hobby dashboard
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
-              Keep an eye on your recent progress and the hobbies on your
-              profile.
-            </p>
-          </div>
-          <Link
-            to="/feed"
-            className={buttonVariants({
-              variant: 'default',
-              size: 'lg',
-              className:
-                'h-12 w-full gap-2 rounded-xl px-8 sm:w-auto font-heading text-xl',
-            })}
-          >
-            Explore activity feed
-            <ArrowRight className="size-5" />
-          </Link>
-        </section>
+        <FadeIn>
+          <section className="flex flex-col items-start justify-between gap-6 rounded-2xl border bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:p-8">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-primary">Welcome back</p>
+              <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">
+                Your hobby dashboard
+              </h1>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+                Keep an eye on your recent progress and the hobbies on your
+                profile.
+              </p>
+            </div>
+            <Link
+              to="/feed"
+              className={buttonVariants({
+                variant: 'default',
+                size: 'lg',
+                className:
+                  'h-12 w-full gap-2 rounded-xl px-8 sm:w-auto font-heading text-xl',
+              })}
+            >
+              Explore activity feed
+              <ArrowRight className="size-5" />
+            </Link>
+          </section>
+        </FadeIn>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-2">
           {/* Stats section */}
@@ -132,50 +134,52 @@ function App() {
           ) : statsQuery.isError ? (
             <SectionError message="We couldn't load your stats right now." />
           ) : (
-            <Card className="min-h-80">
-              <CardHeader>
-                <CardTitle>Your performance</CardTitle>
-                <CardDescription>
-                  A quick overview of your activity and momentum.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-1 flex-col justify-center">
-                {!hasSessions || !stats ? (
-                  <EmptyState
-                    icon={Compass}
-                    title="No stats yet"
-                    description="Start tracking your hobby sessions to see your progress here."
-                  />
-                ) : (
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <StatItem
-                      icon={Activity}
-                      label="Total Sessions"
-                      value={stats.totalCount}
-                      description={`${stats.sessionsLast30Days} in last 30 days`}
+            <FadeIn delay={0.1}>
+              <Card className="min-h-80 h-full">
+                <CardHeader>
+                  <CardTitle>Your performance</CardTitle>
+                  <CardDescription>
+                    A quick overview of your activity and momentum.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-1 flex-col justify-center">
+                  {!hasSessions || !stats ? (
+                    <EmptyState
+                      icon={Compass}
+                      title="No stats yet"
+                      description="Start tracking your hobby sessions to see your progress here."
                     />
-                    <StatItem
-                      icon={Clock3}
-                      label="Total Time"
-                      value={formatDuration(stats.totalDurationInSeconds)}
-                      description={`Avg. ${formatDuration(stats.averageDurationInSeconds)}`}
-                    />
-                    <StatItem
-                      icon={Trophy}
-                      label="Current Streak"
-                      value={`${stats.currentStreakDays} days`}
-                      description={`Best: ${stats.longestStreakDays} days`}
-                    />
-                    <StatItem
-                      icon={Calendar}
-                      label="Active Days"
-                      value={stats.activeDaysCount}
-                      description="Days with at least one session"
-                    />
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                      <StatItem
+                        icon={Activity}
+                        label="Total Sessions"
+                        value={stats.totalCount}
+                        description={`${stats.sessionsLast30Days} in last 30 days`}
+                      />
+                      <StatItem
+                        icon={Clock3}
+                        label="Total Time"
+                        value={formatDuration(stats.totalDurationInSeconds)}
+                        description={`Avg. ${formatDuration(stats.averageDurationInSeconds)}`}
+                      />
+                      <StatItem
+                        icon={Trophy}
+                        label="Current Streak"
+                        value={`${stats.currentStreakDays} days`}
+                        description={`Best: ${stats.longestStreakDays} days`}
+                      />
+                      <StatItem
+                        icon={Calendar}
+                        label="Active Days"
+                        value={stats.activeDaysCount}
+                        description="Days with at least one session"
+                      />
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </FadeIn>
           )}
 
           {/* Hobbies list */}
@@ -187,34 +191,36 @@ function App() {
           ) : hobbiesQuery.isError ? (
             <SectionError message="We couldn't load your hobbies right now." />
           ) : (
-            <Card className="flex h-full min-h-80 flex-col xl:max-h-[440px]">
-              <CardHeader>
-                <CardTitle>Your hobbies</CardTitle>
-                <CardDescription>
-                  Hobbies added to your profile, with their session counts.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 overflow-y-auto">
-                {!hasHobbies ? (
-                  <div className="flex h-full flex-col justify-center">
-                    <EmptyState
-                      icon={Shapes}
-                      title="No hobbies on your profile"
-                      description="Add your first hobby to start tracking the time you invest in it."
-                    />
-                  </div>
-                ) : (
-                  <ItemGroup>
-                    {hobbies.map((hobby) => (
-                      <HobbyItem
-                        key={hobby.id ?? hobby.name ?? 'hobby'}
-                        hobby={hobby}
+            <FadeIn delay={0.2}>
+              <Card className="flex h-full min-h-80 flex-col xl:max-h-[440px]">
+                <CardHeader>
+                  <CardTitle>Your hobbies</CardTitle>
+                  <CardDescription>
+                    Hobbies added to your profile, with their session counts.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 overflow-y-auto">
+                  {!hasHobbies ? (
+                    <div className="flex h-full flex-col justify-center">
+                      <EmptyState
+                        icon={Shapes}
+                        title="No hobbies on your profile"
+                        description="Add your first hobby to start tracking the time you invest in it."
                       />
-                    ))}
-                  </ItemGroup>
-                )}
-              </CardContent>
-            </Card>
+                    </div>
+                  ) : (
+                    <ItemGroup>
+                      {hobbies.map((hobby) => (
+                        <HobbyItem
+                          key={hobby.id ?? hobby.name ?? 'hobby'}
+                          hobby={hobby}
+                        />
+                      ))}
+                    </ItemGroup>
+                  )}
+                </CardContent>
+              </Card>
+            </FadeIn>
           )}
         </div>
       </main>

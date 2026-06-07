@@ -65,11 +65,7 @@ export default function LoginPage() {
   return (
     <MeshGradientBackground className="dark">
       <div className="grid min-h-screen w-full grid-cols-1 sm:grid-cols-2 lg:grid-cols-[60%_40%]">
-        <div className="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-primary/20 to-transparent p-8 text-white sm:flex z-20 lg:p-12">
-          <div className="relative z-20 flex">
-            <img src="/logo-2.png" alt="Logo" className="h-16 w-auto lg:h-20" />
-          </div>
-
+        <div className="relative hidden flex-col justify-between overflow-hidden bg-linear-to-br from-primary/20 to-transparent p-8 text-white sm:flex z-20 lg:p-12">
           <div className="relative z-20 max-w-md space-y-4">
             <p className="text-sm font-medium uppercase tracking-[0.3em] text-white/80">
               Hobby Tracker
