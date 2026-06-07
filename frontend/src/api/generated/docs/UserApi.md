@@ -156,7 +156,7 @@ const { status, data } = await apiInstance.patchUserMe(
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **postUserAvatar**
-> postUserAvatar()
+> PostUserAvatar200Response postUserAvatar()
 
 
 ### Example
@@ -186,7 +186,7 @@ const { status, data } = await apiInstance.postUserAvatar(
 
 ### Return type
 
-void (empty response body)
+**PostUserAvatar200Response**
 
 ### Authorization
 

@@ -37,7 +37,9 @@ export function CurrentUserProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    return () => setUnauthorizedHandler(null);
+    return () => {
+      setUnauthorizedHandler(null);
+    };
   }, []);
 
   const value = useMemo<CurrentUserContextValue>(

@@ -30,6 +30,7 @@ export class UserRepository {
         id: true,
         name: true,
         createdAt: true,
+        avatarFileKey: true,
         _count: {
           select: {
             hobbies: true,
