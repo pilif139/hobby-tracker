@@ -23,15 +23,5 @@
     "prettier": "3.8.0",
     "typescript-eslint": "^8.53.0",
     "typescript": "6.0.3"
-  },
-  "pnpm": {
-    "overrides": {
-      "@typescript-eslint/typescript-estree>semver": "7.3.8",
-      "eslint>minimatch": "3.1.5",
-      "eslint>brace-expansion": "1.1.11",
-      "@eslint/config-array>minimatch": "3.1.5",
-      "@eslint/config-array>brace-expansion": "1.1.11",
-      "@eslint/eslintrc>minimatch": "3.1.5"
-    }
   }
 }
