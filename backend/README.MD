@@ -2,13 +2,13 @@
 
 Głównym załoeniem aplikacji backendowej jest nauczenie się czegoś nowego, dlatego postanowiłem wykorzystać usługi Cloudflare tj. KV, D1 database, Workers itp..
 
+
 ## Technologie
 
 - Hono framework
 - Zod do walidacji danych
 - Prisma jako ORM
 - vitest do testów
-- bun jako package manager
 - Cloudflare D1, KV, Workers, Images
 - Własny system autentykacji i autoryzacji oparty na tokenie JWT oraz refresh tokenie przechowywanym w bardzo szybkiej bazie danych klucz-wartość Cloudflare KV
 - hono-openapi do generowania dokumentacji API i automatycznego walidowania danych przychodzących do endpointów na podstawie schematów zdefiniowanych za pomocą Zod
@@ -34,6 +34,16 @@ Głównym załoeniem aplikacji backendowej jest nauczenie się czegoś nowego, 
 - folder .wrangler - folder z lokalnymi danymi cloudflare'a np. lokalna baza danych D1 lub KV namespace
 - worker-configuration.d.ts - plik automatycznie generowany za pomocą komendy `bunx wrangler types` (nie zmieniać go ręcznie), zawiera typy potrzebne do integracji z cloudflarem i nie trzeba go importować
 
+## Schemat bazy danych
+
+Screenshot z prisma studio visualizera
+
+![Schemat bazy danych](./db-schema.png)
+
+## Testy
+
+![Scenariusze testowe](./backend-tests.png)
+
 ## Uruchamianie aplikacji lokalnie
 
 1. Utwórz plik .env z następującą zawartością:
@@ -48,31 +58,39 @@ Gdzie `sekretny_klucz_1` i `sekretny_klucz_2` to losowe ciągi znaków używane 
 
 Sekrety można wygenerować za pomocą komendy `openssl rand -base64 32`
 
-1. Zainstaluj zależności:
+2. Zainstaluj zależności:
 
 ```bash
-bun install
+pnpm install
 ```
 
-1. Uruchom migracje i wygeneruj klienta prismy
+3. Uruchom migracje i wygeneruj klienta prismy
 
 ```bash
-bunx wrangler d1 migrations apply hobby-tracker-db --local
-bunx prisma generate
+pnpm exec wrangler d1 migrations apply hobby-tracker-db --local
+pnpm exec prisma generate
 ```
 
-1. Uruchom aplikację lokalnie:
+4. Uruchom aplikację lokalnie:
 
 ```bash
-bun dev
+pnpm dev
 ```
 
-Aplikacja będzie dostępna pod adresem <http://localhost:8787>
+Aplikacja będzie dostępna pod adresem http://localhost:8787
 
-## Testy
+## Uruchamianie seedera do bazy danych
 
-Aby uruchomić testy, użyj komendy:
+Do seedowania bazy danych można użyć skryptu seed.sh. Skrypt ten wykorzystuje narzędzie wrangler do uruchomienia przygotowanych w folderze fixtures skryptów SQL, które wstawiają przykładowe dane do bazy danych D1.
 
 ```bash
-bun run test
+./seed.sh
+```
+
+## Uruchamianie testów
+
+Testy można uruchomić za pomocą komendy:
+
+```bash
+pnpm test
 ```
