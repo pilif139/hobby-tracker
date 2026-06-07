@@ -10,6 +10,10 @@ export class UserService {
     private readonly BUCKET_URL: string,
   ) {}
 
+  fileKeyToUrl(key: string | null): string | null {
+    return key ? `${this.BUCKET_URL}/${key}` : null;
+  }
+
   async getById(id: string) {
     return this.userRepository.findById(id);
   }
@@ -44,23 +48,28 @@ export class UserService {
 
   async uploadAvatar(userId: string, avatar: File) {
     const maxSize = 128;
-
     const arrayBuffer = await avatar.arrayBuffer();
     const originalBuffer = Buffer.from(arrayBuffer);
 
-    const image = PhotonImage.new_from_byteslice(originalBuffer);
-    const originalWidth = image.get_width();
-    const originalHeight = image.get_height();
-    image.free();
+    let buffer = originalBuffer;
 
-    let buffer: Buffer;
-    if (originalWidth <= maxSize && originalHeight <= maxSize) {
-      buffer = originalBuffer;
-    } else {
-      const scale = Math.min(maxSize / originalWidth, maxSize / originalHeight);
-      const targetWidth = Math.max(1, Math.floor(originalWidth * scale));
-      const targetHeight = Math.max(1, Math.floor(originalHeight * scale));
-      buffer = resizeImage(originalBuffer, targetWidth, targetHeight);
+    try {
+      const image = PhotonImage.new_from_byteslice(originalBuffer);
+      const originalWidth = image.get_width();
+      const originalHeight = image.get_height();
+      image.free();
+
+      if (originalWidth > maxSize || originalHeight > maxSize) {
+        const scale = Math.min(
+          maxSize / originalWidth,
+          maxSize / originalHeight,
+        );
+        const targetWidth = Math.max(1, Math.floor(originalWidth * scale));
+        const targetHeight = Math.max(1, Math.floor(originalHeight * scale));
+        buffer = resizeImage(originalBuffer, targetWidth, targetHeight);
+      }
+    } catch (e) {
+      throw new Error('Failed to process image via photon lib', { cause: e });
     }
 
     const avatarKey = await this.userRepository.updateAvatar(

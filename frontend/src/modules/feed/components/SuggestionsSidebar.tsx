@@ -17,6 +17,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
+import { FadeIn } from '@/components/animations';
 
 export default function SuggestionsSidebar() {
   const { currentUser } = useCurrentUser();
@@ -93,113 +94,117 @@ export default function SuggestionsSidebar() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-border/60 shadow-none dark:bg-card/40">
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-primary" />
-            <CardTitle className="text-sm font-semibold">
-              Who to follow
-            </CardTitle>
-          </div>
-          <CardDescription className="text-xs">
-            Connect with people sharing your interests.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="hobby" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-8">
-              <TabsTrigger value="hobby" className="text-[11px]">
-                By Hobby
-              </TabsTrigger>
-              <TabsTrigger value="social" className="text-[11px]">
-                Social
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="hobby" className="mt-0">
-              <ScrollArea className="h-auto max-h-[350px]">
-                {hobbySuggestions.isLoading ? (
-                  <SuggestionListSkeleton />
-                ) : isEmpty(hobbySuggestions) ? (
-                  <p className="py-6 text-center text-xs text-muted-foreground">
-                    No hobby-based suggestions.
-                  </p>
-                ) : (
-                  <div className="divide-y divide-border/40">
-                    {hobbySuggestions.data?.map((user) => (
-                      <UserSuggestionItem
-                        key={user.id}
-                        type="hobby"
-                        user={user}
-                        onFollow={followMutation.mutate}
-                        isFollowPending={followMutation.isPending}
-                      />
-                    ))}
-                  </div>
-                )}
-              </ScrollArea>
-            </TabsContent>
-            <TabsContent value="social" className="mt-0">
-              <ScrollArea className="h-auto max-h-[350px]">
-                {socialSuggestions.isLoading ? (
-                  <SuggestionListSkeleton />
-                ) : isEmpty(socialSuggestions) ? (
-                  <p className="py-6 text-center text-xs text-muted-foreground">
-                    No social suggestions.
-                  </p>
-                ) : (
-                  <div className="divide-y divide-border/40">
-                    {socialSuggestions.data?.map((user) => (
-                      <UserSuggestionItem
-                        key={user.id}
-                        type="social"
-                        user={user}
-                        onFollow={followMutation.mutate}
-                        isFollowPending={followMutation.isPending}
-                      />
-                    ))}
-                  </div>
-                )}
-              </ScrollArea>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+      <FadeIn delay={0.3}>
+        <Card className="border-border/60 shadow-none dark:bg-card/40">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-primary" />
+              <CardTitle className="text-sm font-semibold">
+                Who to follow
+              </CardTitle>
+            </div>
+            <CardDescription className="text-xs">
+              Connect with people sharing your interests.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs defaultValue="hobby" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 h-8">
+                <TabsTrigger value="hobby" className="text-[11px]">
+                  By Hobby
+                </TabsTrigger>
+                <TabsTrigger value="social" className="text-[11px]">
+                  Social
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="hobby" className="mt-0">
+                <ScrollArea className="h-auto max-h-[350px]">
+                  {hobbySuggestions.isLoading ? (
+                    <SuggestionListSkeleton />
+                  ) : isEmpty(hobbySuggestions) ? (
+                    <p className="py-6 text-center text-xs text-muted-foreground">
+                      No hobby-based suggestions.
+                    </p>
+                  ) : (
+                    <div className="divide-y divide-border/40">
+                      {hobbySuggestions.data?.map((user) => (
+                        <UserSuggestionItem
+                          key={user.id}
+                          type="hobby"
+                          user={user}
+                          onFollow={followMutation.mutate}
+                          isFollowPending={followMutation.isPending}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </ScrollArea>
+              </TabsContent>
+              <TabsContent value="social" className="mt-0">
+                <ScrollArea className="h-auto max-h-[350px]">
+                  {socialSuggestions.isLoading ? (
+                    <SuggestionListSkeleton />
+                  ) : isEmpty(socialSuggestions) ? (
+                    <p className="py-6 text-center text-xs text-muted-foreground">
+                      No social suggestions.
+                    </p>
+                  ) : (
+                    <div className="divide-y divide-border/40">
+                      {socialSuggestions.data?.map((user) => (
+                        <UserSuggestionItem
+                          key={user.id}
+                          type="social"
+                          user={user}
+                          onFollow={followMutation.mutate}
+                          isFollowPending={followMutation.isPending}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </ScrollArea>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      </FadeIn>
 
-      <Card className="border-border/60 shadow-none dark:bg-card/40">
-        <CardHeader className="pb-3">
-          <div className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-primary" />
-            <CardTitle className="text-sm font-semibold">
-              Suggested Hobbies
-            </CardTitle>
-          </div>
-          <CardDescription className="text-xs">
-            Explore and add new hobbies to your profile.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-auto max-h-[350px]">
-            {trendingHobbies.isLoading ? (
-              <SuggestionListSkeleton />
-            ) : isEmpty(trendingHobbies) ? (
-              <p className="py-6 text-center text-xs text-muted-foreground">
-                No new hobbies to suggest.
-              </p>
-            ) : (
-              <div className="divide-y divide-border/40">
-                {trendingHobbies.data?.map((hobby) => (
-                  <HobbySuggestionItem
-                    key={hobby.id}
-                    hobby={hobby}
-                    onAdd={addHobbyMutation.mutate}
-                    isAddPending={addHobbyMutation.isPending}
-                  />
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-        </CardContent>
-      </Card>
+      <FadeIn delay={0.4}>
+        <Card className="border-border/60 shadow-none dark:bg-card/40">
+          <CardHeader className="pb-3">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-primary" />
+              <CardTitle className="text-sm font-semibold">
+                Suggested Hobbies
+              </CardTitle>
+            </div>
+            <CardDescription className="text-xs">
+              Explore and add new hobbies to your profile.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScrollArea className="h-auto max-h-[350px]">
+              {trendingHobbies.isLoading ? (
+                <SuggestionListSkeleton />
+              ) : isEmpty(trendingHobbies) ? (
+                <p className="py-6 text-center text-xs text-muted-foreground">
+                  No new hobbies to suggest.
+                </p>
+              ) : (
+                <div className="divide-y divide-border/40">
+                  {trendingHobbies.data?.map((hobby) => (
+                    <HobbySuggestionItem
+                      key={hobby.id}
+                      hobby={hobby}
+                      onAdd={addHobbyMutation.mutate}
+                      isAddPending={addHobbyMutation.isPending}
+                    />
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </CardContent>
+        </Card>
+      </FadeIn>
     </div>
   );
 }

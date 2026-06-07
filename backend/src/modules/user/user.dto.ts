@@ -7,6 +7,7 @@ export const userResponseSelect = {
   email: true,
   name: true,
   password: true,
+  avatarFileKey: true,
 } as const satisfies Prisma.UserSelect;
 
 export const UserProfileSchema = z.object({
@@ -17,12 +18,14 @@ export const UserProfileSchema = z.object({
   followsCount: z.number(),
   hobbiesCount: z.number(),
   hobbySessionsCount: z.number(),
+  avatarUrl: z.string().nullable().optional(),
 });
 
 export const UserSafeSchema = z.object({
   id: z.uuid(),
   email: z.email(),
   name: z.string(),
+  avatarUrl: z.string().nullable().optional(),
 });
 
 export const CreateUserSchema = z.object({
@@ -31,17 +34,15 @@ export const CreateUserSchema = z.object({
   password: z.string().min(8).max(128),
 });
 
+export const AvatarUploadResponse = z.object({
+  url: z.string(),
+  message: z.string(),
+});
+
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
 
-// TODO: add secure email and password update handling
 export const UpdateUserSchema = z.object({
-  // email: z
-  //   .email({
-  //     error: 'Invalid email address',
-  //   })
-  //   .optional(),
   name: UsernameSchema.optional(),
-  // password: UserPasswordSchema.optional(),
 });
 
 export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;

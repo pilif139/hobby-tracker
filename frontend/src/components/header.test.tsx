@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -18,9 +17,8 @@ describe('Header', () => {
     render(<Header />);
 
     expect(screen.getByText(/Hobby Tracker/)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Track your hobbies and sessions/),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Dashboard/)).toBeInTheDocument();
+    expect(screen.getByText(/Feed/)).toBeInTheDocument();
     expect(screen.getByTestId('mock-user-nav')).toBeInTheDocument();
   });
 });

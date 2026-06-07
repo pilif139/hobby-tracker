@@ -1,4 +1,10 @@
-import { ChevronDown, LayoutDashboard, LogOut, Settings } from 'lucide-react';
+import {
+  ChevronDown,
+  LayoutDashboard,
+  LogOut,
+  Rss,
+  Settings,
+} from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
 import { authApiClient } from '@/api';
@@ -13,13 +19,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useCurrentUser } from '@/modules/auth/current-user/CurrentUserContext';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function UserNav() {
   const { currentUser, setCurrentUser } = useCurrentUser();
 
   const handleLogout = async () => {
     try {
-      // suppress global API error toast; show explicit toast on failure
       await authApiClient.postAuthLogout({
         headers: { 'x-toast-suppressed': '1' },
       });
@@ -32,6 +38,14 @@ export default function UserNav() {
     }
   };
 
+  const userInitials = currentUser?.name
+    ? currentUser.name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+    : (currentUser?.email[0] ?? 'A').toUpperCase();
+
   return (
     <div className="flex items-center gap-2">
       <ModeToggle />
@@ -39,9 +53,15 @@ export default function UserNav() {
         <DropdownMenuTrigger
           className={buttonVariants({
             variant: 'outline',
-            className: 'h-10 max-w-full gap-2 px-3 sm:max-w-70',
+            className: 'h-8 max-w-full gap-2 px-2 sm:max-w-70',
           })}
         >
+          <Avatar size="sm" className="size-5">
+            <AvatarImage src={currentUser?.avatarUrl ?? undefined} />
+            <AvatarFallback className="text-[10px]">
+              {userInitials}
+            </AvatarFallback>
+          </Avatar>
           <span className="min-w-0 truncate text-sm font-medium">
             {currentUser?.name ?? currentUser?.email ?? 'Account'}
           </span>
@@ -49,12 +69,18 @@ export default function UserNav() {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end" className="w-64">
-          <div className="border-b px-3 py-2">
-            <div className="truncate text-sm font-medium">
-              {currentUser?.name ?? 'Account'}
-            </div>
-            <div className="truncate text-xs text-muted-foreground">
-              {currentUser?.email ?? 'Signed in'}
+          <div className="flex items-center gap-3 border-b px-3 py-2">
+            <Avatar>
+              <AvatarImage src={currentUser?.avatarUrl ?? undefined} />
+              <AvatarFallback>{userInitials}</AvatarFallback>
+            </Avatar>
+            <div className="min-w-0">
+              <div className="truncate text-sm font-medium">
+                {currentUser?.name ?? 'Account'}
+              </div>
+              <div className="truncate text-xs text-muted-foreground">
+                {currentUser?.email ?? 'Signed in'}
+              </div>
             </div>
           </div>
 
@@ -63,6 +89,12 @@ export default function UserNav() {
               <DropdownMenuItem className="cursor-pointer gap-2 rounded-sm">
                 <LayoutDashboard className="size-4 text-muted-foreground" />
                 <span>Dashboard</span>
+              </DropdownMenuItem>
+            </Link>
+            <Link to="/feed">
+              <DropdownMenuItem className="cursor-pointer gap-2 rounded-sm">
+                <Rss className="size-4 text-muted-foreground" />
+                <span>Feed</span>
               </DropdownMenuItem>
             </Link>
             <Link to="/settings">

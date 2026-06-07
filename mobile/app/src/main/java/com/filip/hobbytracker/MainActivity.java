@@ -7,9 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.filip.hobbytracker.data.local.AppDatabase;
 import com.filip.hobbytracker.data.local.UserEntity;
 import com.filip.hobbytracker.data.sync.SyncManager;
+import com.filip.hobbytracker.lib.PreferencesManager;
 import com.filip.hobbytracker.repository.UserRepository;
 import com.filip.hobbytracker.repository.Resource;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,20 +28,31 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        PreferencesManager prefs = PreferencesManager.getInstance(this);
+        AppCompatDelegate.setDefaultNightMode(
+                prefs.isDarkMode() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         userRepository = new UserRepository(this, Executors.newSingleThreadExecutor());
         db = AppDatabase.getDatabase(this);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.navigation_dashboard);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
-            if (itemId == R.id.navigation_feed) {
+            if (itemId == R.id.navigation_dashboard) {
+                switchFragment(new DashboardFragment(), false);
+                return true;
+            } else if (itemId == R.id.navigation_feed) {
                 switchFragment(new FeedFragment(), false);
                 return true;
             } else if (itemId == R.id.navigation_discover) {
                 switchFragment(new DiscoverFragment(), false);
+                return true;
+            } else if (itemId == R.id.navigation_settings) {
+                switchFragment(new SettingsFragment(), false);
                 return true;
             }
             return false;
@@ -51,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             checkAuth();
+        } else {
+            Fragment restoredFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            updateBottomNavVisibility(restoredFragment);
         }
     }
 
@@ -62,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                         db.userDao().insertUser(new UserEntity(resource.data.getId(), resource.data.getName(), resource.data.getEmail()));
                     });
                     SyncManager.scheduleSync(this);
-                    switchFragment(new FeedFragment(), false);
+                    switchFragment(new DashboardFragment(), false);
                 } else if (resource.status == Resource.Status.UNAUTHORIZED) {
                     dbExecutor.execute(() -> {
                         db.userDao().clearUser();
@@ -74,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (cachedUser != null) {
                                 SyncManager.scheduleSync(this);
-                                switchFragment(new FeedFragment(), false);
+                                switchFragment(new DashboardFragment(), false);
                             } else {
                                 switchFragment(new OnboardFragment(), false);
                             }
@@ -105,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateBottomNavVisibility(Fragment fragment) {
-        if (fragment instanceof FeedFragment || fragment instanceof DiscoverFragment) {
+        if (fragment instanceof DashboardFragment || fragment instanceof FeedFragment
+                || fragment instanceof DiscoverFragment || fragment instanceof SettingsFragment) {
             bottomNavigationView.setVisibility(View.VISIBLE);
         } else {
             bottomNavigationView.setVisibility(View.GONE);

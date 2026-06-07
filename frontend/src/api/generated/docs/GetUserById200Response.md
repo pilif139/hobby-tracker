@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **followsCount** | **number** |  | [default to undefined]
 **hobbiesCount** | **number** |  | [default to undefined]
 **hobbySessionsCount** | **number** |  | [default to undefined]
+**avatarUrl** | **string** |  | [optional] [default to undefined]
 
 ## Example
 
@@ -26,6 +27,7 @@ const instance: GetUserById200Response = {
     followsCount,
     hobbiesCount,
     hobbySessionsCount,
+    avatarUrl,
 };
 ```
 

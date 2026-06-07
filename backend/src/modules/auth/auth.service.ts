@@ -2,7 +2,7 @@ import { sign, verify } from 'hono/jwt';
 import z from 'zod';
 import type { CreateUserDto } from '../user/user.dto';
 import authConfig from './auth.config';
-import type { JWTRefreshToken, KVRefreshToken } from './auth.dto';
+import type { JWTRefreshToken } from './auth.dto';
 import { compareHash } from '@/src/lib/hash';
 import type { UserService } from '@/src/modules/user/user.service';
 
@@ -40,6 +40,7 @@ export class AuthService {
         id: createdUser.id,
         email: createdUser.email,
         name: createdUser.name,
+        avatarUrl: this.userService.fileKeyToUrl(createdUser.avatarFileKey),
       },
     };
   }
@@ -69,6 +70,7 @@ export class AuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        avatarUrl: this.userService.fileKeyToUrl(user.avatarFileKey),
       },
     };
   }

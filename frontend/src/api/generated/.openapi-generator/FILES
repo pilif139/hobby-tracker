@@ -42,6 +42,7 @@ docs/PostFollow200Response.md
 docs/PostFollowRequest.md
 docs/PostHobby201Response.md
 docs/PostHobbyRequest.md
+docs/PostUserAvatar200Response.md
 docs/UserApi.md
 git_push.sh
 index.ts
