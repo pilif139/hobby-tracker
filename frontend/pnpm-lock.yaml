@@ -61,9 +61,6 @@ importers:
       lucide-react:
         specifier: ^1.7.0
         version: 1.17.0(react@19.2.6)
-      next-themes:
-        specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: ^19.2.0
         version: 19.2.6
@@ -5861,15 +5858,6 @@ packages:
       }
     engines: { node: '>= 0.4.0' }
 
-  next-themes@0.4.6:
-    resolution:
-      {
-        integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==,
-      }
-    peerDependencies:
-      react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
-      react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
-
   node-domexception@1.0.0:
     resolution:
       {
@@ -11219,11 +11207,6 @@ snapshots:
   negotiator@1.0.0: {}
 
   netmask@2.1.1: {}
-
-  next-themes@0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
-    dependencies:
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
 
   node-domexception@1.0.0: {}
 

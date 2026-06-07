@@ -1,12 +1,10 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import LoginPage from './LoginPage';
 
-// Mocks we need to observe and control
 const mockNavigate = vi.fn();
 const mockSetCurrentUser = vi.fn();
 

@@ -71,6 +71,7 @@ apiHttpClient.interceptors.response.use(
         if (!suppressed) {
           toast.error(String(message ?? 'Request failed'), { id: toastId });
         }
+        // eslint-disable-next-line no-unused-vars
       } catch (e) {
         // swallow toast errors
       }
