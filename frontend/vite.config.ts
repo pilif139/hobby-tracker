@@ -42,6 +42,11 @@ export default defineConfig(async () => {
 
   return {
     plugins,
+    server: {
+      fs: {
+        allow: ['..'],
+      },
+    },
     resolve: {
       alias: [
         {

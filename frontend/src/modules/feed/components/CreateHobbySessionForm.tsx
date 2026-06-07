@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2, Plus, TriangleAlert } from 'lucide-react';
@@ -19,6 +19,7 @@ import { Item, ItemContent, ItemMedia } from '@/components/ui/item';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { formatDateTimeLocal } from '@/lib/formatDateTimeLocal';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 
 const getDefaultValues = () => {
   const start = new Date();
@@ -256,16 +257,28 @@ export default function CreateHobbySessionForm() {
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>Start time</FieldLabel>
-                    <Input
-                      id={field.name}
-                      type="datetime-local"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
+                    <Suspense
+                      fallback={
+                        <Input
+                          id={field.name}
+                          type="datetime-local"
+                          value={field.state.value}
+                          onChange={(event) =>
+                            field.handleChange(event.target.value)
+                          }
+                          onBlur={field.handleBlur}
+                          aria-invalid={isInvalid}
+                        />
                       }
-                      onBlur={field.handleBlur}
-                      aria-invalid={isInvalid}
-                    />
+                    >
+                      <DateTimePicker
+                        id={field.name}
+                        value={field.state.value}
+                        onChange={field.handleChange}
+                        onBlur={field.handleBlur}
+                        aria-invalid={isInvalid}
+                      />
+                    </Suspense>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
@@ -282,16 +295,28 @@ export default function CreateHobbySessionForm() {
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>End time</FieldLabel>
-                    <Input
-                      id={field.name}
-                      type="datetime-local"
-                      value={field.state.value}
-                      onChange={(event) =>
-                        field.handleChange(event.target.value)
+                    <Suspense
+                      fallback={
+                        <Input
+                          id={field.name}
+                          type="datetime-local"
+                          value={field.state.value}
+                          onChange={(event) =>
+                            field.handleChange(event.target.value)
+                          }
+                          onBlur={field.handleBlur}
+                          aria-invalid={isInvalid}
+                        />
                       }
-                      onBlur={field.handleBlur}
-                      aria-invalid={isInvalid}
-                    />
+                    >
+                      <DateTimePicker
+                        id={field.name}
+                        value={field.state.value}
+                        onChange={field.handleChange}
+                        onBlur={field.handleBlur}
+                        aria-invalid={isInvalid}
+                      />
+                    </Suspense>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
                     )}
